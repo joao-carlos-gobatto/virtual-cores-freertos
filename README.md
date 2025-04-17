@@ -9,3 +9,7 @@ Free
 Como é que o FreeRTOS sabe quantos cores tem?
 Como é que o FreeRTOS joga a task pro core?
 Como é que o FreeRTOS gera o tick? de onde ele vem?
+
+Fazer o SELECT de algoritmo de escalonamento.
+Como disparar as Tasks.
+Como tratar a interrupção do Timer.

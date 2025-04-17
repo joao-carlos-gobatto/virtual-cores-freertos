@@ -162,6 +162,25 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
 /*----------------------------------------------------------*/
 
 /* -------------------------------------------------- Task Creation ------------------------------------------------- */
+//struct Parameters{
+//	int period;
+//	int deadline;
+//	TaskHandle_t handle;
+//};
+
+struct Parameters taskParameters[5];
+int counter = 0;
+
+
+int GetTidByHandle(TaskHandle_t handle)
+{
+	for (int i = 0; i < 5;i++)
+	{
+		if (taskParameters[i].handle == handle)
+			return i;
+	}
+	return -1;
+}
 
 #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
@@ -174,8 +193,12 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
                                         const BaseType_t xCoreID )
     {
         BaseType_t xReturn;
-
+        struct Parameters *prPointer;
+		prPointer = pvParameters;
         configASSERT( taskVALID_CORE_ID( xCoreID ) == pdTRUE || xCoreID == tskNO_AFFINITY );
+		printf("T '%s' dynamic created successfully!\n", pcName);
+		printf("task %d\n", counter);
+		counter++;
 
         #if CONFIG_FREERTOS_SMP
         {
@@ -284,6 +307,14 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
                 prvInitialiseNewTask( pxTaskCode, pcName, ( uint32_t ) usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL, xCoreID );
                 prvAddNewTaskToReadyList( pxNewTCB );
                 xReturn = pdPASS;
+                if (counter > 3)   ////////////////////////////// 
+				{	
+                    taskParameters[counter - 4].period = prPointer->period;
+                    taskParameters[counter - 4].deadline = prPointer->deadline;
+                    taskParameters[counter - 4].handle = pxNewTCB;
+                    printf("'%d' dynamic period set!\n", taskParameters[counter -4].period);
+                    printf("'%d' dynamic deadline set!\n", taskParameters[counter -4].deadline);
+			    }
             }
             else
             {
@@ -297,6 +328,8 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
 
 #endif /* ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) */
 /*----------------------------------------------------------*/
+TaskHandle_t idleHandleArray[2];
+int idleHandleArrayCurrent = 0;
 
 #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
 
@@ -314,7 +347,7 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
         configASSERT( portVALID_STACK_MEM( puxStackBuffer ) );
         configASSERT( portVALID_TCB_MEM( pxTaskBuffer ) );
         configASSERT( taskVALID_CORE_ID( xCoreID ) == pdTRUE || xCoreID == tskNO_AFFINITY );
-
+        printf("T '%s' created successfully!\n", pcName);
         #if CONFIG_FREERTOS_SMP
         {
             /* If using Amazon SMP FreeRTOS. This function is just a wrapper around
@@ -378,6 +411,9 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
 
                 prvInitialiseNewTask( pxTaskCode, pcName, ulStackDepth, pvParameters, uxPriority, &xReturn, pxNewTCB, NULL, xCoreID );
                 prvAddNewTaskToReadyList( pxNewTCB );
+                
+                idleHandleArray[idleHandleArrayCurrent] = pxNewTCB;
+                idleHandleArrayCurrent++;
             }
             else
             {
@@ -454,7 +490,7 @@ BaseType_t xTaskGetCoreID( TaskHandle_t xTask )
     }
     #endif /* configNUM_CORES > 1 */
 
-    return 6;
+    return xReturn;
 }
 /*----------------------------------------------------------*/
 

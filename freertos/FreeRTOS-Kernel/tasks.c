@@ -386,6 +386,15 @@
     #define taskEVENT_LIST_ITEM_VALUE_IN_USE    0x80000000UL
 #endif
 
+//my stuff
+struct Parameters{
+	int period;
+	int deadline;
+	TaskHandle_t handle;
+};
+
+extern struct Parameters taskParameters[5];
+
 /*
  * Task control block.  A task control block (TCB) is allocated for each task,
  * and stores task state information, including a pointer to the task's context
@@ -3202,6 +3211,9 @@ BaseType_t xTaskCatchUpTicks( TickType_t xTicksToCatchUp )
 
 #endif /* INCLUDE_xTaskAbortDelay */
 /*----------------------------------------------------------*/
+extern int GetTidByHandle(TaskHandle_t handle);
+//extern struct Parameters taskParameters[5];
+int tickCounter = 0;
 
 BaseType_t xTaskIncrementTick( void )
 {
@@ -3216,6 +3228,10 @@ BaseType_t xTaskIncrementTick( void )
     #if ( configUSE_TICK_HOOK == 1 )
         BaseType_t xCallTickHook;
     #endif /* configUSE_TICK_HOOK == 1 */
+    for(int i = i; i < 5; i++)
+	{
+		taskParameters[i].period--;
+	}
 
     /* Called by the portable layer each time a tick interrupt occurs.
      * Increments the tick then checks to see if the new tick value will cause any
@@ -3227,6 +3243,9 @@ BaseType_t xTaskIncrementTick( void )
      * interrupts disabled). */
     prvENTER_CRITICAL_SAFE_SMP_ONLY( &xKernelLock );
     {
+        tickCounter++;
+    	//int tid = GetTidByHandle(xTaskGetCurrentTaskHandle());
+    	
         if( uxSchedulerSuspended[ 0 ] == ( UBaseType_t ) pdFALSE )
         {
             /* Minor optimisation.  The tick count cannot change in this

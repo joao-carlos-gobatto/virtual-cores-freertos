@@ -163,6 +163,13 @@ void vPortClearInterruptMaskFromISR(UBaseType_t prev_int_level);
 BaseType_t xPortInIsrContext(void);
 
 /**
+ * @brief Assert if in ISR context
+ *
+ * - Asserts on xPortInIsrContext() internally
+ */
+void vPortAssertIfInISR(void);
+
+/**
  * @brief Check if in ISR context from High priority ISRs
  *
  * - Called from High priority ISR
@@ -471,6 +478,11 @@ void vPortTCBPreDeleteHook( void *pxTCB );
 #define portCLEAR_INTERRUPT_MASK_FROM_ISR(prev_level)       vPortClearInterruptMaskFromISR(prev_level)
 
 /**
+ * @brief Assert if in ISR context
+ */
+#define portASSERT_IF_IN_ISR() vPortAssertIfInISR()
+
+/**
  * @brief Used by FreeRTOS functions to call the correct version of critical section API
  */
 #if ( configNUM_CORES > 1 )
@@ -586,11 +598,11 @@ void vPortTCBPreDeleteHook( void *pxTCB );
 // ------------------- Run Time Stats ----------------------
 
 #define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()
-#define portGET_RUN_TIME_COUNTER_VALUE() 0
 #ifdef CONFIG_FREERTOS_RUN_TIME_STATS_USING_ESP_TIMER
-/* Coarse resolution time (us) */
-#define portALT_GET_RUN_TIME_COUNTER_VALUE(x)    do {x = (uint32_t)esp_timer_get_time();} while(0)
-#endif
+#define portGET_RUN_TIME_COUNTER_VALUE()        ((configRUN_TIME_COUNTER_TYPE) esp_timer_get_time())
+#else
+#define portGET_RUN_TIME_COUNTER_VALUE()        0
+#endif // CONFIG_FREERTOS_RUN_TIME_STATS_USING_ESP_TIMER
 
 // --------------------- TCB Cleanup -----------------------
 

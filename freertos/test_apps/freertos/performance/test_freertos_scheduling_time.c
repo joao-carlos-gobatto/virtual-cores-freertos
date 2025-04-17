@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2022-2023 Espressif Systems (Shanghai) CO LTD
+ * SPDX-FileCopyrightText: 2022-2024 Espressif Systems (Shanghai) CO LTD
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -39,27 +39,29 @@ typedef struct {
     TaskHandle_t t1_handle;
 } test_context_t;
 
-static void test_task_1(void *arg) {
+static void test_task_1(void *arg)
+{
     test_context_t *context = (test_context_t *)arg;
 
-    for( ;; ) {
+    for (;;) {
         context->before_sched = esp_cpu_get_cycle_count();
-        vPortYield();
+        taskYIELD();
     }
 
     vTaskDelete(NULL);
 }
 
-static void test_task_2(void *arg) {
+static void test_task_2(void *arg)
+{
     test_context_t *context = (test_context_t *)arg;
 
     vTaskPrioritySet(NULL, CONFIG_UNITY_FREERTOS_PRIORITY + 1);
     vTaskPrioritySet(context->t1_handle, CONFIG_UNITY_FREERTOS_PRIORITY + 1);
-    vPortYield();
+    taskYIELD();
 
     for (int i = 0; i < NUMBER_OF_ITERATIONS; i++) {
         context->cycles_to_sched[i] = esp_cpu_get_cycle_count() - context->before_sched;
-        vPortYield();
+        taskYIELD();
     }
 
     xSemaphoreGive(context->end_sema);
@@ -75,11 +77,11 @@ TEST_CASE("scheduling time test", "[freertos]")
     TEST_ASSERT(context.end_sema != NULL);
 
 #if !CONFIG_FREERTOS_UNICORE
-    xTaskCreatePinnedToCore(test_task_1, "test1" , 4096, &context, 1, &context.t1_handle,1);
-    xTaskCreatePinnedToCore(test_task_2, "test2" , 4096, &context, 1, NULL,1);
+    xTaskCreatePinnedToCore(test_task_1, "test1", 4096, &context, CONFIG_UNITY_FREERTOS_PRIORITY - 1, &context.t1_handle, 1);
+    xTaskCreatePinnedToCore(test_task_2, "test2", 4096, &context, CONFIG_UNITY_FREERTOS_PRIORITY - 1, NULL, 1);
 #else
-    xTaskCreatePinnedToCore(test_task_1, "test1" , 4096, &context, CONFIG_UNITY_FREERTOS_PRIORITY - 1, &context.t1_handle,0);
-    xTaskCreatePinnedToCore(test_task_2, "test2" , 4096, &context, CONFIG_UNITY_FREERTOS_PRIORITY - 1, NULL,0);
+    xTaskCreatePinnedToCore(test_task_1, "test1", 4096, &context, CONFIG_UNITY_FREERTOS_PRIORITY - 1, &context.t1_handle, 0);
+    xTaskCreatePinnedToCore(test_task_2, "test2", 4096, &context, CONFIG_UNITY_FREERTOS_PRIORITY - 1, NULL, 0);
 #endif
 
     BaseType_t result = xSemaphoreTake(context.end_sema, portMAX_DELAY);

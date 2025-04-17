@@ -28,6 +28,12 @@ static const char *TAG = "port";
 
 static volatile UBaseType_t uxInterruptNesting = 0;
 
+/* When configSUPPORT_STATIC_ALLOCATION is set to 1 the application writer can
+ * use a callback function to optionally provide the memory required by the idle
+ * and timer tasks.  This is the stack that will be used by the timer task.  It is
+ * declared here, as a global, so it can be checked by a test that is implemented
+ * in a different file. */
+StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
 
 BaseType_t xPortCheckIfInISR(void)
 {
@@ -44,9 +50,9 @@ static void main_task(void* args)
 
 int main(int argc, const char **argv)
 {
-    // This makes sure that stdio is flushed after each '\n' so that idf.py monitor
-    // reads the program output on time.
-    setvbuf(stdout, NULL, _IOLBF, 0);
+    // This makes sure that stdio is always synchronized so that idf.py monitor
+    // and other tools read text output on time.
+    setvbuf(stdout, NULL, _IONBF, 0);
 
     usleep(1000);
     BaseType_t res = xTaskCreatePinnedToCore(&main_task, "main",
@@ -118,15 +124,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t ** ppxIdleTaskTCBBuffer,
 #endif // configSUPPORT_STATIC_ALLOCATION == 1
 /*-----------------------------------------------------------*/
 
-#if ( (configSUPPORT_STATIC_ALLOCATION == 1) && (configUSE_TIMERS == 1))
-
-/* When configSUPPORT_STATIC_ALLOCATION is set to 1 the application writer can
- * use a callback function to optionally provide the memory required by the idle
- * and timer tasks.  This is the stack that will be used by the timer task.  It is
- * declared here, as a global, so it can be checked by a test that is implemented
- * in a different file. */
-StackType_t uxTimerTaskStack[ configTIMER_TASK_STACK_DEPTH ];
-
+#if ( configSUPPORT_STATIC_ALLOCATION == 1 )
 /* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
  * application must provide an implementation of vApplicationGetTimerTaskMemory()
  * to provide the memory that is used by the Timer service task. */
@@ -151,7 +149,7 @@ void vApplicationGetTimerTaskMemory( StaticTask_t ** ppxTimerTaskTCBBuffer,
      * configMINIMAL_STACK_SIZE is specified in bytes. */
     *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
-#endif // (configSUPPORT_STATIC_ALLOCATION == 1) && (configUSE_TIMERS == 1)
+#endif // configSUPPORT_STATIC_ALLOCATION == 1
 
 void __attribute__((weak)) vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
 {

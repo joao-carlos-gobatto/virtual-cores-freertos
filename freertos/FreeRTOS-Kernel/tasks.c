@@ -6,7 +6,7 @@
  *
  * SPDX-License-Identifier: MIT
  *
- * SPDX-FileContributor: 2023 Espressif Systems (Shanghai) CO LTD
+ * SPDX-FileContributor: 2023-2024 Espressif Systems (Shanghai) CO LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -3214,25 +3214,23 @@ BaseType_t xTaskCatchUpTicks( TickType_t xTicksToCatchUp )
 extern int GetTidByHandle(TaskHandle_t handle);
 //extern struct Parameters taskParameters[5];
 int tickCounter = 0;
-
 BaseType_t xTaskIncrementTick( void )
 {
     #if ( configNUMBER_OF_CORES > 1 )
         /* Only Core 0 should ever call this function. */
         configASSERT( portGET_CORE_ID() == 0 );
     #endif /* configNUMBER_OF_CORES > 1 */
-
+	
     TCB_t * pxTCB;
     TickType_t xItemValue;
     BaseType_t xSwitchRequired = pdFALSE;
     #if ( configUSE_TICK_HOOK == 1 )
         BaseType_t xCallTickHook;
     #endif /* configUSE_TICK_HOOK == 1 */
-    for(int i = i; i < 5; i++)
+	for(int i = i; i < 5; i++)
 	{
 		taskParameters[i].period--;
 	}
-
     /* Called by the portable layer each time a tick interrupt occurs.
      * Increments the tick then checks to see if the new tick value will cause any
      * tasks to be unblocked. */
@@ -3243,11 +3241,12 @@ BaseType_t xTaskIncrementTick( void )
      * interrupts disabled). */
     prvENTER_CRITICAL_SAFE_SMP_ONLY( &xKernelLock );
     {
-        tickCounter++;
+    	tickCounter++;
     	//int tid = GetTidByHandle(xTaskGetCurrentTaskHandle());
     	
         if( uxSchedulerSuspended[ 0 ] == ( UBaseType_t ) pdFALSE )
         {
+        	
             /* Minor optimisation.  The tick count cannot change in this
              * block. */
             const TickType_t xConstTickCount = xTickCount + ( TickType_t ) 1;
@@ -3337,15 +3336,52 @@ BaseType_t xTaskIncrementTick( void )
                              * For SMP, since this function is only run on core
                              * 0, we only need to context switch if the unblocked
                              * task can run on core 0 and has a higher priority
-                             * than the current task. */
-                            if( ( taskIS_AFFINITY_COMPATIBLE( 0, pxTCB ) == pdTRUE ) && ( pxTCB->uxPriority > pxCurrentTCBs[ 0 ]->uxPriority ) )
+                             * than the current task.
+                             *
+                             * If the unblocked task has affinity to the other
+                             * core or no affinity then we need to set xYieldPending
+                             * for the other core if the unblocked task has a priority
+                             * higher than the priority of the currently running task
+                             * on the other core. */
+                            if( taskIS_AFFINITY_COMPATIBLE( 0, pxTCB ) == pdTRUE )
                             {
-                                xSwitchRequired = pdTRUE;
+                                if( pxTCB->uxPriority > pxCurrentTCBs[ 0 ]->uxPriority )
+                                {
+                                    xSwitchRequired = pdTRUE;
+                                }
+
+                                #if ( configNUMBER_OF_CORES > 1 )
+                                    else if( pxTCB->xCoreID == tskNO_AFFINITY )
+                                    {
+                                        if( pxTCB->uxPriority > pxCurrentTCBs[ 1 ]->uxPriority )
+                                        {
+                                            xYieldPending[ 1 ] = pdTRUE;
+                                        }
+                                        else
+                                        {
+                                            mtCOVERAGE_TEST_MARKER();
+                                        }
+                                    }
+                                #endif /* if ( configNUMBER_OF_CORES > 1 ) */
+                                else
+                                {
+                                    mtCOVERAGE_TEST_MARKER();
+                                }
                             }
-                            else
-                            {
-                                mtCOVERAGE_TEST_MARKER();
-                            }
+
+                            #if ( configNUMBER_OF_CORES > 1 )
+                                else
+                                {
+                                    if( pxTCB->uxPriority > pxCurrentTCBs[ 1 ]->uxPriority )
+                                    {
+                                        xYieldPending[ 1 ] = pdTRUE;
+                                    }
+                                    else
+                                    {
+                                        mtCOVERAGE_TEST_MARKER();
+                                    }
+                                }
+                            #endif /* if ( configNUMBER_OF_CORES > 1 ) */
                         }
                         #endif /* configUSE_PREEMPTION */
                     }
@@ -3622,9 +3658,12 @@ get_next_task:
                 /* The current task cannot be scheduled. Get the next task in the list */
                 listGET_OWNER_OF_NEXT_ENTRY( pxTCBCur, &( pxReadyTasksLists[ uxCurPriority ] ) );
             } while( pxTCBCur != pxTCBFirst ); /* Check to see if we've walked the entire list */
+            ///////printf("Core %d selected task with handle: %p\n", xCurCoreID, pxTCBCur);
         }
-
+		
         configASSERT( xTaskScheduled == pdTRUE ); /* At this point, a task MUST have been scheduled */
+        	//pxCurrentTCBs[xCurCoreID] = taskParameters[0].handle;////////
+    		//xTaskScheduled = pdTRUE;///////////////
     }
 
 #endif /* configNUMBER_OF_CORES > 1 */
@@ -3838,7 +3877,7 @@ void vTaskPlaceOnUnorderedEventList( List_t * pxEventList,
             prvAddCurrentTaskToDelayedList( xTicksToWait, xWaitIndefinitely );
         }
         /* Release the previously taken kernel lock. */
-        prvEXIT_CRITICAL_SMP_ONLY( &xKernelLock );
+        taskEXIT_CRITICAL( &xKernelLock );
     }
 
 #endif /* configUSE_TIMERS */
@@ -4105,19 +4144,10 @@ void vTaskRemoveFromUnorderedEventList( ListItem_t * pxEventListItem,
         if( taskIS_YIELD_REQUIRED( pxUnblockedTCB, pdFALSE ) == pdTRUE )
         {
             /* The unblocked task has a priority above that of the calling task, so
-             * a context switch is required. */
-            #if ( configNUM_CORES > 1 )
-
-                /* In SMP mode, this function is called from a critical section, so we
-                 * yield the current core to schedule the unblocked task. */
-                portYIELD_WITHIN_API();
-            #else /* configNUM_CORES > 1 */
-
-                /* In single-core mode, this function is called with the scheduler suspended
-                 * so xYieldPending is set so the context switch occurs immediately once the
-                 * scheduler is resumed (unsuspended). */
-                xYieldPending[ xCurCoreID ] = pdTRUE;
-            #endif /* configNUM_CORES > 1 */
+             * a context switch is required.  This function is called with the
+             * scheduler suspended so xYieldPending is set so the context switch
+             * occurs immediately that the scheduler is resumed (unsuspended). */
+            xYieldPending[ xCurCoreID ] = pdTRUE;
         }
     }
 }

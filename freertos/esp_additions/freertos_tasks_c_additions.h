@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2015-2023 Espressif Systems (Shanghai) CO LTD
+ * SPDX-FileCopyrightText: 2015-2024 Espressif Systems (Shanghai) CO LTD
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -29,7 +29,9 @@
  */
 _Static_assert( offsetof( StaticTask_t, pxDummy6 ) == offsetof( TCB_t, pxStack ) );
 _Static_assert( offsetof( StaticTask_t, pxDummy8 ) == offsetof( TCB_t, pxEndOfStack ) );
+#if !CONFIG_IDF_TARGET_LINUX    // Disabled for linux builds due to differences in types
 _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "CONFIG_FREERTOS_NO_AFFINITY must be the same as tskNO_AFFINITY" );
+#endif
 
 /* ------------------------------------------------- Kernel Control ------------------------------------------------- */
 
@@ -87,9 +89,8 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
         /* This function should never be called by Core 0. */
         configASSERT( xCoreID != 0 );
 
-        /* Called by the portable layer each time a tick interrupt occurs.
-         * Increments the tick then checks to see if the new tick value will
-         * cause any tasks to be unblocked. */
+        /* Called by the portable layer each time a tick interrupt occurs
+         * on a core other than core 0. */
         traceTASK_INCREMENT_TICK( xTickCount );
 
         if( uxSchedulerSuspended[ xCoreID ] == ( UBaseType_t ) 0U )
@@ -97,23 +98,6 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
             /* We need take the kernel lock here as we are about to access
              * kernel data structures. */
             taskENTER_CRITICAL_ISR( &xKernelLock );
-
-            /* A task being unblocked cannot cause an immediate context switch
-             * if preemption is turned off. */
-            #if ( configUSE_PREEMPTION == 1 )
-            {
-                /* Check if core 0 calling xTaskIncrementTick() has
-                 * unblocked a task that can be run. */
-                if( uxTopReadyPriority > pxCurrentTCBs[ xCoreID ]->uxPriority )
-                {
-                    xSwitchRequired = pdTRUE;
-                }
-                else
-                {
-                    mtCOVERAGE_TEST_MARKER();
-                }
-            }
-            #endif /* if ( configUSE_PREEMPTION == 1 ) */
 
             /* Tasks of equal priority to the currently running task will share
              * processing time (time slice) if preemption is on, and the application
@@ -162,6 +146,7 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
 /*----------------------------------------------------------*/
 
 /* -------------------------------------------------- Task Creation ------------------------------------------------- */
+
 //struct Parameters{
 //	int period;
 //	int deadline;
@@ -193,14 +178,15 @@ int GetTidByHandle(TaskHandle_t handle)
                                         const BaseType_t xCoreID )
     {
         BaseType_t xReturn;
-        struct Parameters *prPointer;
+		struct Parameters *prPointer;
 		prPointer = pvParameters;
         configASSERT( taskVALID_CORE_ID( xCoreID ) == pdTRUE || xCoreID == tskNO_AFFINITY );
 		printf("T '%s' dynamic created successfully!\n", pcName);
 		printf("task %d\n", counter);
-		counter++;
-
-        #if CONFIG_FREERTOS_SMP
+		counter++;;
+		
+		
+		#if CONFIG_FREERTOS_SMP
         {
             /* If using Amazon SMP FreeRTOS. This function is just a wrapper around
              * xTaskCreate() or xTaskCreateAffinitySet(). */
@@ -309,11 +295,11 @@ int GetTidByHandle(TaskHandle_t handle)
                 xReturn = pdPASS;
                 if (counter > 3)   ////////////////////////////// 
 				{	
-                    taskParameters[counter - 4].period = prPointer->period;
-                    taskParameters[counter - 4].deadline = prPointer->deadline;
-                    taskParameters[counter - 4].handle = pxNewTCB;
-                    printf("'%d' dynamic period set!\n", taskParameters[counter -4].period);
-                    printf("'%d' dynamic deadline set!\n", taskParameters[counter -4].deadline);
+				    	taskParameters[counter - 4].period = prPointer->period;
+				    	taskParameters[counter - 4].deadline = prPointer->deadline;
+				    	taskParameters[counter - 4].handle = pxNewTCB;
+				    	printf("'%d' dynamic period set!\n", taskParameters[counter -4].period);
+				    	printf("'%d' dynamic deadline set!\n", taskParameters[counter -4].deadline);
 			    }
             }
             else
@@ -321,6 +307,7 @@ int GetTidByHandle(TaskHandle_t handle)
                 xReturn = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
             }
         }
+       
         #endif /* CONFIG_FREERTOS_SMP */
 
         return xReturn;
@@ -330,7 +317,6 @@ int GetTidByHandle(TaskHandle_t handle)
 /*----------------------------------------------------------*/
 TaskHandle_t idleHandleArray[2];
 int idleHandleArrayCurrent = 0;
-
 #if ( configSUPPORT_STATIC_ALLOCATION == 1 )
 
     TaskHandle_t xTaskCreateStaticPinnedToCore( TaskFunction_t pxTaskCode,
@@ -347,7 +333,7 @@ int idleHandleArrayCurrent = 0;
         configASSERT( portVALID_STACK_MEM( puxStackBuffer ) );
         configASSERT( portVALID_TCB_MEM( pxTaskBuffer ) );
         configASSERT( taskVALID_CORE_ID( xCoreID ) == pdTRUE || xCoreID == tskNO_AFFINITY );
-        printf("T '%s' created successfully!\n", pcName);
+		printf("T '%s' created successfully!\n", pcName);
         #if CONFIG_FREERTOS_SMP
         {
             /* If using Amazon SMP FreeRTOS. This function is just a wrapper around
@@ -494,7 +480,7 @@ BaseType_t xTaskGetCoreID( TaskHandle_t xTask )
 }
 /*----------------------------------------------------------*/
 
-#if ( INCLUDE_xTaskGetIdleTaskHandle == 1 )
+#if ( ( !CONFIG_FREERTOS_SMP ) && ( INCLUDE_xTaskGetIdleTaskHandle == 1 ) )
 
     TaskHandle_t xTaskGetIdleTaskHandleForCore( BaseType_t xCoreID )
     {
@@ -505,10 +491,10 @@ BaseType_t xTaskGetCoreID( TaskHandle_t xTask )
         return xIdleTaskHandle[ xCoreID ];
     }
 
-#endif /* INCLUDE_xTaskGetIdleTaskHandle */
+#endif /* ( ( !CONFIG_FREERTOS_SMP ) && ( INCLUDE_xTaskGetIdleTaskHandle == 1 ) ) */
 /*----------------------------------------------------------*/
 
-#if ( ( INCLUDE_xTaskGetCurrentTaskHandle == 1 ) || ( configUSE_MUTEXES == 1 ) )
+#if ( ( !CONFIG_FREERTOS_SMP ) && ( ( INCLUDE_xTaskGetCurrentTaskHandle == 1 ) || ( configUSE_MUTEXES == 1 ) ) )
 
     TaskHandle_t xTaskGetCurrentTaskHandleForCore( BaseType_t xCoreID )
     {
@@ -532,7 +518,7 @@ BaseType_t xTaskGetCoreID( TaskHandle_t xTask )
         return xReturn;
     }
 
-#endif /* ( ( INCLUDE_xTaskGetCurrentTaskHandle == 1 ) || ( configUSE_MUTEXES == 1 ) ) */
+#endif /* ( ( !CONFIG_FREERTOS_SMP ) && ( ( INCLUDE_xTaskGetCurrentTaskHandle == 1 ) || ( configUSE_MUTEXES == 1 ) ) ) */
 /*----------------------------------------------------------*/
 
 #if ( !CONFIG_FREERTOS_SMP && ( configGENERATE_RUN_TIME_STATS == 1 ) && ( INCLUDE_xTaskGetIdleTaskHandle == 1 ) )
@@ -801,7 +787,11 @@ uint8_t * pxTaskGetStackStart( TaskHandle_t xTask )
 
                         if( xYieldRequired != pdFALSE )
                         {
-                            taskYIELD_IF_USING_PREEMPTION();
+                            #if CONFIG_FREERTOS_SMP
+                                taskYIELD_TASK_CORE_IF_USING_PREEMPTION( pxTCB );
+                            #else
+                                taskYIELD_IF_USING_PREEMPTION();
+                            #endif
                         }
                     }
                 }
@@ -907,16 +897,8 @@ uint8_t * pxTaskGetStackStart( TaskHandle_t xTask )
         }
         else
         {
-            /* We have a task; return its reentrant struct. */
-            #if ( CONFIG_FREERTOS_SMP )
-            {
-                ret = &pxCurTask->xNewLib_reent;
-            }
-            #else /* CONFIG_FREERTOS_SMP */
-            {
-                ret = &pxCurTask->xTLSBlock;
-            }
-            #endif /* CONFIG_FREERTOS_SMP */
+            /* We have a currently executing task. Return its reentrant struct. */
+            ret = &pxCurTask->xTLSBlock;
         }
 
         return ret;
@@ -931,7 +913,8 @@ uint8_t * pxTaskGetStackStart( TaskHandle_t xTask )
  *
  * @note There are currently differing number of task list between SMP FreeRTOS and ESP-IDF FreeRTOS
  */
-static List_t * non_ready_task_lists[] = {
+static List_t * non_ready_task_lists[] =
+{
     #ifdef CONFIG_FREERTOS_SMP
         &xPendingReadyList,
     #else /* CONFIG_FREERTOS_SMP */
@@ -1124,7 +1107,11 @@ UBaseType_t uxTaskGetSnapshotAll( TaskSnapshot_t * const pxTaskSnapshotArray,
         uxArrayNumFilled++;
     }
 
-    *pxTCBSize = sizeof( TCB_t );
+    if( pxTCBSize != NULL )
+    {
+        *pxTCBSize = sizeof( TCB_t );
+    }
+
     return uxArrayNumFilled;
 }
 /*----------------------------------------------------------*/
@@ -1168,7 +1155,8 @@ void * pvTaskGetCurrentTCBForCore( BaseType_t xCoreID )
         ESP_FREERTOS_DEBUG_TABLE_END,
     };
 
-    const DRAM_ATTR uint8_t FreeRTOS_openocd_params[ ESP_FREERTOS_DEBUG_TABLE_END ] = {
+    const DRAM_ATTR uint8_t FreeRTOS_openocd_params[ ESP_FREERTOS_DEBUG_TABLE_END ] =
+    {
         ESP_FREERTOS_DEBUG_TABLE_END, /* table size */
         1,                            /* table version */
         tskKERNEL_VERSION_MAJOR,

@@ -6,7 +6,7 @@
  *
  * SPDX-License-Identifier: MIT
  *
- * SPDX-FileContributor: 2023 Espressif Systems (Shanghai) CO LTD
+ * SPDX-FileContributor: 2023-2024 Espressif Systems (Shanghai) CO LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -37,7 +37,11 @@
 #include "freertos/FreeRTOSConfig.h"
 
 /* Macros used instead ofsetoff() for better performance of interrupt handler */
+#if CONFIG_FREERTOS_USE_LIST_DATA_INTEGRITY_CHECK_BYTES
+#define PORT_OFFSET_PX_STACK 0x40
+#else
 #define PORT_OFFSET_PX_STACK 0x30
+#endif /* #if CONFIG_FREERTOS_USE_LIST_DATA_INTEGRITY_CHECK_BYTES */
 
 #if CONFIG_FREERTOS_UNICORE
 #define CORE_ID_SIZE        0
@@ -469,7 +473,11 @@ void vPortTCBPreDeleteHook( void *pxTCB );
 // --------------------- Interrupts ------------------------
 
 #define portDISABLE_INTERRUPTS()            portSET_INTERRUPT_MASK_FROM_ISR()
-#define portENABLE_INTERRUPTS()             portCLEAR_INTERRUPT_MASK_FROM_ISR(1)
+#if !SOC_INT_CLIC_SUPPORTED
+#define portENABLE_INTERRUPTS()             portCLEAR_INTERRUPT_MASK_FROM_ISR(RVHAL_INTR_ENABLE_THRESH)
+#else
+#define portENABLE_INTERRUPTS()             portCLEAR_INTERRUPT_MASK_FROM_ISR(RVHAL_INTR_ENABLE_THRESH_CLIC)
+#endif /* !SOC_INT_CLIC_SUPPORTED */
 
 /**
  * ISR versions to enable/disable interrupts
@@ -674,7 +682,7 @@ static inline void __attribute__((always_inline)) vPortExitCriticalSafe(portMUX_
 
 FORCE_INLINE_ATTR bool xPortCanYield(void)
 {
-    uint32_t threshold = REG_READ(INTERRUPT_CURRENT_CORE_INT_THRESH_REG);
+
 #if SOC_INT_CLIC_SUPPORTED
     /* When CLIC is supported:
      *  - The lowest interrupt threshold level is 0. Therefore, an interrupt threshold level above 0 would mean that we
@@ -684,19 +692,18 @@ FORCE_INLINE_ATTR bool xPortCanYield(void)
      *    level, we read the machine-mode interrupt level (mil) field from the mintstatus CSR. A non-zero value indicates
      *    that we are in an interrupt context.
      */
+    uint32_t threshold = rv_utils_get_interrupt_threshold();
     uint32_t intr_level = rv_utils_get_interrupt_level();
-    threshold = threshold >> (CLIC_CPU_INT_THRESH_S + (8 - NLBITS));
-
     return ((intr_level == 0) && (threshold == 0));
-#endif /* SOC_INT_CLIC_SUPPORTED */
+#else/* !SOC_INT_CLIC_SUPPORTED */
+    uint32_t threshold = REG_READ(INTERRUPT_CURRENT_CORE_INT_THRESH_REG);
     /* when enter critical code, FreeRTOS will mask threshold to RVHAL_EXCM_LEVEL
      * and exit critical code, will recover threshold value (1). so threshold <= 1
      * means not in critical code
      */
     return (threshold <= 1);
+#endif
 }
-
-
 
 /* ------------------------------------------------------ Misc ---------------------------------------------------------
  * - Miscellaneous porting macros

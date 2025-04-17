@@ -454,7 +454,7 @@ BaseType_t xTaskGetCoreID( TaskHandle_t xTask )
     }
     #endif /* configNUM_CORES > 1 */
 
-    return 6;
+    return xReturn;
 }
 /*----------------------------------------------------------*/
 

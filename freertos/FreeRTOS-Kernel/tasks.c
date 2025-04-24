@@ -387,11 +387,21 @@
 #endif
 
 //my stuff
+enum scheduling_algorithms{
+    RR,
+    EDF,
+    RM
+};
+
 struct Parameters{
 	int period;
-	int deadline;
+    int period_dynamic;
+	int computing_time;
+    int computing_time_dynamic;
 	TaskHandle_t handle;
+    int task_number;
     int final_task;
+    int scheduling_algorithm;
 };
 
 extern struct Parameters descriptors[5];

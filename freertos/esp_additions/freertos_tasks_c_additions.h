@@ -147,11 +147,6 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
 
 /* -------------------------------------------------- Task Creation ------------------------------------------------- */
 
-//struct Parameters{
-//	int period;
-//	int deadline;
-//	TaskHandle_t handle;
-//};
 
 struct Parameters descriptors[5];
 int counter = 0;
@@ -292,19 +287,36 @@ int GetTidByHandle(TaskHandle_t handle)
 
                 prvInitialiseNewTask( pxTaskCode, pcName, ( uint32_t ) usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL, xCoreID );
                 xReturn = pdPASS;
-                if (counter > 3)   ////////////////////////////// 
+                if (counter > 3 && counter < 20)   ////////////////////////////// Definir um MAX_NUMBER_TASK para o 20
 				{	
                     descriptors[counter - 4].period = prPointer->period;
-                    descriptors[counter - 4].deadline = prPointer->deadline;
+                    descriptors[counter - 4].period_dynamic = prPointer->period;
+                    printf("'%d' dynamic period set!\n", descriptors[counter -4].period_dynamic);
+                    descriptors[counter - 4].computing_time = prPointer->computing_time;
+                    descriptors[counter - 4].computing_time_dynamic = prPointer->computing_time;
+                    printf("'%d' dynamic computing_time set!\n", descriptors[counter -4].computing_time_dynamic);
                     descriptors[counter - 4].handle = pxNewTCB;
-                    printf("'%d' dynamic period set!\n", descriptors[counter -4].period);
-                    printf("'%d' dynamic deadline set!\n", descriptors[counter -4].deadline);
+                    descriptors[counter - 4].task_number = counter;
                     descriptors[counter - 4].final_task = prPointer->final_task;
+                    descriptors[counter - 4].scheduling_algorithm = prPointer->scheduling_algorithm;
                     if(descriptors[counter - 4].final_task == 1){
-                        printf("Chama função de escalonamento\n");
+                        switch (descriptors[counter - 4].scheduling_algorithm)
+                        {
+                        case 0:
+                            printf("Chama RR\n");
+                            break;
+                        
+                        case 1:
+                            printf("Chama EDF\n");
+                            break;
+                        
+                        default:
+                            printf("Chama RM\n");
+                            break;
+                        }
                     }
 			    }
-                else {
+                else {                    
                     prvAddNewTaskToReadyList( pxNewTCB );
                 }
             }

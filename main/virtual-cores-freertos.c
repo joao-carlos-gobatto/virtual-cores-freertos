@@ -4,12 +4,22 @@
 #include "esp_system.h"
 
 //xTaskIncrementTask // task.c
+enum scheduling_algorithms{
+    RR,
+    EDF,
+    RM
+};
 struct Parameters{
 	int period;
-	int deadline;
+    int period_dynamic;
+	int computing_time;
+    int computing_time_dynamic;
 	TaskHandle_t handle;
+    int task_number;
     int final_task;
+    int scheduling_algorithm;
 };
+
 extern struct Parameters descriptors[5];
 
 extern int GetTidByHandle(TaskHandle_t);
@@ -20,7 +30,7 @@ void hello_task(void *pvParameter)
     while (1) {
     	TaskHandle_t xHandle = xTaskGetCurrentTaskHandle();
     	int tid = GetTidByHandle(xHandle);
-        printf("Hello from a FreeRTOS task!\nMy parameters are\nPeriod: %d\nDeadline: %d\n",descriptors[tid].period, descriptors[tid].deadline);
+        printf("Hello from a FreeRTOS task!\nMy parameters are\nPeriod: %d\nDeadline: %d\n",descriptors[tid].period, descriptors[tid].computing_time);
         
         printf("My Task ID (By FreeRtos Handle): %p\n", xHandle);
         printf("My Task ID (By GetTid): %d\n", tid);
@@ -34,8 +44,9 @@ void app_main(void)
 {
 	struct Parameters pr;
 	pr.period = 10;
-	pr.deadline = 5;
-    pr.final_task = 0;
+	pr.computing_time = 5;
+    pr.final_task = 1;
+    pr.scheduling_algorithm = RM;
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     xTaskCreatePinnedToCore(
         hello_task,      // Task function

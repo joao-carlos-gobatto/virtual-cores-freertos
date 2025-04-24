@@ -153,7 +153,7 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
 //	TaskHandle_t handle;
 //};
 
-struct Parameters taskParameters[5];
+struct Parameters descriptors[5];
 int counter = 0;
 
 
@@ -161,7 +161,7 @@ int GetTidByHandle(TaskHandle_t handle)
 {
 	for (int i = 0; i < 5;i++)
 	{
-		if (taskParameters[i].handle == handle)
+		if (descriptors[i].handle == handle)
 			return i;
 	}
 	return -1;
@@ -183,7 +183,7 @@ int GetTidByHandle(TaskHandle_t handle)
         configASSERT( taskVALID_CORE_ID( xCoreID ) == pdTRUE || xCoreID == tskNO_AFFINITY );
 		printf("T '%s' dynamic created successfully!\n", pcName);
 		printf("task %d\n", counter);
-		counter++;;
+		counter++;
 		
 		
 		#if CONFIG_FREERTOS_SMP
@@ -291,16 +291,22 @@ int GetTidByHandle(TaskHandle_t handle)
                 #endif /* tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE */
 
                 prvInitialiseNewTask( pxTaskCode, pcName, ( uint32_t ) usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL, xCoreID );
-                prvAddNewTaskToReadyList( pxNewTCB );
                 xReturn = pdPASS;
                 if (counter > 3)   ////////////////////////////// 
 				{	
-				    	taskParameters[counter - 4].period = prPointer->period;
-				    	taskParameters[counter - 4].deadline = prPointer->deadline;
-				    	taskParameters[counter - 4].handle = pxNewTCB;
-				    	printf("'%d' dynamic period set!\n", taskParameters[counter -4].period);
-				    	printf("'%d' dynamic deadline set!\n", taskParameters[counter -4].deadline);
+                    descriptors[counter - 4].period = prPointer->period;
+                    descriptors[counter - 4].deadline = prPointer->deadline;
+                    descriptors[counter - 4].handle = pxNewTCB;
+                    printf("'%d' dynamic period set!\n", descriptors[counter -4].period);
+                    printf("'%d' dynamic deadline set!\n", descriptors[counter -4].deadline);
+                    descriptors[counter - 4].final_task = prPointer->final_task;
+                    if(descriptors[counter - 4].final_task == 1){
+                        printf("Chama função de escalonamento\n");
+                    }
 			    }
+                else {
+                    prvAddNewTaskToReadyList( pxNewTCB );
+                }
             }
             else
             {

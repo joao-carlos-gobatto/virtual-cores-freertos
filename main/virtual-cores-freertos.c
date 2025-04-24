@@ -8,8 +8,9 @@ struct Parameters{
 	int period;
 	int deadline;
 	TaskHandle_t handle;
+    int final_task;
 };
-extern struct Parameters taskParameters[5];
+extern struct Parameters descriptors[5];
 
 extern int GetTidByHandle(TaskHandle_t);
 extern int tickCounter;
@@ -19,7 +20,7 @@ void hello_task(void *pvParameter)
     while (1) {
     	TaskHandle_t xHandle = xTaskGetCurrentTaskHandle();
     	int tid = GetTidByHandle(xHandle);
-        printf("Hello from a FreeRTOS task!\nMy parameters are\nPeriod: %d\nDeadline: %d\n",taskParameters[tid].period, taskParameters[tid].deadline);
+        printf("Hello from a FreeRTOS task!\nMy parameters are\nPeriod: %d\nDeadline: %d\n",descriptors[tid].period, descriptors[tid].deadline);
         
         printf("My Task ID (By FreeRtos Handle): %p\n", xHandle);
         printf("My Task ID (By GetTid): %d\n", tid);
@@ -34,7 +35,8 @@ void app_main(void)
 	struct Parameters pr;
 	pr.period = 10;
 	pr.deadline = 5;
-	 vTaskDelay(1000 / portTICK_PERIOD_MS);
+    pr.final_task = 0;
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
     xTaskCreatePinnedToCore(
         hello_task,      // Task function
         "HelloTask",     // Task name

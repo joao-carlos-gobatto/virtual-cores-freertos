@@ -391,9 +391,10 @@ struct Parameters{
 	int period;
 	int deadline;
 	TaskHandle_t handle;
+    int final_task;
 };
 
-extern struct Parameters taskParameters[5];
+extern struct Parameters descriptors[5];
 
 /*
  * Task control block.  A task control block (TCB) is allocated for each task,
@@ -896,7 +897,7 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB ) PRIVILEGED_FUNCTION;
 #if ( ( portUSING_MPU_WRAPPERS == 1 ) && ( configSUPPORT_STATIC_ALLOCATION == 1 ) )
 
 /* Todo: Add support for task restricted API (IDF-7895) */
-    BaseType_t xTaskCreateRestrictedStatic( const TaskParameters_t * const pxTaskDefinition,
+    BaseType_t xTaskCreateRestrictedStatic( const descriptors_t * const pxTaskDefinition,
                                             TaskHandle_t * pxCreatedTask )
     {
         TCB_t * pxNewTCB;
@@ -945,7 +946,7 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB ) PRIVILEGED_FUNCTION;
 #if ( ( portUSING_MPU_WRAPPERS == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
 
 /* Todo: Add support for task restricted API (IDF-7895) */
-    BaseType_t xTaskCreateRestricted( const TaskParameters_t * const pxTaskDefinition,
+    BaseType_t xTaskCreateRestricted( const descriptors_t * const pxTaskDefinition,
                                       TaskHandle_t * pxCreatedTask )
     {
         TCB_t * pxNewTCB;
@@ -3212,7 +3213,7 @@ BaseType_t xTaskCatchUpTicks( TickType_t xTicksToCatchUp )
 #endif /* INCLUDE_xTaskAbortDelay */
 /*----------------------------------------------------------*/
 extern int GetTidByHandle(TaskHandle_t handle);
-//extern struct Parameters taskParameters[5];
+//extern struct Parameters descriptors[5];
 int tickCounter = 0;
 BaseType_t xTaskIncrementTick( void )
 {
@@ -3229,7 +3230,7 @@ BaseType_t xTaskIncrementTick( void )
     #endif /* configUSE_TICK_HOOK == 1 */
 	for(int i = i; i < 5; i++)
 	{
-		taskParameters[i].period--;
+		descriptors[i].period--;
 	}
     /* Called by the portable layer each time a tick interrupt occurs.
      * Increments the tick then checks to see if the new tick value will cause any
@@ -3662,7 +3663,7 @@ get_next_task:
         }
 		
         configASSERT( xTaskScheduled == pdTRUE ); /* At this point, a task MUST have been scheduled */
-        	//pxCurrentTCBs[xCurCoreID] = taskParameters[0].handle;////////
+        	//pxCurrentTCBs[xCurCoreID] = descriptors[0].handle;////////
     		//xTaskScheduled = pdTRUE;///////////////
     }
 

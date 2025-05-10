@@ -386,26 +386,6 @@
     #define taskEVENT_LIST_ITEM_VALUE_IN_USE    0x80000000UL
 #endif
 
-//my stuff
-enum scheduling_algorithms{
-    RR,
-    EDF,
-    RM
-};
-
-struct Parameters{
-	int period;
-    int period_dynamic;
-	int computing_time;
-    int computing_time_dynamic;
-	TaskHandle_t handle;
-    int task_number;
-    int final_task;
-    int scheduling_algorithm;
-};
-
-extern struct Parameters descriptors[5];
-
 /*
  * Task control block.  A task control block (TCB) is allocated for each task,
  * and stores task state information, including a pointer to the task's context

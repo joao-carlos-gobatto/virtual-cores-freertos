@@ -3,22 +3,6 @@
 #include "freertos/task.h"
 #include "esp_system.h"
 
-//xTaskIncrementTask // task.c
-enum scheduling_algorithms{
-    RR,
-    EDF,
-    RM
-};
-struct Parameters{
-	int period;
-    int period_dynamic;
-	int computing_time;
-    int computing_time_dynamic;
-	TaskHandle_t handle;
-    int task_number;
-    int final_task;
-    int scheduling_algorithm;
-};
 
 extern struct Parameters descriptors[5];
 
@@ -46,22 +30,22 @@ void app_main(void)
     pr.period = 10;
     pr.computing_time = 5;
     pr.final_task = 0;
-    pr.scheduling_algorithm = RM;
+    pr.scheduling_algorithm = RMC;
 
     pr1.period = 20;
     pr1.computing_time = 10;
     pr1.final_task = 0;
-    pr1.scheduling_algorithm = RM;
+    pr1.scheduling_algorithm = RMC;
 
     pr2.period = 30;
     pr2.computing_time = 15;
     pr2.final_task = 0;
-    pr2.scheduling_algorithm = RM;
+    pr2.scheduling_algorithm = RMC;
 
     pr3.period = 40;
     pr3.computing_time = 20;
     pr3.final_task = 1;
-    pr3.scheduling_algorithm = RM;
+    pr3.scheduling_algorithm = RMC;
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     xTaskCreatePinnedToCore(

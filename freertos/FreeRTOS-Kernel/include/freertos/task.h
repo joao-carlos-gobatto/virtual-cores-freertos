@@ -92,7 +92,7 @@
 struct tskTaskControlBlock; /* The old naming convention is used to prevent breaking kernel aware debuggers. */
 typedef struct tskTaskControlBlock * TaskHandle_t;
 
-//my stuff
+//Modificado
 enum scheduling_algorithms{
     RRC,
     EDFC,
@@ -106,11 +106,13 @@ struct Parameters{
     int computing_time_dynamic;
 	TaskHandle_t handle;
     int task_number;
-    int final_task;
-    int scheduling_algorithm;
+    int final_task;    
 };
 
 extern struct Parameters descriptors[5];
+
+extern int getSchedulingAlgorithm();
+extern void setSchedulingAlgorithm(int algorithm);
 
 /**
  * Defines the prototype to which the application task hook function must

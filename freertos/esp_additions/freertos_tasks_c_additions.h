@@ -298,9 +298,8 @@ int GetTidByHandle(TaskHandle_t handle)
                     descriptors[counter - 4].handle = pxNewTCB;
                     descriptors[counter - 4].task_number = counter;
                     descriptors[counter - 4].final_task = prPointer->final_task;
-                    descriptors[counter - 4].scheduling_algorithm = prPointer->scheduling_algorithm;
                     if(descriptors[counter - 4].final_task == 1){
-                        switch (descriptors[counter - 4].scheduling_algorithm)
+                        switch (getSchedulingAlgorithm())
                         {
                         case 0:
                             printf("Chama RR\n");

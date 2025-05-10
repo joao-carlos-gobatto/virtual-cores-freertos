@@ -3202,8 +3202,19 @@ BaseType_t xTaskCatchUpTicks( TickType_t xTicksToCatchUp )
 
 #endif /* INCLUDE_xTaskAbortDelay */
 /*----------------------------------------------------------*/
+//Modificiado
+int SCHEDULING_ALGORITHM_C;
+void setSchedulingAlgorithm(int algorithm)
+{
+    SCHEDULING_ALGORITHM_C = algorithm;
+}
+
+int getSchedulingAlgorithm()
+{
+    return SCHEDULING_ALGORITHM_C;
+}
+
 extern int GetTidByHandle(TaskHandle_t handle);
-//extern struct Parameters descriptors[5];
 int tickCounter = 0;
 BaseType_t xTaskIncrementTick( void )
 {
@@ -3220,8 +3231,20 @@ BaseType_t xTaskIncrementTick( void )
     #endif /* configUSE_TICK_HOOK == 1 */
 	for(int i = 0; i < 5; i++)
 	{
+        if(descriptors[i].period_dynamic <= 0)
+        {
+            descriptors[i].period_dynamic = descriptors[i].period;
+        }
 		descriptors[i].period_dynamic--;
 	}
+    // int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCurCoreID));
+    // descriptors[tempTid].computing_time_dynamic--;
+    // if(descriptors[tempTid].computing_time_dynamic == 0)
+    // {
+    //     taskYIELD();
+    //     descriptors[tempTid].computing_time_dynamic = descriptors[tempTid].computing_time;
+    // }
+
     /* Called by the portable layer each time a tick interrupt occurs.
      * Increments the tick then checks to see if the new tick value will cause any
      * tasks to be unblocked. */

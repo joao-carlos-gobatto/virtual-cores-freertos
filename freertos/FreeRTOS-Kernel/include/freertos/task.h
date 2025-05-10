@@ -106,7 +106,8 @@ struct Parameters{
     int computing_time_dynamic;
 	TaskHandle_t handle;
     int task_number;
-    int final_task;    
+    int final_task;
+    int task_core;
 };
 
 extern struct Parameters descriptors[5];

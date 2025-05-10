@@ -297,6 +297,7 @@ int GetTidByHandle(TaskHandle_t handle)
                     printf("'%d' dynamic computing_time set!\n", descriptors[counter -4].computing_time_dynamic);
                     descriptors[counter - 4].handle = pxNewTCB;
                     descriptors[counter - 4].task_number = counter;
+                    descriptors[counter - 4].task_core = xCoreID;
                     descriptors[counter - 4].final_task = prPointer->final_task;
                     if(descriptors[counter - 4].final_task == 1){
                         switch (getSchedulingAlgorithm())

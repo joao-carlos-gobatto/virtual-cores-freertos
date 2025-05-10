@@ -3218,6 +3218,7 @@ extern int GetTidByHandle(TaskHandle_t handle);
 int tickCounter = 0;
 BaseType_t xTaskIncrementTick( void )
 {
+    const BaseType_t xCurCoreID = portGET_CORE_ID();
     #if ( configNUMBER_OF_CORES > 1 )
         /* Only Core 0 should ever call this function. */
         configASSERT( portGET_CORE_ID() == 0 );
@@ -3237,13 +3238,13 @@ BaseType_t xTaskIncrementTick( void )
         }
 		descriptors[i].period_dynamic--;
 	}
-    // int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCurCoreID));
-    // descriptors[tempTid].computing_time_dynamic--;
-    // if(descriptors[tempTid].computing_time_dynamic == 0)
-    // {
-    //     taskYIELD();
-    //     descriptors[tempTid].computing_time_dynamic = descriptors[tempTid].computing_time;
-    // }
+    int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCurCoreID));
+    descriptors[tempTid].computing_time_dynamic--;
+    if(descriptors[tempTid].computing_time_dynamic == 0)
+    {
+        // taskYIELD();
+        descriptors[tempTid].computing_time_dynamic = descriptors[tempTid].computing_time;
+    }
 
     /* Called by the portable layer each time a tick interrupt occurs.
      * Increments the tick then checks to see if the new tick value will cause any

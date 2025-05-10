@@ -3220,7 +3220,7 @@ BaseType_t xTaskIncrementTick( void )
     #endif /* configUSE_TICK_HOOK == 1 */
 	for(int i = 0; i < 5; i++)
 	{
-		descriptors[i].period--;
+		descriptors[i].period_dynamic--;
 	}
     /* Called by the portable layer each time a tick interrupt occurs.
      * Increments the tick then checks to see if the new tick value will cause any

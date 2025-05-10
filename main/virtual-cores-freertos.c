@@ -15,7 +15,7 @@ void hello_task(void *pvParameter)
     	TaskHandle_t xHandle = xTaskGetCurrentTaskHandle();
     	int tid = GetTidByHandle(xHandle);
         printf("Hello from a FreeRTOS task!\nMy parameters are\nPeriod: %d\nDeadline: %d\n",descriptors[tid].period, descriptors[tid].computing_time);
-        
+        printf("Period Dynamic: %d\nDeadline Dynamic: %d\n",descriptors[tid].period_dynamic, descriptors[tid].computing_time_dynamic);
         printf("My Task ID (By FreeRtos Handle): %p\n", xHandle);
         printf("My Task ID (By GetTid): %d\n", tid);
         printf("tickCounter is %d\n", tickCounter);

@@ -42,17 +42,60 @@ void hello_task(void *pvParameter)
 
 void app_main(void)
 {
-	struct Parameters pr;
-	pr.period = 10;
-	pr.computing_time = 5;
-    pr.final_task = 1;
+	struct Parameters pr,pr1,pr2,pr3;
+    pr.period = 10;
+    pr.computing_time = 5;
+    pr.final_task = 0;
     pr.scheduling_algorithm = RM;
+
+    pr1.period = 20;
+    pr1.computing_time = 10;
+    pr1.final_task = 0;
+    pr1.scheduling_algorithm = RM;
+
+    pr2.period = 30;
+    pr2.computing_time = 15;
+    pr2.final_task = 0;
+    pr2.scheduling_algorithm = RM;
+
+    pr3.period = 40;
+    pr3.computing_time = 20;
+    pr3.final_task = 1;
+    pr3.scheduling_algorithm = RM;
+
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     xTaskCreatePinnedToCore(
         hello_task,      // Task function
         "HelloTask",     // Task name
         2048,            // Stack size (in words, not bytes)
         &pr,            // Task input parameter
+        1,               // Priority
+        NULL,             // Task handle
+    	0			//core
+    );
+    xTaskCreatePinnedToCore(
+        hello_task,      // Task function
+        "HelloTask1",     // Task name
+        2048,            // Stack size (in words, not bytes)
+        &pr1,            // Task input parameter
+        1,               // Priority
+        NULL,             // Task handle
+    	0			//core
+    );
+    xTaskCreatePinnedToCore(
+        hello_task,      // Task function
+        "HelloTask2",     // Task name
+        2048,            // Stack size (in words, not bytes)
+        &pr2,            // Task input parameter
+        1,               // Priority
+        NULL,             // Task handle
+    	0			//core
+    );
+    xTaskCreatePinnedToCore(
+        hello_task,      // Task function
+        "HelloTask3",     // Task name
+        2048,            // Stack size (in words, not bytes)
+        &pr3,            // Task input parameter
         1,               // Priority
         NULL,             // Task handle
     	0			//core

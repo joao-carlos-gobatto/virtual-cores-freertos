@@ -3218,7 +3218,7 @@ BaseType_t xTaskIncrementTick( void )
     #if ( configUSE_TICK_HOOK == 1 )
         BaseType_t xCallTickHook;
     #endif /* configUSE_TICK_HOOK == 1 */
-	for(int i = i; i < 5; i++)
+	for(int i = 0; i < 5; i++)
 	{
 		descriptors[i].period--;
 	}

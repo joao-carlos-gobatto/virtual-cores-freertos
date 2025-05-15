@@ -100,6 +100,8 @@ enum scheduling_algorithms{
 };
 
 struct Parameters{
+    TaskFunction_t task_function;
+    char * task_name;
 	int period;
     int period_dynamic;
 	int computing_time;
@@ -108,6 +110,7 @@ struct Parameters{
     int task_number;
     int final_task;
     int task_core;
+    int task_virtual_core;
 };
 
 extern struct Parameters descriptors[5];

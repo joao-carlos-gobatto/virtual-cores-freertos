@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_system.h"
@@ -6,6 +7,7 @@
 
 extern struct Parameters descriptors[5];
 
+extern struct Parameters tasks[20];
 extern int GetTidByHandle(TaskHandle_t);
 extern int tickCounter;
 extern TaskHandle_t idleHandleArray[2];
@@ -19,6 +21,33 @@ const char* getTaskStateName(int state) {
         case eDeleted:   return "Deleted";
         case eInvalid:   return "Invalid";
         default:         return "Unknown State";
+    }
+}
+
+void initVirtualCores(){
+    if(getSchedulingAlgorithm() == RMC){
+        int virtualCoreZero = 0,virtualCoreOne = 0,virtualCoreTwo = 0,virtualCoreThree = 0;
+        Pensar em uma forma de contar a quantidade de task não nulas para entrar no for.
+        for (size_t i = 0; i < 5; i++)
+        {
+            tasks[i].task_virtual_core = i%4;
+        }
+        for (size_t i = 0; i < 5; i++)
+        {
+            xTaskCreatePinnedToCore(
+                tasks[i].task_function,
+                tasks[i].task_name,
+                2048,
+                &tasks[i],
+                0,
+                NULL,
+                i%2
+            );
+        }
+    } else if(getSchedulingAlgorithm() == RRC) {
+        //Usuário pode ou não selecionar o core da task.
+    } else {
+        //Algoritmo selecionado é o EDF, então será uma lista global.
     }
 }
 
@@ -54,76 +83,42 @@ void hello_task(void *pvParameter)
 
 void app_main(void)
 {
-    struct Parameters pr,pr1,pr2,pr3,prprint;
+    // struct Parameters pr,pr1,pr2,pr3,prprint;
 
     setSchedulingAlgorithm(RMC);
 
-    prprint.period = 1000;
-    prprint.computing_time = 5;
-    prprint.final_task = 0;
+    tasks[0].period = 1000;
+    tasks[0].task_function = print_task;
+    tasks[0].task_name = strdup("Print Task");  // Don't forget to free later
+    tasks[0].computing_time = 5;
+    tasks[0].final_task = 0;
 
-    pr.period = 1000;
-    pr.computing_time = 5;
-    pr.final_task = 0;
+    tasks[1].period = 1000;
+    tasks[1].task_function = hello_task;
+    tasks[1].task_name = strdup("Hello Task 0");  // Requires char* not char[]
+    tasks[1].computing_time = 5;
+    tasks[1].final_task = 0;
 
-    pr1.period = 1000;
-    pr1.computing_time = 10;
-    pr1.final_task = 0;
+    tasks[2].period = 1000;
+    tasks[2].task_function = hello_task;
+    tasks[2].task_name = strdup("Hello Task 1");  // Requires char* not char[]
+    tasks[2].computing_time = 10;
+    tasks[2].final_task = 0;
 
-    pr2.period = 1000;
-    pr2.computing_time = 15;
-    pr2.final_task = 0;
+    tasks[3].period = 1000;
+    tasks[3].task_function = hello_task;
+    tasks[3].task_name = strdup("Hello Task 2");  // Requires char* not char[]
+    tasks[3].computing_time = 15;
+    tasks[3].final_task = 0;
 
-    pr3.period = 1000;
-    pr3.computing_time = 20;
-    pr3.final_task = 1;
+    tasks[4].period = 1000;
+    tasks[4].task_function = hello_task;
+    tasks[4].task_name = strdup("Hello Task 3");  // Requires char* not char[]
+    tasks[4].computing_time = 20;
+    tasks[4].final_task = 1;
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-    xTaskCreatePinnedToCore(
-        print_task,     // Task function
-        "Print Task",   // Task name
-        2048,           // Stack size (in words, not bytes)
-        &prprint,       // Task input parameter
-        0,              // Priority
-        NULL,           // Task handle
-    	0               // Core
-    );
+    initVirtualCores();
 
-    xTaskCreatePinnedToCore(
-        hello_task,     // Task function
-        "HelloTask0",   // Task name
-        2048,           // Stack size (in words, not bytes)
-        &pr,            // Task input parameter
-        0,              // Priority
-        NULL,           // Task handle
-    	0   // Core
-    );
-    xTaskCreatePinnedToCore(
-        hello_task,     // Task function
-        "HelloTask1",   // Task name
-        2048,           // Stack size (in words, not bytes)
-        &pr1,           // Task input parameter
-        0,              // Priority
-        NULL,           // Task handle
-    	0               // Core
-    );
-    xTaskCreatePinnedToCore(
-        hello_task,     // Task function
-        "HelloTask2",   // Task name
-        2048,           // Stack size (in words, not bytes)
-        &pr2,           // Task input parameter
-        0,              // Priority
-        NULL,           // Task handle
-    	1               // Core
-    );
-    xTaskCreatePinnedToCore(
-        hello_task,     // Task function
-        "HelloTask3",   // Task name
-        2048,           // Stack size (in words, not bytes)
-        &pr3,           // Task input parameter
-        0,              // Priority
-        NULL,           // Task handle
-    	1               // Core
-    );
 }

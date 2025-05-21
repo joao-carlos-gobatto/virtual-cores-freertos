@@ -7,10 +7,15 @@
 
 extern struct Parameters descriptors[5];
 
-extern struct Parameters tasks[20];
+struct Parameters tasks[20];
 extern int GetTidByHandle(TaskHandle_t);
 extern int tickCounter;
 extern TaskHandle_t idleHandleArray[2];
+
+extern int task_id_buffer[30];
+extern TaskHandle_t task_handle_buffer[30];
+extern int task_id_buffer_index;
+int task_id_buffer_start = 0;
 
 const char* getTaskStateName(int state) {
     switch (state) {
@@ -27,7 +32,7 @@ const char* getTaskStateName(int state) {
 void initVirtualCores(){
     if(getSchedulingAlgorithm() == RMC){
         int virtualCoreZero = 0,virtualCoreOne = 0,virtualCoreTwo = 0,virtualCoreThree = 0;
-        Pensar em uma forma de contar a quantidade de task não nulas para entrar no for.
+        //Pensar em uma forma de contar a quantidade de task não nulas para entrar no for.
         for (size_t i = 0; i < 5; i++)
         {
             tasks[i].task_virtual_core = i%4;
@@ -51,6 +56,16 @@ void initVirtualCores(){
     }
 }
 
+void printTaskIdsBuffer(void) {
+    int count = (task_id_buffer_index < 30) ? task_id_buffer_index : 30;
+    int start = (task_id_buffer_index < 30) ? 0 : task_id_buffer_index % 30;
+
+    for (int i = 0; i < count; i++) {
+        int index = (start + i) % 30;
+        printf("Task ID: %d, handle: %p\n", task_id_buffer[index], task_handle_buffer[index]);
+    }
+}
+
 void print_task(){
     while(1){
         printf("---------------------------------------------------------------------------------------------------------------\n");
@@ -69,6 +84,9 @@ void print_task(){
         }
         printf("---------------------------------------------------------------------------------------------------------------\n");
         printf("Idle 0 handle: %p , Idle 1 handle: %p\n", idleHandleArray[0], idleHandleArray[1]);
+        printf("History of selected tasks:\n");
+        printTaskIdsBuffer();
+
         vTaskDelay(300 / portTICK_PERIOD_MS);
     }
 }

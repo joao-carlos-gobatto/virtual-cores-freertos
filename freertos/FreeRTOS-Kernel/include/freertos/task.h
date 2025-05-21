@@ -117,6 +117,9 @@ extern struct Parameters descriptors[5];
 
 extern int getSchedulingAlgorithm();
 extern void setSchedulingAlgorithm(int algorithm);
+extern int task_id_buffer[30];
+extern TaskHandle_t task_handle_buffer[30];
+extern int task_id_buffer_index;
 
 /**
  * Defines the prototype to which the application task hook function must

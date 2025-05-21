@@ -3589,7 +3589,10 @@ BaseType_t xTaskIncrementTick( void )
 
 #endif /* configUSE_APPLICATION_TASK_TAG */
 /*-----------------------------------------------------------*/
-
+    extern int GetTidByHandle(TaskHandle_t handle);
+    int task_id_buffer[30];
+    TaskHandle_t task_handle_buffer[30];
+    int task_id_buffer_index = 0;
 #if ( configNUMBER_OF_CORES > 1 )
 
     static void prvSelectHighestPriorityTaskSMP( void )
@@ -3659,8 +3662,12 @@ BaseType_t xTaskIncrementTick( void )
 
                 /* The current task is runnable. Schedule it */
                 pxCurrentTCBs[ xCurCoreID ] = pxTCBCur;
+                task_id_buffer[task_id_buffer_index] = GetTidByHandle(pxTCBCur);
+                task_handle_buffer[task_id_buffer_index] = pxTCBCur;
+                task_id_buffer_index = (task_id_buffer_index + 1) % 30;
+                
                 xTaskScheduled = pdTRUE;
-
+                
                 /* Move the current tasks list item to the back of the list in order
                  * to implement best effort round robin. To do this, we need to reset
                  * the pxIndex to point to the tail again. */

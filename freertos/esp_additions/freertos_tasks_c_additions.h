@@ -151,6 +151,8 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
 struct Parameters descriptors[5];
 int counter = 0;
 
+extern int ready_list_by_core[8][15]; // [coreId][taskPosInList]
+extern int ready_list_by_core_index[8];
 
 int GetTidByHandle(TaskHandle_t handle)
 {
@@ -285,7 +287,7 @@ int GetTidByHandle(TaskHandle_t handle)
                 }
                 #endif /* tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE */
 
-                prvInitialiseNewTask( pxTaskCode, pcName, ( uint32_t ) usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL, xCoreID );
+                prvInitialiseNewTask( pxTaskCode, pcName, ( uint32_t ) usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL, xCoreID % 2 );  // COLOQUEI O %2
                 xReturn = pdPASS;
                 if (counter > 3 && counter < 20)   ////////////////////////////// Definir um MAX_NUMBER_TASK para o 20
 				{	
@@ -299,6 +301,11 @@ int GetTidByHandle(TaskHandle_t handle)
                     descriptors[counter - 4].task_number = counter;
                     descriptors[counter - 4].task_core = xCoreID;
                     descriptors[counter - 4].final_task = prPointer->final_task;
+
+                    ready_list_by_core[xCoreID][ready_list_by_core_index[xCoreID]] = counter - 4; // [coreId][taskPosInList]
+                    ready_list_by_core_index[xCoreID]++;
+
+
                     if(descriptors[counter - 4].final_task == 1){
                         switch (getSchedulingAlgorithm())
                         {

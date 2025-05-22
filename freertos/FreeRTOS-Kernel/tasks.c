@@ -1550,13 +1550,13 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
 
 #endif /* INCLUDE_xTaskDelayUntil */
 /*-----------------------------------------------------------*/
-
+    extern int GetTidByHandle(TaskHandle_t handle);
 #if ( INCLUDE_vTaskDelay == 1 )
 
     void vTaskDelay( const TickType_t xTicksToDelay )
     {
         BaseType_t xAlreadyYielded = pdFALSE;
-
+        UBaseType_t xCurCoreID = portGET_CORE_ID();
         /* A delay time of zero just forces a reschedule. */
         if( xTicksToDelay > ( TickType_t ) 0U )
         {
@@ -1572,7 +1572,8 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
                  *
                  * This task cannot be in an event list as it is the currently
                  * executing task. */
-                prvAddCurrentTaskToDelayedList( xTicksToDelay, pdFALSE );
+                //if (GetTidByHandle(pxCurrentTCBs[xCurCoreID]) == -1)
+                    prvAddCurrentTaskToDelayedList( xTicksToDelay, pdFALSE );
             }
             xAlreadyYielded = prvEXIT_CRITICAL_OR_RESUME_ALL( &xKernelLock );
         }
@@ -3214,7 +3215,7 @@ int getSchedulingAlgorithm()
     return SCHEDULING_ALGORITHM_C;
 }
 
-extern int GetTidByHandle(TaskHandle_t handle);
+
 int tickCounter = 0;
 BaseType_t xTaskIncrementTick( void )
 {
@@ -3589,10 +3590,16 @@ BaseType_t xTaskIncrementTick( void )
 
 #endif /* configUSE_APPLICATION_TASK_TAG */
 /*-----------------------------------------------------------*/
-    extern int GetTidByHandle(TaskHandle_t handle);
+    
+    extern struct Parameters descriptors[5];
     int task_id_buffer[30];
     TaskHandle_t task_handle_buffer[30];
     int task_id_buffer_index = 0;
+
+    int ready_list_by_core[8][15]; // [coreId][taskPosInList]
+    int ready_list_by_core_index[8];
+
+    int current_logical_in_core_0 = 0, current_logical_in_core_1 = 1; //current logical core id thas is executing in the real core
 #if ( configNUMBER_OF_CORES > 1 )
 
     static void prvSelectHighestPriorityTaskSMP( void )
@@ -3602,6 +3609,39 @@ BaseType_t xTaskIncrementTick( void )
         BaseType_t xTaskScheduled = pdFALSE;
         BaseType_t xNewTopPrioritySet = pdFALSE;
         BaseType_t xCurCoreID = portGET_CORE_ID();
+
+        //int taskFound = 0;
+        /*/if (xCurCoreID == 0)
+        {
+            if (ready_list_by_core_index[current_logical_in_core_0] > 0)
+            {
+                pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
+                xTaskScheduled = pdTRUE;
+                for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_0] - 1; i++)
+                {
+                    ready_list_by_core[current_logical_in_core_0][i] = ready_list_by_core[current_logical_in_core_0][i + 1];
+                }
+                ready_list_by_core_index[current_logical_in_core_0]--;
+                current_logical_in_core_0 = (current_logical_in_core_0 + 2) % 8;
+            }
+            
+        }
+        else //real core == 1
+        {
+            if (ready_list_by_core_index[current_logical_in_core_1] > 0)
+            {
+                pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].handle;
+                xTaskScheduled = pdTRUE;
+                for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_1] - 1; i++)
+                {
+                    ready_list_by_core[current_logical_in_core_1][i] = ready_list_by_core[current_logical_in_core_1][i + 1];
+                }
+                ready_list_by_core_index[current_logical_in_core_1]--;
+                current_logical_in_core_1 = (current_logical_in_core_1 + 2) % 8;
+            }
+        }*/
+
+
 
         /* Search for tasks, starting form the highest ready priority. If nothing is
          * found, we eventually default to the IDLE tasks at priority 0 */
@@ -3656,6 +3696,12 @@ BaseType_t xTaskIncrementTick( void )
 
                 /* Check if the current task has a compatible affinity */
                 if( taskIS_AFFINITY_COMPATIBLE( xCurCoreID, pxTCBCur ) == pdFALSE )
+                {
+                    goto get_next_task;
+                }
+
+
+                if (GetTidByHandle(pxTCBCur) > 0)
                 {
                     goto get_next_task;
                 }

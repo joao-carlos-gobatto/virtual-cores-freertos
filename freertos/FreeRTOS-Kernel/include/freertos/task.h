@@ -121,6 +121,9 @@ extern int task_id_buffer[30];
 extern TaskHandle_t task_handle_buffer[30];
 extern int task_id_buffer_index;
 
+extern int ready_list_by_core[8][15]; // [coreId][taskPosInList]
+extern int ready_list_by_core_index[8];
+
 /**
  * Defines the prototype to which the application task hook function must
  * conform.

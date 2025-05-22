@@ -117,6 +117,8 @@ extern struct Parameters descriptors[5];
 
 extern int getSchedulingAlgorithm();
 extern void setSchedulingAlgorithm(int algorithm);
+extern int getCount_do_celsinho_manobrown_0();
+extern int getCount_do_celsinho_manobrown_1();
 extern int task_id_buffer[30];
 extern TaskHandle_t task_handle_buffer[30];
 extern int task_id_buffer_index;

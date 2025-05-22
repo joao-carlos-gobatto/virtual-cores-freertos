@@ -178,7 +178,7 @@ int GetTidByHandle(TaskHandle_t handle)
 		struct Parameters *prPointer;
 		prPointer = pvParameters;
         configASSERT( taskVALID_CORE_ID( xCoreID ) == pdTRUE || xCoreID == tskNO_AFFINITY );
-		printf("T '%s' dynamic created successfully!\n", pcName);
+		// printf("T '%s' dynamic created successfully!\n", pcName);
 		printf("task %d\n", counter);
 		counter++;
 		
@@ -289,24 +289,24 @@ int GetTidByHandle(TaskHandle_t handle)
 
                 prvInitialiseNewTask( pxTaskCode, pcName, ( uint32_t ) usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL, xCoreID % 2 );  // COLOQUEI O %2
                 xReturn = pdPASS;
-                if (counter > 3 && counter < 20)   ////////////////////////////// Definir um MAX_NUMBER_TASK para o 20
+                if (counter > 4 && counter < 20)   ////////////////////////////// Definir um MAX_NUMBER_TASK para o 20
 				{	
-                    descriptors[counter - 4].period = prPointer->period;
-                    descriptors[counter - 4].period_dynamic = prPointer->period;
-                    printf("'%d' dynamic period set!\n", descriptors[counter -4].period_dynamic);
-                    descriptors[counter - 4].computing_time = prPointer->computing_time;
-                    descriptors[counter - 4].computing_time_dynamic = prPointer->computing_time;
-                    printf("'%d' dynamic computing_time set!\n", descriptors[counter -4].computing_time_dynamic);
-                    descriptors[counter - 4].handle = pxNewTCB;
-                    descriptors[counter - 4].task_number = counter;
-                    descriptors[counter - 4].task_core = xCoreID;
-                    descriptors[counter - 4].final_task = prPointer->final_task;
+                    descriptors[counter - 5].period = prPointer->period;
+                    descriptors[counter - 5].period_dynamic = prPointer->period;
+                    printf("'%d' dynamic period set!\n", descriptors[counter -5].period_dynamic);
+                    descriptors[counter - 5].computing_time = prPointer->computing_time;
+                    descriptors[counter - 5].computing_time_dynamic = prPointer->computing_time;
+                    printf("'%d' dynamic computing_time set!\n", descriptors[counter -5].computing_time_dynamic);
+                    descriptors[counter - 5].handle = pxNewTCB;
+                    descriptors[counter - 5].task_number = counter;
+                    descriptors[counter - 5].task_core = xCoreID;
+                    descriptors[counter - 5].final_task = prPointer->final_task;
 
-                    ready_list_by_core[xCoreID][ready_list_by_core_index[xCoreID]] = counter - 4; // [coreId][taskPosInList]
+                    ready_list_by_core[xCoreID][ready_list_by_core_index[xCoreID]] = counter - 5; // [coreId][taskPosInList]
                     ready_list_by_core_index[xCoreID]++;
 
 
-                    if(descriptors[counter - 4].final_task == 1){
+                    if(descriptors[counter - 5].final_task == 1){
                         switch (getSchedulingAlgorithm())
                         {
                         case 0:
@@ -320,7 +320,7 @@ int GetTidByHandle(TaskHandle_t handle)
                         
                         default:
                             printf("Chama RM\n");
-                            for (int i = 0; i < counter - 3; i++)
+                            for (int i = 0; i < counter - 4; i++)
                             {
                             	// prvAddNewTaskToReadyList( descriptors[i].handle );
                             	// printf("added to ready list RM\n");

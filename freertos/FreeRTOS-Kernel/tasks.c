@@ -513,6 +513,15 @@ PRIVILEGED_DATA static UBaseType_t uxTaskNumber = ( UBaseType_t ) 0U;
 PRIVILEGED_DATA static volatile TickType_t xNextTaskUnblockTime = ( TickType_t ) 0U;     /* Initialised to portMAX_DELAY before the scheduler starts. */
 PRIVILEGED_DATA static TaskHandle_t xIdleTaskHandle[ configNUMBER_OF_CORES ] = { NULL }; /*< Holds the handle of the idle task.  The idle task is created automatically when the scheduler is started. */
 
+int count_do_celsinho_manobrown_0 = 0,count_do_celsinho_manobrown_1 = 0;
+int getCount_do_celsinho_manobrown_0(){
+    return count_do_celsinho_manobrown_0;
+}
+int getCount_do_celsinho_manobrown_1(){
+    return count_do_celsinho_manobrown_1;
+}
+
+
 /* Improve support for OpenOCD. The kernel tracks Ready tasks via priority lists.
  * For tracking the state of remote threads, OpenOCD uses uxTopUsedPriority
  * to determine the number of priority lists to read back from the remote target. */
@@ -3624,8 +3633,9 @@ BaseType_t xTaskIncrementTick( void )
                     ready_list_by_core[current_logical_in_core_0][i] = ready_list_by_core[current_logical_in_core_0][i + 1];
                 }
                 ready_list_by_core[current_logical_in_core_0][ready_list_by_core_index[current_logical_in_core_0]] = task_to_requeue;
-                current_logical_in_core_0 = (current_logical_in_core_0 + 2) % 8;
+                count_do_celsinho_manobrown_0++;
             }
+            current_logical_in_core_0 = (current_logical_in_core_0 + 2) % 8;
         }
         else //real core == 1
         {
@@ -3639,8 +3649,9 @@ BaseType_t xTaskIncrementTick( void )
                     ready_list_by_core[current_logical_in_core_1][i] = ready_list_by_core[current_logical_in_core_1][i + 1];
                 }
                 ready_list_by_core[current_logical_in_core_1][ready_list_by_core_index[current_logical_in_core_1]] = task_to_requeue;
-                current_logical_in_core_1 = (current_logical_in_core_1 + 2) % 8;
+                count_do_celsinho_manobrown_1++;
             }
+            current_logical_in_core_1 = (current_logical_in_core_1 + 2) % 8;
         }
 
 

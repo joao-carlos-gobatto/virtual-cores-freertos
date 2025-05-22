@@ -37,7 +37,7 @@ void initVirtualCores(){
         {
             tasks[i].task_virtual_core = i%4;
         }
-        for (size_t i = 0; i < 5; i++)
+        for (size_t i = 0; i < 4; i++)
         {
             xTaskCreatePinnedToCore(
                 tasks[i].task_function,
@@ -67,22 +67,23 @@ void printTaskIdsBuffer(void) {
 }
 
 void print_task(){
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
     while(1){
-        printf("---------------------------------------------------------------------------------------------------------------\n");
-        printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | Task Status | Tick Counter |\n");
-        printf("---------------------------------------------------------------------------------------------------------------\n");
+        printf("Virtual Core ReadyList Shifting\nCore 0: %d, Core 1: %d\n", getCount_do_celsinho_manobrown_0(),getCount_do_celsinho_manobrown_1());
+        printf("-------------------------------------------------------------------------------------------------\n");
+        printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | Tick Counter |\n");
+        printf("-------------------------------------------------------------------------------------------------\n");
         for (size_t i = 0; i < 5; i++) {
-            printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-11s | %-12d |\n",
+            printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-12d |\n",
                 i,
                 descriptors[i].period,
                 descriptors[i].computing_time,
                 descriptors[i].period_dynamic,
                 descriptors[i].computing_time_dynamic,
                 descriptors[i].task_core,
-                getTaskStateName(eTaskGetState(descriptors[i].handle)),
                 tickCounter);
         }
-        printf("---------------------------------------------------------------------------------------------------------------\n");
+        printf("---------------------------------------------------------------------------------------------------\n");
         printf("Idle 0 handle: %p , Idle 1 handle: %p\n", idleHandleArray[0], idleHandleArray[1]);
         printf("History of selected tasks:\n");
         printTaskIdsBuffer();
@@ -106,38 +107,44 @@ void app_main(void)
 
     setSchedulingAlgorithm(RMC);
 
+    // tasks[0].period = 1000;
+    // tasks[0].task_function = print_task;
+    // tasks[0].task_name = strdup("Print Task");  // Don't forget to free later
+    // tasks[0].computing_time = 5;
+    // tasks[0].final_task = 0;
+
     tasks[0].period = 1000;
-    tasks[0].task_function = print_task;
-    tasks[0].task_name = strdup("Print Task");  // Don't forget to free later
+    tasks[0].task_function = hello_task;
+    tasks[0].task_name = strdup("Hello Task 0");  // Requires char* not char[]
     tasks[0].computing_time = 5;
     tasks[0].final_task = 0;
 
     tasks[1].period = 1000;
     tasks[1].task_function = hello_task;
-    tasks[1].task_name = strdup("Hello Task 0");  // Requires char* not char[]
-    tasks[1].computing_time = 5;
+    tasks[1].task_name = strdup("Hello Task 1");  // Requires char* not char[]
+    tasks[1].computing_time = 10;
     tasks[1].final_task = 0;
 
     tasks[2].period = 1000;
     tasks[2].task_function = hello_task;
-    tasks[2].task_name = strdup("Hello Task 1");  // Requires char* not char[]
-    tasks[2].computing_time = 10;
+    tasks[2].task_name = strdup("Hello Task 2");  // Requires char* not char[]
+    tasks[2].computing_time = 15;
     tasks[2].final_task = 0;
 
     tasks[3].period = 1000;
     tasks[3].task_function = hello_task;
-    tasks[3].task_name = strdup("Hello Task 2");  // Requires char* not char[]
-    tasks[3].computing_time = 15;
-    tasks[3].final_task = 0;
+    tasks[3].task_name = strdup("Hello Task 3");  // Requires char* not char[]
+    tasks[3].computing_time = 20;
+    tasks[3].final_task = 1;
 
-    tasks[4].period = 1000;
-    tasks[4].task_function = hello_task;
-    tasks[4].task_name = strdup("Hello Task 3");  // Requires char* not char[]
-    tasks[4].computing_time = 20;
-    tasks[4].final_task = 1;
 
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-
+    xTaskCreate(
+        print_task,           // Function that implements the task
+        "PrintTask",          // Text name for debugging
+        2048, // Stack size in words
+        NULL,                 // Task input parameter
+        tskIDLE_PRIORITY + 1, // Priority of the task
+        NULL                  // Task handle
+    );
     initVirtualCores();
-
 }

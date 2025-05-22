@@ -322,8 +322,8 @@ int GetTidByHandle(TaskHandle_t handle)
                             printf("Chama RM\n");
                             for (int i = 0; i < counter - 3; i++)
                             {
-                            	prvAddNewTaskToReadyList( descriptors[i].handle );
-                            	printf("added to ready list RM\n");
+                            	// prvAddNewTaskToReadyList( descriptors[i].handle );
+                            	// printf("added to ready list RM\n");
 							}
                             break;
                         }

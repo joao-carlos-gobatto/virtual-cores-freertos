@@ -95,7 +95,7 @@ void hello_task(void *pvParameter)
 {
     while (1) {
     	// TaskHandle_t xHandle = xTaskGetCurrentTaskHandle();
-        //printf("HELLO TASK\n");
+        // printf("HELLO TASK\n");
         vTaskDelay(1000 / portTICK_PERIOD_MS); // wait 1 second
     }
 }

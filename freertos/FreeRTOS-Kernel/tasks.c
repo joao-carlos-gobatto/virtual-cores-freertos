@@ -1572,8 +1572,9 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
                  *
                  * This task cannot be in an event list as it is the currently
                  * executing task. */
-                //if (GetTidByHandle(pxCurrentTCBs[xCurCoreID]) == -1)
+                if (GetTidByHandle(pxCurrentTCBs[xCurCoreID]) == -1){
                     prvAddCurrentTaskToDelayedList( xTicksToDelay, pdFALSE );
+                }
             }
             xAlreadyYielded = prvEXIT_CRITICAL_OR_RESUME_ALL( &xKernelLock );
         }
@@ -3611,20 +3612,20 @@ BaseType_t xTaskIncrementTick( void )
         BaseType_t xCurCoreID = portGET_CORE_ID();
 
         //int taskFound = 0;
-        /*/if (xCurCoreID == 0)
+        if (xCurCoreID == 0)
         {
             if (ready_list_by_core_index[current_logical_in_core_0] > 0)
             {
                 pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
                 xTaskScheduled = pdTRUE;
+                int task_to_requeue = ready_list_by_core[current_logical_in_core_0][0];
                 for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_0] - 1; i++)
                 {
                     ready_list_by_core[current_logical_in_core_0][i] = ready_list_by_core[current_logical_in_core_0][i + 1];
                 }
-                ready_list_by_core_index[current_logical_in_core_0]--;
+                ready_list_by_core[current_logical_in_core_0][ready_list_by_core_index[current_logical_in_core_0]] = task_to_requeue;
                 current_logical_in_core_0 = (current_logical_in_core_0 + 2) % 8;
             }
-            
         }
         else //real core == 1
         {
@@ -3632,14 +3633,15 @@ BaseType_t xTaskIncrementTick( void )
             {
                 pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].handle;
                 xTaskScheduled = pdTRUE;
+                int task_to_requeue = ready_list_by_core[current_logical_in_core_1][0];
                 for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_1] - 1; i++)
                 {
                     ready_list_by_core[current_logical_in_core_1][i] = ready_list_by_core[current_logical_in_core_1][i + 1];
                 }
-                ready_list_by_core_index[current_logical_in_core_1]--;
+                ready_list_by_core[current_logical_in_core_1][ready_list_by_core_index[current_logical_in_core_1]] = task_to_requeue;
                 current_logical_in_core_1 = (current_logical_in_core_1 + 2) % 8;
             }
-        }*/
+        }
 
 
 

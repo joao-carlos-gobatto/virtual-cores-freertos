@@ -148,7 +148,7 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
 /* -------------------------------------------------- Task Creation ------------------------------------------------- */
 
 
-struct Parameters descriptors[5];
+struct Parameters descriptors[120];
 int counter = 0;
 
 extern int ready_list_by_core[8][15]; // [coreId][taskPosInList]
@@ -156,7 +156,7 @@ extern int ready_list_by_core_index[8];
 
 int GetTidByHandle(TaskHandle_t handle)
 {
-	for (int i = 0; i < 5;i++)
+	for (int i = 0; i < 7;i++)
 	{
 		if (descriptors[i].handle == handle)
 			return i;
@@ -298,7 +298,7 @@ int GetTidByHandle(TaskHandle_t handle)
                     descriptors[counter - 5].computing_time_dynamic = prPointer->computing_time;
                     printf("'%d' dynamic computing_time set!\n", descriptors[counter -5].computing_time_dynamic);
                     descriptors[counter - 5].handle = pxNewTCB;
-                    descriptors[counter - 5].task_number = counter;
+                    descriptors[counter - 5].task_number = counter - 5;
                     descriptors[counter - 5].task_core = xCoreID;
                     descriptors[counter - 5].final_task = prPointer->final_task;
 

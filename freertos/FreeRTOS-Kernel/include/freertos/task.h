@@ -113,14 +113,14 @@ struct Parameters{
     int task_virtual_core;
 };
 
-extern struct Parameters descriptors[5];
+extern struct Parameters descriptors[120];
 
 extern int getSchedulingAlgorithm();
 extern void setSchedulingAlgorithm(int algorithm);
 extern int getCount_do_celsinho_manobrown_0();
 extern int getCount_do_celsinho_manobrown_1();
-extern int task_id_buffer[30];
-extern TaskHandle_t task_handle_buffer[30];
+extern int task_id_buffer[60];
+extern TaskHandle_t task_handle_buffer[60];
 extern int task_id_buffer_index;
 
 extern int ready_list_by_core[8][15]; // [coreId][taskPosInList]

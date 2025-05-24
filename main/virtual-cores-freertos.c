@@ -5,17 +5,23 @@
 #include "esp_system.h"
 
 
-extern struct Parameters descriptors[5];
+extern struct Parameters descriptors[120];
 
 struct Parameters tasks[20];
 extern int GetTidByHandle(TaskHandle_t);
 extern int tickCounter;
 extern TaskHandle_t idleHandleArray[2];
 
-extern int task_id_buffer[30];
-extern TaskHandle_t task_handle_buffer[30];
+extern int task_id_buffer[60];
+extern int task_id_buffer_0[60];
+extern int task_id_buffer_1[60];
+extern TaskHandle_t task_handle_buffer[60];
 extern int task_id_buffer_index;
 int task_id_buffer_start = 0;
+extern int task_id_buffer_index_0;
+int task_id_0_buffer_start = 0;
+extern int task_id_buffer_index_1;
+int task_id_1_buffer_start = 0;
 
 const char* getTaskStateName(int state) {
     switch (state) {
@@ -65,11 +71,11 @@ void initVirtualCores(){
     if(getSchedulingAlgorithm() == RMC){
         int virtualCoreZero = 0,virtualCoreOne = 0,virtualCoreTwo = 0,virtualCoreThree = 0;
         //Pensar em uma forma de contar a quantidade de task não nulas para entrar no for.
-        for (size_t i = 0; i < 5; i++)
+        for (size_t i = 0; i < 7; i++)
         {
             tasks[i].task_virtual_core = i%4;
         }
-        for (size_t i = 0; i < 4; i++)
+        for (size_t i = 0; i < 7; i++)
         {
             xTaskCreatePinnedToCore(
                 tasks[i].task_function,
@@ -89,12 +95,17 @@ void initVirtualCores(){
 }
 
 void printTaskIdsBuffer(void) {
-    int count = (task_id_buffer_index < 30) ? task_id_buffer_index : 30;
-    int start = (task_id_buffer_index < 30) ? 0 : task_id_buffer_index % 30;
+    int count = (task_id_buffer_index < 60) ? task_id_buffer_index : 60;
+    int start = (task_id_buffer_index < 60) ? 0 : task_id_buffer_index % 60;
+    int start_0 = (task_id_buffer_index_0 < 60) ? 0 : task_id_0_buffer_start % 60;
+    int start_1 = (task_id_buffer_index_1 < 60) ? 0 : task_id_1_buffer_start % 60;
 
     for (int i = 0; i < count; i++) {
-        int index = (start + i) % 30;
-        printf("Task ID: %d, handle: %p\n", task_id_buffer[index], task_handle_buffer[index]);
+        int index = (start + i) % 60;
+        int index_0 = (start_0 + i) % 60;
+        int index_1 = (start_1 + i) % 60;
+        // printf("Task ID: %d, handle: %p\n", task_id_buffer[index], task_handle_buffer[index]);
+        printf("Task ID Selected at Core 0: %d\tTask ID Selected at Core 1: %d\n", task_id_buffer_0[index_0], task_id_buffer_1[index_1]);
     }
 }
 
@@ -105,7 +116,7 @@ void print_task(){
         printf("-------------------------------------------------------------------------------------------------\n");
         printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | Tick Counter |\n");
         printf("-------------------------------------------------------------------------------------------------\n");
-        for (size_t i = 0; i < 5; i++) {
+        for (size_t i = 0; i < 8; i++) {
             printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-12d |\n",
                 i,
                 descriptors[i].period,
@@ -120,7 +131,7 @@ void print_task(){
         printf("History of selected tasks:\n");
         printTaskIdsBuffer();
         printAndClearStringBuffer();
-        vTaskDelay(300 / portTICK_PERIOD_MS);
+        vTaskDelay(600 / portTICK_PERIOD_MS);
     }
 }
 
@@ -174,8 +185,25 @@ void app_main(void)
     tasks[3].task_function = hello_task;
     tasks[3].task_name = strdup("Hello Task 3");  // Requires char* not char[]
     tasks[3].computing_time = 20;
-    tasks[3].final_task = 1;
+    tasks[3].final_task = 0;
 
+    tasks[4].period = 1000;
+    tasks[4].task_function = hello_task;
+    tasks[4].task_name = strdup("Hello Task 4");  // Requires char* not char[]
+    tasks[4].computing_time = 25;
+    tasks[4].final_task = 0;
+
+    tasks[5].period = 1000;
+    tasks[5].task_function = hello_task;
+    tasks[5].task_name = strdup("Hello Task 5");  // Requires char* not char[]
+    tasks[5].computing_time = 30;
+    tasks[5].final_task = 0;
+
+    tasks[6].period = 1000;
+    tasks[6].task_function = hello_task;
+    tasks[6].task_name = strdup("Hello Task 6");  // Requires char* not char[]
+    tasks[6].computing_time = 35;
+    tasks[6].final_task = 1;
 
     xTaskCreate(
         print_task,           // Function that implements the task

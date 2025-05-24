@@ -29,7 +29,7 @@ const char* getTaskStateName(int state) {
     }
 }
 
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 2048
 char string_buffer[BUFFER_SIZE];
 int buffer_index = 0;
 
@@ -42,8 +42,9 @@ void addToStringBuffer(const char* str) {
         string_buffer[buffer_index] = '\0';    // Null-terminate
     }
     else {
-        // Buffer full; you can handle this as needed
-        
+        string_buffer[BUFFER_SIZE - 2] = 'Z';
+        string_buffer[BUFFER_SIZE - 1] = '\0';
+        buffer_index = BUFFER_SIZE - 1;    
     }
 }
 
@@ -130,7 +131,11 @@ void hello_task(void *pvParameter)
     	// TaskHandle_t xHandle = xTaskGetCurrentTaskHandle();
         // printf("HELLO TASK\n");
         //printf("Task ID: %d\n", params->period);
-        addToStringBuffer("Hello Task");
+        char line[16]; 
+         
+        addToStringBuffer("Hello Task Computing Time: ");
+        snprintf(line, sizeof(line), "%d", params->computing_time);
+        addToStringBuffer(line);
         vTaskDelay(1000 / portTICK_PERIOD_MS); // wait 1 second
     }
 }

@@ -513,11 +513,11 @@ PRIVILEGED_DATA static UBaseType_t uxTaskNumber = ( UBaseType_t ) 0U;
 PRIVILEGED_DATA static volatile TickType_t xNextTaskUnblockTime = ( TickType_t ) 0U;     /* Initialised to portMAX_DELAY before the scheduler starts. */
 PRIVILEGED_DATA static TaskHandle_t xIdleTaskHandle[ configNUMBER_OF_CORES ] = { NULL }; /*< Holds the handle of the idle task.  The idle task is created automatically when the scheduler is started. */
 
-int count_do_celsinho_manobrown_0 = 0,count_do_celsinho_manobrown_1 = 0;
-int getCount_do_celsinho_manobrown_0(){
+uint32_t count_do_celsinho_manobrown_0 = 0,count_do_celsinho_manobrown_1 = 0;
+uint32_t getCount_do_celsinho_manobrown_0(){
     return count_do_celsinho_manobrown_0;
 }
-int getCount_do_celsinho_manobrown_1(){
+uint32_t getCount_do_celsinho_manobrown_1(){
     return count_do_celsinho_manobrown_1;
 }
 
@@ -3601,17 +3601,17 @@ BaseType_t xTaskIncrementTick( void )
 #endif /* configUSE_APPLICATION_TASK_TAG */
 /*-----------------------------------------------------------*/
     
-    extern struct Parameters descriptors[120];
-    int task_id_buffer[60];         //FreeRTOS task id buffer
-    int task_id_buffer_0[60];
-    int task_id_buffer_1[60];
-    TaskHandle_t task_handle_buffer[60];
+    extern struct Parameters descriptors[MAX_NUMBER_TASK_C];
+    int task_id_buffer[BUFFER_SIZE_C];         //FreeRTOS task id buffer
+    int task_id_buffer_0[BUFFER_SIZE_C];
+    int task_id_buffer_1[BUFFER_SIZE_C];
+    TaskHandle_t task_handle_buffer[BUFFER_SIZE_C];
     int task_id_buffer_index = 0;   //FreeRTOS task id buffer index
     int task_id_buffer_index_0 = 0;
     int task_id_buffer_index_1 = 0;
 
-    int ready_list_by_core[8][15]; // [coreId][taskPosInList]
-    int ready_list_by_core_index[8];
+    int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
+    int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
 
     int current_logical_in_core_0 = 0, current_logical_in_core_1 = 1; //current logical core id thas is executing in the real core
 #if ( configNUMBER_OF_CORES > 1 )
@@ -3630,7 +3630,8 @@ BaseType_t xTaskIncrementTick( void )
             if (ready_list_by_core_index[current_logical_in_core_0] > 0)
             {
                 pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
-                task_id_buffer_0[task_id_buffer_index_0] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_number;
+                // task_id_buffer_0[task_id_buffer_index_0] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_number;
+                task_id_buffer_0[task_id_buffer_index_0] = current_logical_in_core_0;
                 xTaskScheduled = pdTRUE;
                 int task_to_requeue = ready_list_by_core[current_logical_in_core_0][0];
                 for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_0] - 1; i++)
@@ -3638,17 +3639,18 @@ BaseType_t xTaskIncrementTick( void )
                     ready_list_by_core[current_logical_in_core_0][i] = ready_list_by_core[current_logical_in_core_0][i + 1];
                 }
                 ready_list_by_core[current_logical_in_core_0][ready_list_by_core_index[current_logical_in_core_0] - 1] = task_to_requeue;
-                task_id_buffer_index_0 = (task_id_buffer_index_0 + 1) % 60;
+                task_id_buffer_index_0 = (task_id_buffer_index_0 + 1) % BUFFER_SIZE_C;
                 count_do_celsinho_manobrown_0++;
             }
-            current_logical_in_core_0 = (current_logical_in_core_0 + 2) % 8;
+            current_logical_in_core_0 = (current_logical_in_core_0 + 2) % VIRTUAL_CORE_QUANTITY_C;
         }
         else //real core == 1
         {
             if (ready_list_by_core_index[current_logical_in_core_1] > 0)
             {
                 pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].handle;
-                task_id_buffer_1[task_id_buffer_index_1] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_number;
+                // task_id_buffer_1[task_id_buffer_index_1] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_number;
+                task_id_buffer_1[task_id_buffer_index_1] = current_logical_in_core_1;
                 xTaskScheduled = pdTRUE;
                 int task_to_requeue = ready_list_by_core[current_logical_in_core_1][0];
                 for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_1] - 1; i++)
@@ -3656,10 +3658,10 @@ BaseType_t xTaskIncrementTick( void )
                     ready_list_by_core[current_logical_in_core_1][i] = ready_list_by_core[current_logical_in_core_1][i + 1];
                 }
                 ready_list_by_core[current_logical_in_core_1][ready_list_by_core_index[current_logical_in_core_1] - 1] = task_to_requeue;
-                task_id_buffer_index_1 = (task_id_buffer_index_1 + 1) % 60;
+                task_id_buffer_index_1 = (task_id_buffer_index_1 + 1) % BUFFER_SIZE_C;
                 count_do_celsinho_manobrown_1++;
             }
-            current_logical_in_core_1 = (current_logical_in_core_1 + 2) % 8;
+            current_logical_in_core_1 = (current_logical_in_core_1 + 2) % VIRTUAL_CORE_QUANTITY_C;
         }
 
 
@@ -3731,7 +3733,7 @@ BaseType_t xTaskIncrementTick( void )
                 pxCurrentTCBs[ xCurCoreID ] = pxTCBCur;
                 task_id_buffer[task_id_buffer_index] = GetTidByHandle(pxTCBCur);
                 task_handle_buffer[task_id_buffer_index] = pxTCBCur;
-                task_id_buffer_index = (task_id_buffer_index + 1) % 60;
+                task_id_buffer_index = (task_id_buffer_index + 1) % BUFFER_SIZE_C;
                 
                 xTaskScheduled = pdTRUE;
                 

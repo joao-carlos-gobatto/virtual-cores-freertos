@@ -99,6 +99,11 @@ enum scheduling_algorithms{
     RMC
 };
 
+#define MAX_NUMBER_TASK_C 120
+#define BUFFER_SIZE_C 60
+#define VIRTUAL_CORE_QUANTITY_C 8
+#define VIRTUAL_CORE_READY_LIST_SIZE_C 15 //MAX_NUMBER_TASK_C / VIRTUAL_CORE_QUANTITY_C Tem que ser um número inteiro
+
 struct Parameters{
     TaskFunction_t task_function;
     char * task_name;
@@ -113,18 +118,18 @@ struct Parameters{
     int task_virtual_core;
 };
 
-extern struct Parameters descriptors[120];
+extern struct Parameters descriptors[MAX_NUMBER_TASK_C];
 
 extern int getSchedulingAlgorithm();
 extern void setSchedulingAlgorithm(int algorithm);
-extern int getCount_do_celsinho_manobrown_0();
-extern int getCount_do_celsinho_manobrown_1();
-extern int task_id_buffer[60];
-extern TaskHandle_t task_handle_buffer[60];
+extern uint32_t getCount_do_celsinho_manobrown_0();
+extern uint32_t getCount_do_celsinho_manobrown_1();
+extern int task_id_buffer[BUFFER_SIZE_C];
+extern TaskHandle_t task_handle_buffer[BUFFER_SIZE_C];
 extern int task_id_buffer_index;
 
-extern int ready_list_by_core[8][15]; // [coreId][taskPosInList]
-extern int ready_list_by_core_index[8];
+extern int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
+extern int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
 
 /**
  * Defines the prototype to which the application task hook function must

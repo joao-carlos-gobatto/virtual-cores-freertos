@@ -148,11 +148,10 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
 /* -------------------------------------------------- Task Creation ------------------------------------------------- */
 
 
-struct Parameters descriptors[120];
+struct Parameters descriptors[MAX_NUMBER_TASK_C];
 int counter = 0;
-
-extern int ready_list_by_core[8][15]; // [coreId][taskPosInList]
-extern int ready_list_by_core_index[8];
+extern int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
+extern int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
 
 int GetTidByHandle(TaskHandle_t handle)
 {
@@ -302,8 +301,8 @@ int GetTidByHandle(TaskHandle_t handle)
                     descriptors[counter - 5].task_core = xCoreID;
                     descriptors[counter - 5].final_task = prPointer->final_task;
 
-                    ready_list_by_core[xCoreID][ready_list_by_core_index[xCoreID]] = counter - 5; // [coreId][taskPosInList]
-                    ready_list_by_core_index[xCoreID]++;
+                    ready_list_by_core[prPointer->task_virtual_core][ready_list_by_core_index[prPointer->task_virtual_core]] = counter - 5; // [coreId][taskPosInList]
+                    ready_list_by_core_index[prPointer->task_virtual_core]++;
 
 
                     if(descriptors[counter - 5].final_task == 1){

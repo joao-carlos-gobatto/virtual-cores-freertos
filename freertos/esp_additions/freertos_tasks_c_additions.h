@@ -156,7 +156,7 @@ extern int ready_list_by_core_index[8];
 
 int GetTidByHandle(TaskHandle_t handle)
 {
-	for (int i = 0; i < 7;i++)
+	for (int i = 0; i < 10;i++)
 	{
 		if (descriptors[i].handle == handle)
 			return i;
@@ -320,11 +320,11 @@ int GetTidByHandle(TaskHandle_t handle)
                         
                         default:
                             printf("Chama RM\n");
-                            for (int i = 0; i < counter - 4; i++)
-                            {
+                            // for (int i = 0; i < counter - 4; i++)
+                            // {
                             	// prvAddNewTaskToReadyList( descriptors[i].handle );
                             	// printf("added to ready list RM\n");
-							}
+							// }
                             break;
                         }
                     }

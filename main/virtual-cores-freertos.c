@@ -71,11 +71,11 @@ void initVirtualCores(){
     if(getSchedulingAlgorithm() == RMC){
         int virtualCoreZero = 0,virtualCoreOne = 0,virtualCoreTwo = 0,virtualCoreThree = 0;
         //Pensar em uma forma de contar a quantidade de task não nulas para entrar no for.
-        for (size_t i = 0; i < 7; i++)
+        for (size_t i = 0; i < 10; i++)
         {
             tasks[i].task_virtual_core = i%4;
         }
-        for (size_t i = 0; i < 7; i++)
+        for (size_t i = 0; i < 10; i++)
         {
             xTaskCreatePinnedToCore(
                 tasks[i].task_function,
@@ -203,7 +203,25 @@ void app_main(void)
     tasks[6].task_function = hello_task;
     tasks[6].task_name = strdup("Hello Task 6");  // Requires char* not char[]
     tasks[6].computing_time = 35;
-    tasks[6].final_task = 1;
+    tasks[6].final_task = 0;
+
+    tasks[7].period = 1000;
+    tasks[7].task_function = hello_task;
+    tasks[7].task_name = strdup("Hello Task 7");  // Requires char* not char[]
+    tasks[7].computing_time = 40;
+    tasks[7].final_task = 0;
+
+    tasks[8].period = 1000;
+    tasks[8].task_function = hello_task;
+    tasks[8].task_name = strdup("Hello Task 8");  // Requires char* not char[]
+    tasks[8].computing_time = 45;
+    tasks[8].final_task = 0;
+
+    tasks[9].period = 1000;
+    tasks[9].task_function = hello_task;
+    tasks[9].task_name = strdup("Hello Task 9");  // Requires char* not char[]
+    tasks[9].computing_time = 50;
+    tasks[9].final_task = 1;
 
     xTaskCreate(
         print_task,           // Function that implements the task

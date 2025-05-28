@@ -93,6 +93,17 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
          * on a core other than core 0. */
         traceTASK_INCREMENT_TICK( xTickCount );
 
+        int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCoreID));
+        int currentVirtualCore = descriptors[tempTid].task_virtual_core;
+        descriptors[tempTid].computing_time_dynamic--;
+        if (tempTid != -1 && descriptors[tempTid].computing_time_dynamic == -200)
+        {
+            //descriptors[tempTid].computing_time_dynamic = -9999;
+            RemoveFromReadyList(currentVirtualCore, tempTid);
+            // taskYIELD();
+            //descriptors[tempTid].computing_time_dynamic = descriptors[tempTid].computing_time;
+        }
+
         if( uxSchedulerSuspended[ xCoreID ] == ( UBaseType_t ) 0U )
         {
             /* We need take the kernel lock here as we are about to access
@@ -161,6 +172,28 @@ int GetTidByHandle(TaskHandle_t handle)
 			return i;
 	}
 	return -1;
+}
+
+void RemoveFromReadyList(int core_id, int task_id) {
+    int index = -1;
+
+    for (int i = 0; i < ready_list_by_core_index[core_id]; i++) {
+        if (ready_list_by_core[core_id][i] == task_id) {
+            index = i;
+            break;
+        }
+    }
+    
+    if (index != -1) {
+        for (int i = index; i < ready_list_by_core_index[core_id] - 1; i++) {
+            ready_list_by_core[core_id][i] = ready_list_by_core[core_id][i + 1];
+        }
+        ready_list_by_core_index[core_id]--;
+    }
+    else
+    {
+        printf("This will crash");
+    }
 }
 
 #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
@@ -298,10 +331,11 @@ int GetTidByHandle(TaskHandle_t handle)
                     printf("'%d' dynamic computing_time set!\n", descriptors[counter -5].computing_time_dynamic);
                     descriptors[counter - 5].handle = pxNewTCB;
                     descriptors[counter - 5].task_number = counter - 5;
+                    descriptors[counter - 5].task_virtual_core = prPointer->task_virtual_core;
                     descriptors[counter - 5].task_core = xCoreID;
                     descriptors[counter - 5].final_task = prPointer->final_task;
 
-                    ready_list_by_core[prPointer->task_virtual_core][ready_list_by_core_index[prPointer->task_virtual_core]] = counter - 5; // [coreId][taskPosInList]
+                    ready_list_by_core[prPointer->task_virtual_core][ready_list_by_core_index[prPointer->task_virtual_core]] = counter - 5; // [coreId][taskPosInList] = id da task
                     ready_list_by_core_index[prPointer->task_virtual_core]++;
 
 

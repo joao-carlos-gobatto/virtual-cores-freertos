@@ -1560,6 +1560,7 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
 #endif /* INCLUDE_xTaskDelayUntil */
 /*-----------------------------------------------------------*/
     extern int GetTidByHandle(TaskHandle_t handle);
+    extern void RemoveFromReadyList(int core_id, int task_id);
 #if ( INCLUDE_vTaskDelay == 1 )
 
     void vTaskDelay( const TickType_t xTicksToDelay )
@@ -3241,7 +3242,7 @@ BaseType_t xTaskIncrementTick( void )
     #if ( configUSE_TICK_HOOK == 1 )
         BaseType_t xCallTickHook;
     #endif /* configUSE_TICK_HOOK == 1 */
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 5; i++)                  // FIX THIS
 	{
         if(descriptors[i].period_dynamic <= 0)
         {
@@ -3250,11 +3251,14 @@ BaseType_t xTaskIncrementTick( void )
 		descriptors[i].period_dynamic--;
 	}
     int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCurCoreID));
+    int currentVirtualCore = descriptors[tempTid].task_virtual_core;
     descriptors[tempTid].computing_time_dynamic--;
-    if(descriptors[tempTid].computing_time_dynamic == 0)
+    if(tempTid != -1 && descriptors[tempTid].computing_time_dynamic == -200)
     {
+        //descriptors[tempTid].computing_time_dynamic = -9999;
+        RemoveFromReadyList(currentVirtualCore, tempTid);
         // taskYIELD();
-        descriptors[tempTid].computing_time_dynamic = descriptors[tempTid].computing_time;
+        //descriptors[tempTid].computing_time_dynamic = descriptors[tempTid].computing_time;
     }
 
     /* Called by the portable layer each time a tick interrupt occurs.

@@ -146,7 +146,7 @@ void hello_task(void *pvParameter)
         addToStringBuffer("Hello Task Computing Time: ");
         snprintf(line, sizeof(line), "%d", params->computing_time);
         addToStringBuffer(line);
-        vTaskDelay(1000 / portTICK_PERIOD_MS); // wait 1 second
+        //vTaskDelay(1000 / portTICK_PERIOD_MS); // Se usar vTaskDelay, o tempo de comp dinamico não é decrementado nas tasks no core real 1
     }
 }
 

@@ -1561,6 +1561,7 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
 /*-----------------------------------------------------------*/
     extern int GetTidByHandle(TaskHandle_t handle);
     extern void RemoveFromReadyList(int core_id, int task_id);
+    extern void AddToReadyList(int core_id, int task_id);
 #if ( INCLUDE_vTaskDelay == 1 )
 
     void vTaskDelay( const TickType_t xTicksToDelay )
@@ -3242,11 +3243,13 @@ BaseType_t xTaskIncrementTick( void )
     #if ( configUSE_TICK_HOOK == 1 )
         BaseType_t xCallTickHook;
     #endif /* configUSE_TICK_HOOK == 1 */
-	for(int i = 0; i < 5; i++)                  // FIX THIS
+	for(int i = 0; i < 7; i++)                  // FIX THIS
 	{
-        if(descriptors[i].period_dynamic <= 0)
+        if(descriptors[i].period_dynamic <= -1000)
         {
             descriptors[i].period_dynamic = descriptors[i].period;
+            descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
+            AddToReadyList(descriptors[i].task_virtual_core, i);
         }
 		descriptors[i].period_dynamic--;
 	}

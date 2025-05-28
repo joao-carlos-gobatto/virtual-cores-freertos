@@ -196,6 +196,21 @@ void RemoveFromReadyList(int core_id, int task_id) {
     }
 }
 
+void AddToReadyList(int core_id, int task_id) {
+    // check bounds?
+    
+
+    for (int i = 0; i < ready_list_by_core_index[core_id]; i++) {
+        if (ready_list_by_core[core_id][i] == task_id) {
+            return; // Already in list, do not add
+        }
+    }
+
+    
+    ready_list_by_core[core_id][ready_list_by_core_index[core_id]] = task_id;
+    ready_list_by_core_index[core_id]++;
+}
+
 #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
     BaseType_t xTaskCreatePinnedToCore( TaskFunction_t pxTaskCode,

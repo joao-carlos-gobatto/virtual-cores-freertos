@@ -116,9 +116,12 @@ struct Parameters{
     int final_task;
     int task_core;
     int task_virtual_core;
+    int delayed_timer;
 };
 
 extern struct Parameters descriptors[MAX_NUMBER_TASK_C];
+
+extern int task_count_celsinho_mano; 
 
 extern int getSchedulingAlgorithm();
 extern void setSchedulingAlgorithm(int algorithm);

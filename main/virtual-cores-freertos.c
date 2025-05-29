@@ -12,6 +12,8 @@ extern int GetTidByHandle(TaskHandle_t);
 extern int tickCounter;
 extern TaskHandle_t idleHandleArray[2];
 
+int task_count_celsinho_mano = 0;
+
 extern int task_id_buffer[BUFFER_SIZE_C];
 extern int task_id_buffer_0[BUFFER_SIZE_C];
 extern int task_id_buffer_1[BUFFER_SIZE_C];
@@ -70,11 +72,11 @@ void printAndClearStringBuffer() {
 void initVirtualCores(){
     if(getSchedulingAlgorithm() == RMC){
         //Pensar em uma forma de contar a quantidade de task não nulas para entrar no for.
-        for (size_t i = 0; i < 7; i++)
+        for (size_t i = 0; i < 8; i++)
         {
             tasks[i].task_virtual_core = i%VIRTUAL_CORE_QUANTITY_C;
         }
-        for (size_t i = 0; i < 7; i++)
+        for (size_t i = 0; i < 8; i++)
         {
             xTaskCreatePinnedToCore(
                 tasks[i].task_function,
@@ -115,7 +117,7 @@ void print_task(){
         printf("-------------------------------------------------------------------------------------------------\n");
         printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | Tick Counter |\n");
         printf("-------------------------------------------------------------------------------------------------\n");
-        for (size_t i = 0; i < 7; i++) {
+        for (size_t i = 0; i < task_count_celsinho_mano; i++) {
             printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-12d |\n",
                 i,
                 descriptors[i].period,
@@ -212,7 +214,28 @@ void app_main(void)
     tasks[6].task_function = hello_task;
     tasks[6].task_name = strdup("Hello Task 6");  // Requires char* not char[]
     tasks[6].computing_time = 35;
-    tasks[6].final_task = 1;
+    tasks[6].final_task = 0;
+
+    tasks[7].period = 1000;
+    tasks[7].task_function = hello_task;
+    tasks[7].task_name = strdup("Hello Task 6");  // Requires char* not char[]
+    tasks[7].computing_time = 40;
+    tasks[7].final_task = 1;
+
+
+
+    // for (size_t i = 0; i < (MAX_NUMBER_TASK_C/4); i++)
+    // {
+    //     tasks[0].period = 1000;
+    //     tasks[0].task_function = hello_task;
+    //     tasks[0].task_name = strdup("Hello Task");  // Requires char* not char[]
+    //     tasks[0].computing_time = 2*(i+1);
+    //     if(i == (MAX_NUMBER_TASK_C/4) - 1){
+    //         tasks[i].final_task = 1;
+    //     } else {
+    //         tasks[i].final_task = 0;
+    //     }
+    // }
 
     initVirtualCores();
 }

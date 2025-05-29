@@ -1585,6 +1585,8 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
                  * executing task. */
                 if (GetTidByHandle(pxCurrentTCBs[xCurCoreID]) == -1){
                     prvAddCurrentTaskToDelayedList( xTicksToDelay, pdFALSE );
+                }else {
+                    descriptors[GetTidByHandle(pxCurrentTCBs[xCurCoreID])].delayed_timer = (int) xTicksToDelay;
                 }
             }
             xAlreadyYielded = prvEXIT_CRITICAL_OR_RESUME_ALL( &xKernelLock );
@@ -3243,7 +3245,7 @@ BaseType_t xTaskIncrementTick( void )
     #if ( configUSE_TICK_HOOK == 1 )
         BaseType_t xCallTickHook;
     #endif /* configUSE_TICK_HOOK == 1 */
-	for(int i = 0; i < 7; i++)                  // FIX THIS
+	for(int i = 0; i < task_count_celsinho_mano; i++)                  // FIX THIS
 	{
         if(descriptors[i].period_dynamic <= -1000)
         {

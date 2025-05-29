@@ -211,6 +211,26 @@ void AddToReadyList(int core_id, int task_id) {
     ready_list_by_core_index[core_id]++;
 }
 
+void SortReadyListByPeriod(int core_id)
+{
+    int i, j;
+    for (i = 0; i < ready_list_by_core_index[core_id] - 1; i++)
+    {
+        for (j = 0; j < ready_list_by_core_index[core_id] - i - 1; j++)
+        {
+            int id1 = ready_list_by_core[core_id][j];
+            int id2 = ready_list_by_core[core_id][j + 1];
+            if (descriptors[id1].period > descriptors[id2].period)
+            {
+                // Swap the two task IDs
+                int temp = ready_list_by_core[core_id][j];
+                ready_list_by_core[core_id][j] = ready_list_by_core[core_id][j + 1];
+                ready_list_by_core[core_id][j + 1] = temp;
+            }
+        }
+    }
+}
+
 #if ( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
     BaseType_t xTaskCreatePinnedToCore( TaskFunction_t pxTaskCode,

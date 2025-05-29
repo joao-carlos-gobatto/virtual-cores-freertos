@@ -162,6 +162,16 @@ void app_main(void)
     // tasks[0].computing_time = 5;
     // tasks[0].final_task = 0;
 
+    xTaskCreatePinnedToCore(
+        print_task,           // Function that implements the task
+        "PrintTask",          // Text name for debugging
+        2048,                 // Stack size in words
+        NULL,                 // Task input parameter
+        tskIDLE_PRIORITY + 1, // Priority of the task
+        NULL,                  // Task handle
+        0
+    );
+
     tasks[0].period = 1000;
     tasks[0].task_function = hello_task;
     tasks[0].task_name = strdup("Hello Task 0");  // Requires char* not char[]
@@ -204,13 +214,5 @@ void app_main(void)
     tasks[6].computing_time = 35;
     tasks[6].final_task = 1;
 
-    xTaskCreate(
-        print_task,           // Function that implements the task
-        "PrintTask",          // Text name for debugging
-        2048, // Stack size in words
-        NULL,                 // Task input parameter
-        tskIDLE_PRIORITY + 1, // Priority of the task
-        NULL                  // Task handle
-    );
     initVirtualCores();
 }

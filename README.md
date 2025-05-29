@@ -2,6 +2,8 @@
 Versão da ESP-IDF utilizada: 5.3.3
 Simulação de cores virtuais para FreeRTOS na ESP32. Experimentação de algoritmos de escalonamento multicore
 
+Desativar os watchdogs das Idles 0 e 1 na configuração de sistema.
+
 A localização da função xTaskIncrementTick está localizada em /freertos/FreeRTOS-Kernel/tasks.c
 
 Em FreeRTOS-Kernel/portable/xtensa/include/freertos/portmacro.h existem algumas implementações em assembly de salvamento de contexto e liberação de núcleo por uma task. Essas macros são chamadas em C das seguintes formas:

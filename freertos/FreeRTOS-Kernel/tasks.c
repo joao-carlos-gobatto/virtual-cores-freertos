@@ -3634,22 +3634,24 @@ BaseType_t xTaskIncrementTick( void )
         //int taskFound = 0;
         if (xCurCoreID == 0)
         {
-            if (ready_list_by_core_index[current_logical_in_core_0] > 0)
-            {
-                pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
-                // task_id_buffer_0[task_id_buffer_index_0] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_number;
-                task_id_buffer_0[task_id_buffer_index_0] = current_logical_in_core_0;
-                xTaskScheduled = pdTRUE;
-                int task_to_requeue = ready_list_by_core[current_logical_in_core_0][0];
-                for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_0] - 1; i++)
+            if(current_logical_in_core_0 < 8){
+                if (ready_list_by_core_index[current_logical_in_core_0] > 0)
                 {
-                    ready_list_by_core[current_logical_in_core_0][i] = ready_list_by_core[current_logical_in_core_0][i + 1];
+                    pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
+                    // task_id_buffer_0[task_id_buffer_index_0] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_number;
+                    task_id_buffer_0[task_id_buffer_index_0] = current_logical_in_core_0;
+                    xTaskScheduled = pdTRUE;
+                    int task_to_requeue = ready_list_by_core[current_logical_in_core_0][0];
+                    for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_0] - 1; i++)
+                    {
+                        ready_list_by_core[current_logical_in_core_0][i] = ready_list_by_core[current_logical_in_core_0][i + 1];
+                    }
+                    ready_list_by_core[current_logical_in_core_0][ready_list_by_core_index[current_logical_in_core_0] - 1] = task_to_requeue;
+                    task_id_buffer_index_0 = (task_id_buffer_index_0 + 1) % BUFFER_SIZE_C;
+                    count_do_celsinho_manobrown_0++;
                 }
-                ready_list_by_core[current_logical_in_core_0][ready_list_by_core_index[current_logical_in_core_0] - 1] = task_to_requeue;
-                task_id_buffer_index_0 = (task_id_buffer_index_0 + 1) % BUFFER_SIZE_C;
-                count_do_celsinho_manobrown_0++;
             }
-            current_logical_in_core_0 = (current_logical_in_core_0 + 2) % VIRTUAL_CORE_QUANTITY_C;
+            current_logical_in_core_0 = (current_logical_in_core_0 + 2) % (VIRTUAL_CORE_QUANTITY_C + 2);
         }
         else //real core == 1
         {

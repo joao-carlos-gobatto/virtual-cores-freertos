@@ -93,16 +93,20 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
          * on a core other than core 0. */
         traceTASK_INCREMENT_TICK( xTickCount );
 
-        int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCoreID));
-        int currentVirtualCore = descriptors[tempTid].task_virtual_core;
-        descriptors[tempTid].computing_time_dynamic--;
-        if (tempTid != -1 && descriptors[tempTid].computing_time_dynamic == -200)
+        if (getSchedulingAlgorithm() != RRC)
         {
-            //descriptors[tempTid].computing_time_dynamic = -9999;
-            RemoveFromReadyList(currentVirtualCore, tempTid);
-            // taskYIELD();
-            //descriptors[tempTid].computing_time_dynamic = descriptors[tempTid].computing_time;
+            int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCoreID));
+            int currentVirtualCore = descriptors[tempTid].task_virtual_core;
+            descriptors[tempTid].computing_time_dynamic--;
+            if (tempTid != -1 && descriptors[tempTid].computing_time_dynamic == -200)
+            {
+                //descriptors[tempTid].computing_time_dynamic = -9999;
+                RemoveFromReadyList(currentVirtualCore, tempTid);
+                // taskYIELD();
+                //descriptors[tempTid].computing_time_dynamic = descriptors[tempTid].computing_time;
+            }
         }
+        
 
         if( uxSchedulerSuspended[ xCoreID ] == ( UBaseType_t ) 0U )
         {
@@ -368,7 +372,7 @@ void SortReadyListByPeriod(int core_id)
                     descriptors[counter - 5].handle = pxNewTCB;
                     descriptors[counter - 5].task_number = counter - 5;
                     descriptors[counter - 5].task_virtual_core = prPointer->task_virtual_core;
-                    descriptors[counter - 5].task_core = xCoreID;
+                    descriptors[counter - 5].task_core = prPointer->task_virtual_core % 2;
                     descriptors[counter - 5].final_task = prPointer->final_task;
                     task_count_celsinho_mano++; 
 

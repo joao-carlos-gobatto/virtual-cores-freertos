@@ -3246,26 +3246,40 @@ BaseType_t xTaskIncrementTick( void )
     #if ( configUSE_TICK_HOOK == 1 )
         BaseType_t xCallTickHook;
     #endif /* configUSE_TICK_HOOK == 1 */
-	for(int i = 0; i < task_count_celsinho_mano; i++)                  // FIX THIS
-	{
-        if(descriptors[i].period_dynamic <= -1000)
-        {
-            descriptors[i].period_dynamic = descriptors[i].period;
-            descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
-            AddToReadyList(descriptors[i].task_virtual_core, i);
-        }
-		descriptors[i].period_dynamic--;
-	}
-    int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCurCoreID));
-    int currentVirtualCore = descriptors[tempTid].task_virtual_core;
-    descriptors[tempTid].computing_time_dynamic--;
-    if(tempTid != -1 && descriptors[tempTid].computing_time_dynamic == -200)
+    switch (getSchedulingAlgorithm()) 
     {
+        case RMC:       // FIX THIS
+            for (int i = 0; i < task_count_celsinho_mano; i++)                  // FIX THIS
+            {
+                if (descriptors[i].period_dynamic <= -1000)
+                {
+                    descriptors[i].period_dynamic = descriptors[i].period;
+                    descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
+                    AddToReadyList(descriptors[i].task_virtual_core, i); // FIX THIS
+                }
+                descriptors[i].period_dynamic--;
+            }
+            int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCurCoreID));
+            if (tempTid != -1)
+            {
+                int currentVirtualCore = descriptors[tempTid].task_virtual_core;
+                descriptors[tempTid].computing_time_dynamic--;
+                if (descriptors[tempTid].computing_time_dynamic == -200)
+                    RemoveFromReadyList(currentVirtualCore, tempTid);
+            }
+        break;
+        default:
+            break;
+    }
+	
+    
+    //if(tempTid != -1 && descriptors[tempTid].computing_time_dynamic == -200)
+    //{
         //descriptors[tempTid].computing_time_dynamic = -9999;
-        RemoveFromReadyList(currentVirtualCore, tempTid);
+        
         // taskYIELD();
         //descriptors[tempTid].computing_time_dynamic = descriptors[tempTid].computing_time;
-    }
+    //}
 
     /* Called by the portable layer each time a tick interrupt occurs.
      * Increments the tick then checks to see if the new tick value will cause any
@@ -3640,10 +3654,10 @@ BaseType_t xTaskIncrementTick( void )
             if(current_logical_in_core_0 < 8){
                 if (ready_list_by_core_index[current_logical_in_core_0] > 0)
                 {
-                    //if (RATE MONOTONIC CELSO){
+                    if (SCHEDULING_ALGORITHM_C == RMC){
                         SortReadyListByPeriod(current_logical_in_core_0);
-                    //}
-
+                    } //else RRC
+                                     
                     pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
                     // task_id_buffer_0[task_id_buffer_index_0] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_number;
                     task_id_buffer_0[task_id_buffer_index_0] = current_logical_in_core_0;
@@ -3664,9 +3678,9 @@ BaseType_t xTaskIncrementTick( void )
         {
             if (ready_list_by_core_index[current_logical_in_core_1] > 0)
             {
-                //if (RATE MONOTONIC CELSO){
+                if (SCHEDULING_ALGORITHM_C == RMC) {
                     SortReadyListByPeriod(current_logical_in_core_1);
-                //}
+                } //else RRC
 
                 pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].handle;
                 // task_id_buffer_1[task_id_buffer_index_1] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_number;

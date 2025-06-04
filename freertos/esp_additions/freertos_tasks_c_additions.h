@@ -93,18 +93,36 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
          * on a core other than core 0. */
         traceTASK_INCREMENT_TICK( xTickCount );
 
-        if (getSchedulingAlgorithm() != RRC)
+        switch (getSchedulingAlgorithm())
         {
-            int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCoreID));
-            int currentVirtualCore = descriptors[tempTid].task_virtual_core;
-            descriptors[tempTid].computing_time_dynamic--;
-            if (tempTid != -1 && descriptors[tempTid].computing_time_dynamic == -200)
+        case RMC:       // FIX THIS
+            for (int i = 0; i < task_count_celsinho_mano; i++)                  // FIX THIS
             {
-                //descriptors[tempTid].computing_time_dynamic = -9999;
-                RemoveFromReadyList(currentVirtualCore, tempTid);
-                // taskYIELD();
-                //descriptors[tempTid].computing_time_dynamic = descriptors[tempTid].computing_time;
+                if (descriptors[i].task_core == 1)
+                {
+                    if (descriptors[i].period_dynamic <= -1000)
+                    {
+                        descriptors[i].period_dynamic = descriptors[i].period;
+                        descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
+                        AddToReadyList(descriptors[i].task_virtual_core, i); // FIX THIS
+                    }
+                    descriptors[i].period_dynamic--;
+                }
             }
+            int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCoreID));
+            if (tempTid != -1)
+            {
+                int currentVirtualCore = descriptors[tempTid].task_virtual_core;
+                descriptors[tempTid].computing_time_dynamic--;
+                if (descriptors[tempTid].computing_time_dynamic == -200)
+                    RemoveFromReadyList(currentVirtualCore, tempTid);
+            }
+            break;
+        case EDFC:
+
+            break;
+        default:
+            break;
         }
         
 

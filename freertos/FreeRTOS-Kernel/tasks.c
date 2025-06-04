@@ -3251,13 +3251,16 @@ BaseType_t xTaskIncrementTick( void )
         case RMC:       // FIX THIS
             for (int i = 0; i < task_count_celsinho_mano; i++)                  // FIX THIS
             {
-                if (descriptors[i].period_dynamic <= -1000)
+                if (descriptors[i].task_core == 0)
                 {
-                    descriptors[i].period_dynamic = descriptors[i].period;
-                    descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
-                    AddToReadyList(descriptors[i].task_virtual_core, i); // FIX THIS
-                }
-                descriptors[i].period_dynamic--;
+                    if (descriptors[i].period_dynamic <= -1000)
+                    {
+                        descriptors[i].period_dynamic = descriptors[i].period;
+                        descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
+                        AddToReadyList(descriptors[i].task_virtual_core, i); // FIX THIS
+                    }
+                    descriptors[i].period_dynamic--;
+                }              
             }
             int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCurCoreID));
             if (tempTid != -1)
@@ -3267,7 +3270,10 @@ BaseType_t xTaskIncrementTick( void )
                 if (descriptors[tempTid].computing_time_dynamic == -200)
                     RemoveFromReadyList(currentVirtualCore, tempTid);
             }
-        break;
+            break;
+        case EDFC:
+
+            break;
         default:
             break;
     }

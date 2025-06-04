@@ -1562,6 +1562,7 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
     extern int GetTidByHandle(TaskHandle_t handle);
     extern void RemoveFromReadyList(int core_id, int task_id);
     extern void AddToReadyList(int core_id, int task_id);
+    extern void SortReadyListByPeriod(int core_id);
 #if ( INCLUDE_vTaskDelay == 1 )
 
     void vTaskDelay( const TickType_t xTicksToDelay )
@@ -3639,6 +3640,10 @@ BaseType_t xTaskIncrementTick( void )
             if(current_logical_in_core_0 < 8){
                 if (ready_list_by_core_index[current_logical_in_core_0] > 0)
                 {
+                    //if (RATE MONOTONIC CELSO){
+                        SortReadyListByPeriod(current_logical_in_core_0);
+                    //}
+
                     pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
                     // task_id_buffer_0[task_id_buffer_index_0] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_number;
                     task_id_buffer_0[task_id_buffer_index_0] = current_logical_in_core_0;
@@ -3659,6 +3664,10 @@ BaseType_t xTaskIncrementTick( void )
         {
             if (ready_list_by_core_index[current_logical_in_core_1] > 0)
             {
+                //if (RATE MONOTONIC CELSO){
+                    SortReadyListByPeriod(current_logical_in_core_1);
+                //}
+
                 pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].handle;
                 // task_id_buffer_1[task_id_buffer_index_1] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_number;
                 task_id_buffer_1[task_id_buffer_index_1] = current_logical_in_core_1;

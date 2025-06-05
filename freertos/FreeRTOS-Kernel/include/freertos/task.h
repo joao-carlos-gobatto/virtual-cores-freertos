@@ -125,8 +125,8 @@ extern int task_count_celsinho_mano;
 
 extern int getSchedulingAlgorithm();
 extern void setSchedulingAlgorithm(int algorithm);
-extern uint32_t getCount_do_celsinho_manobrown_0();
-extern uint32_t getCount_do_celsinho_manobrown_1();
+extern uint32_t getcount_switch_vcore_0();
+extern uint32_t getcount_switch_vcore_1();
 extern int task_id_buffer[BUFFER_SIZE_C];
 extern TaskHandle_t task_handle_buffer[BUFFER_SIZE_C];
 extern int task_id_buffer_index;

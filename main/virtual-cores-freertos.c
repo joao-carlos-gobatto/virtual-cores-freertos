@@ -16,14 +16,14 @@ int task_count_celsinho_mano = 0;
 int task_count = 0;
 
 extern int task_id_buffer[BUFFER_SIZE_C];
-extern int task_id_buffer_0[BUFFER_SIZE_C];
-extern int task_id_buffer_1[BUFFER_SIZE_C];
+extern int gantt_buffer_0[BUFFER_SIZE_C][2];
+extern int gantt_buffer_1[BUFFER_SIZE_C][2];
 extern TaskHandle_t task_handle_buffer[BUFFER_SIZE_C];
 extern int task_id_buffer_index;
 int task_id_buffer_start = 0;
-extern int task_id_buffer_index_0;
+extern int gantt_buffer_index_0;
 int task_id_0_buffer_start = 0;
-extern int task_id_buffer_index_1;
+extern int gantt_buffer_index_1;
 int task_id_1_buffer_start = 0;
 
 
@@ -94,20 +94,22 @@ void initVirtualCores(){
 
 void printTaskIdsBuffer(void) {
     int count = (task_id_buffer_index < BUFFER_SIZE_C) ? task_id_buffer_index : BUFFER_SIZE_C;
-    int start_0 = (task_id_buffer_index_0 < BUFFER_SIZE_C) ? 0 : task_id_0_buffer_start % BUFFER_SIZE_C;
-    int start_1 = (task_id_buffer_index_1 < BUFFER_SIZE_C) ? 0 : task_id_1_buffer_start % BUFFER_SIZE_C;
+    int start_0 = (gantt_buffer_index_0 < BUFFER_SIZE_C) ? 0 : task_id_0_buffer_start % BUFFER_SIZE_C;
+    int start_1 = (gantt_buffer_index_1 < BUFFER_SIZE_C) ? 0 : task_id_1_buffer_start % BUFFER_SIZE_C;
 
     for (int i = 0; i < count; i++) {
         int index_0 = (start_0 + i) % BUFFER_SIZE_C;
         int index_1 = (start_1 + i) % BUFFER_SIZE_C;
-        printf("Virtual core at Core 0: %d\tVirtual core at Core 1: %d\n", task_id_buffer_0[index_0], task_id_buffer_1[index_1]);
+        //Core 0      Core 1
+        //tick,taskid,tick,taskid
+        printf("$%d,%d,%d,%d\n", gantt_buffer_0[index_0][0],gantt_buffer_0[index_0][1],gantt_buffer_1[index_1][0],gantt_buffer_1[index_1][1]);
     }
 }
 
 void print_task(){
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     while(1){
-        printf("Virtual Core ReadyList Shifting\nCore 0: %ld, Core 1: %ld\n", getCount_do_celsinho_manobrown_0(),getCount_do_celsinho_manobrown_1());
+        printf("Virtual Core ReadyList Shifting\nCore 0: %ld, Core 1: %ld\n", getcount_switch_vcore_0(),getcount_switch_vcore_1());
         printf("------------------------------------------------------------------------------------------------------------\n");
         printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |\n");
         printf("-----------------------------------------------------------------------------------------------------------\n");

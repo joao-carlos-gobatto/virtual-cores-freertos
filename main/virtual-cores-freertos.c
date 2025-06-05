@@ -13,6 +13,7 @@ extern int tickCounter;
 extern TaskHandle_t idleHandleArray[2];
 
 int task_count_celsinho_mano = 0;
+int task_count = 0;
 
 extern int task_id_buffer[BUFFER_SIZE_C];
 extern int task_id_buffer_0[BUFFER_SIZE_C];
@@ -24,6 +25,7 @@ extern int task_id_buffer_index_0;
 int task_id_0_buffer_start = 0;
 extern int task_id_buffer_index_1;
 int task_id_1_buffer_start = 0;
+
 
 const char* getTaskStateName(int state) {
     switch (state) {
@@ -71,12 +73,7 @@ void printAndClearStringBuffer() {
 
 void initVirtualCores(){
     if(getSchedulingAlgorithm() == RMC || getSchedulingAlgorithm() == RRC){
-        //Pensar em uma forma de contar a quantidade de task não nulas para entrar no for.
-        for (size_t i = 0; i < 8; i++)
-        {
-            //tasks[i].task_virtual_core = i%VIRTUAL_CORE_QUANTITY_C;
-        }
-        for (size_t i = 0; i < 8; i++)
+        for (size_t i = 0; i < task_count; i++)
         {
             xTaskCreatePinnedToCore(
                 tasks[i].task_function,
@@ -158,7 +155,7 @@ void generateTasks(int number_tasks){
         } else {
             tasks[i].final_task = 1;
         }
-        tasks[i].task_virtual_core = i % 8;
+        tasks[i].task_virtual_core = i % VIRTUAL_CORE_QUANTITY_C;
     }
 }
 
@@ -233,8 +230,9 @@ void app_main(void)
     // tasks[7].computing_time = 40;
     // tasks[7].final_task = 1;
     // tasks[7].task_virtual_core = 3;
+    task_count = 13;
 
-    generateTasks(8);
+    generateTasks(task_count);
 
     initVirtualCores();
 }

@@ -382,7 +382,7 @@ void SortReadyListByPeriod(int core_id)
 
                 prvInitialiseNewTask( pxTaskCode, pcName, ( uint32_t ) usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL, xCoreID % 2 );  // COLOQUEI O %2
                 xReturn = pdPASS;
-                if (counter > 4 && counter < 20)   ////////////////////////////// Definir um MAX_NUMBER_TASK para o 20
+                if (counter > 4 && counter < MAX_NUMBER_TASK_C + 4)   ////////////////////////////// Definir um MAX_NUMBER_TASK para o 20
 				{	
                     descriptors[counter - 5].period = prPointer->period;
                     descriptors[counter - 5].period_dynamic = prPointer->period;

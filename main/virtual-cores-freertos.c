@@ -156,7 +156,7 @@ void app_main(void)
 {
     // struct Parameters pr,pr1,pr2,pr3,prprint;
 
-    setSchedulingAlgorithm(RMC);
+    setSchedulingAlgorithm(RRC);
 
     // tasks[0].period = 1000;
     // tasks[0].task_function = print_task;
@@ -181,7 +181,7 @@ void app_main(void)
     tasks[0].final_task = 0;
     tasks[0].task_virtual_core = 0;
 
-    tasks[1].period = 999;
+    tasks[1].period = 500;
     tasks[1].task_function = hello_task;
     tasks[1].task_name = strdup("Hello Task 1");  // Requires char* not char[]
     tasks[1].computing_time = 10;

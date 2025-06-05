@@ -3275,6 +3275,9 @@ BaseType_t xTaskIncrementTick( void )
 
             break;
         default:
+            int tempTidRR = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCurCoreID));
+            if (tempTidRR != -1)
+                descriptors[tempTidRR].period_dynamic++;
             break;
     }
 	

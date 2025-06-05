@@ -124,7 +124,7 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
         default:
             int tempTidRR = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCoreID));
             if (tempTidRR != -1)
-                descriptors[tempTidRR].period_dynamic++;
+                descriptors[tempTidRR].period_dynamic++; // FIX THIS
             break;
         }
         

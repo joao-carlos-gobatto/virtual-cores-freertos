@@ -1,0 +1,1848 @@
+Executing action: monitor
+Serial port /dev/ttyUSB0
+Connecting....
+Detecting chip type... Unsupported detection protocol, switching and trying again...
+Connecting....
+Detecting chip type... ESP32
+Running idf_monitor in directory /home/doidobr/Documents/virtual-cores-freertos
+Executing "/home/doidobr/.espressif/python_env/idf5.3_py3.10_env/bin/python /home/doidobr/esp/v5.3.3/esp-idf/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 /home/doidobr/Documents/virtual-cores-freertos/build/virtual-cores-freertos.elf -m '/home/doidobr/.espressif/python_env/idf5.3_py3.10_env/bin/python' '/home/doidobr/esp/v5.3.3/esp-idf/tools/idf.py'"...
+ets Jun  8 2016 00:22:57
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:7176
+load:0x40078000,len:15644
+ho 0 tail 12 room 4
+load:0x40080400,len:4
+load:0x40080404,len:3904
+entry 0x40080640
+[0;32mI (30) boot: ESP-IDF v5.3.3-dirty 2nd stage bootloader[0m
+[0;32mI (30) boot: compile time Jun 26 2025 11:30:34[0m
+[0;32mI (30) boot: Multicore bootloader[0m
+[0;32mI (35) boot: chip revision: v1.0[0m
+[0;32mI (39) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (43) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (48) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (53) boot: Enabling RNG early entropy source...[0m
+[0;32mI (58) boot: Partition Table:[0m
+[0;32mI (62) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (69) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (76) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (84) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (91) boot: End of partition table[0m
+[0;32mI (95) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=09a4ch ( 39500) map[0m
+[0;32mI (117) esp_image: segment 1: paddr=00019a74 vaddr=3ffb0000 size=022cch (  8908) load[0m
+[0;32mI (121) esp_image: segment 2: paddr=0001bd48 vaddr=40080000 size=042d0h ( 17104) load[0m
+[0;32mI (130) esp_image: segment 3: paddr=00020020 vaddr=400d0020 size=16f9ch ( 94108) map[0m
+[0;32mI (164) esp_image: segment 4: paddr=00036fc4 vaddr=400842d0 size=09054h ( 36948) load[0m
+[0;32mI (185) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (185) boot: Disabling RNG early entropy source...[0m
+[0;32mI (198) cpu_start: Multicore app[0m
+[0;32mI (206) cpu_start: Pro cpu start user code[0m
+[0;32mI (206) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (206) app_init: Application information:[0m
+[0;32mI (209) app_init: Project name:     virtual-cores-freertos[0m
+[0;32mI (215) app_init: App version:      fd8a934-dirty[0m
+[0;32mI (221) app_init: Compile time:     Jun 26 2025 11:30:19[0m
+[0;32mI (227) app_init: ELF file SHA256:  c1cd848e6...[0m
+[0;32mI (232) app_init: ESP-IDF:          v5.3.3-dirty[0m
+[0;32mI (237) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (242) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (247) efuse_init: Chip rev:         v1.0[0m
+[0;32mI (252) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (259) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (265) heap_init: At 3FFB6C40 len 000293C0 (164 KiB): DRAM[0m
+[0;32mI (271) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (278) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (284) heap_init: At 4008D324 len 00012CDC (75 KiB): IRAM[0m
+[0;32mI (292) spi_flash: detected chip: generic[0m
+[0;32mI (295) spi_flash: flash io: dio[0m
+task 0
+task 1
+task 2
+T 'IDLE0' created successfully!
+T 'IDLE1' created successfully!
+[0;32mI (307) main_task: Started on CPU0[0m
+[0;32mI (317) main_task: Calling app_main()[0m
+task 3
+task 4
+'500' dynamic period set!
+'5' dynamic computing_time set!
+
+contado do celso mano: 1:	Chama RR
+task 5
+'1000' dynamic period set!
+'10' dynamic computing_time set!
+
+contado do celso mano: 2:	Chama RR
+task 6
+'1500' dynamic period set!
+'15' dynamic computing_time set!
+
+contado do celso mano: 3:	Chama RR
+task 7
+'2000' dynamic period set!
+'20' dynamic computing_time set!
+
+contado do celso mano: 4:	Chama RR
+task 8
+'2500' dynamic period set!
+'25' dynamic computing_time set!
+
+contado do celso mano: 5:	Chama RR
+task 9
+'3000' dynamic period set!
+'30' dynamic computing_time set!
+
+contado do celso mano: 6:	Chama RR
+task 10
+'3500' dynamic period set!
+'35' dynamic computing_time set!
+
+contado do celso mano: 7:	Chama RR
+task 11
+'4000' dynamic period set!
+'40' dynamic computing_time set!
+
+contado do celso mano: 8:	Chama RR
+task 12
+'4500' dynamic period set!
+'45' dynamic computing_time set!
+
+contado do celso mano: 9:	Chama RR
+task 13
+'5000' dynamic period set!
+'50' dynamic computing_time set!
+
+contado do celso mano: 10:	Chama RR
+task 14
+'5500' dynamic period set!
+'55' dynamic computing_time set!
+
+contado do celso mano: 11:	Chama RR
+task 15
+'6000' dynamic period set!
+'60' dynamic computing_time set!
+
+contado do celso mano: 12:	Chama RR
+task 16
+'6500' dynamic period set!
+'65' dynamic computing_time set!
+
+contado do celso mano: 13:	[0;32mI (427) main_task: Returned from app_main()[0m
+Virtual Core ReadyList Shifting
+Core 0: 72, Core 1: 97
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 509        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1014       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1509       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2013       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2509       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3025       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3518       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4025       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4509       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5013       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5509       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6013       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6509       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###117
+$89,8,0,0,66,7,1,7
+###117
+$90,10,0,2,67,1,1,1
+###118
+$91,12,0,4,68,3,1,3
+###118
+$92,6,0,6,69,5,1,5
+###118
+$94,0,0,0,70,7,1,7
+###118
+$95,2,0,2,71,9,1,1
+###119
+$96,4,0,4,72,11,1,3
+###119
+$97,6,0,6,73,5,1,5
+###119
+$99,8,0,0,74,7,1,7
+###119
+$100,10,0,2,75,1,1,1
+###120
+$101,12,0,4,76,3,1,3
+###120
+$102,6,0,6,77,5,1,5
+###120
+$29,8,0,0,78,7,1,7
+###120
+$30,10,0,2,79,9,1,1
+###121
+$31,12,0,4,80,11,1,3
+###121
+$32,6,0,6,81,5,1,5
+###121
+$34,0,0,0,82,7,1,7
+###121
+$35,2,0,2,83,1,1,1
+###122
+$36,4,0,4,84,3,1,3
+###122
+$37,6,0,6,85,5,1,5
+###122
+$39,8,0,0,86,7,1,7
+###122
+$40,10,0,2,87,9,1,1
+###123
+$41,12,0,4,88,11,1,3
+###123
+$42,6,0,6,89,5,1,5
+###123
+$44,0,0,0,90,7,1,7
+###123
+$45,2,0,2,91,1,1,1
+###124
+$46,4,0,4,92,3,1,3
+###124
+$47,6,0,6,93,5,1,5
+###124
+$49,8,0,0,94,7,1,7
+###124
+$50,10,0,2,95,9,1,1
+Buffered Output:
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+Hello Task Computing Time: 
+10
+ZVirtual Core ReadyList Shifting
+Core 0: 124, Core 1: 202
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 516        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1027       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1516       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2026       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2516       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3052       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3531       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4052       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4515       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5026       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5515       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6026       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6515       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###222
+$204,0,0,0,186,7,1,7
+###222
+$205,2,0,2,187,1,1,1
+###223
+$206,4,0,4,188,3,1,3
+###223
+$207,6,0,6,189,5,1,5
+###223
+$94,0,0,0,190,7,1,7
+###223
+$95,2,0,2,191,9,1,1
+###224
+$96,4,0,4,192,11,1,3
+###224
+$97,6,0,6,193,5,1,5
+###224
+$99,8,0,0,194,7,1,7
+###224
+$100,10,0,2,195,1,1,1
+###225
+$101,12,0,4,196,3,1,3
+###225
+$102,6,0,6,197,5,1,5
+###225
+$144,0,0,0,198,7,1,7
+###226
+$145,2,0,2,199,9,1,1
+###226
+$146,4,0,4,200,11,1,3
+###226
+$147,6,0,6,201,5,1,5
+###226
+$149,8,0,0,202,7,1,7
+###227
+$150,10,0,2,203,1,1,1
+###227
+$151,12,0,4,204,3,1,3
+###227
+$152,6,0,6,205,5,1,5
+###227
+$154,0,0,0,206,7,1,7
+###228
+$155,2,0,2,207,9,1,1
+###228
+$156,4,0,4,208,11,1,3
+###228
+$157,6,0,6,209,5,1,5
+###228
+$159,8,0,0,210,7,1,7
+###229
+$160,10,0,2,211,1,1,1
+###229
+$161,12,0,4,212,3,1,3
+###229
+$162,6,0,6,213,5,1,5
+###229
+$164,0,0,0,214,7,1,7
+###230
+$165,2,0,2,215,9,1,1
+###230
+$166,4,0,4,216,11,1,3
+###230
+$167,6,0,6,217,5,1,5
+###231
+$169,8,0,0,218,7,1,7
+###231
+$170,10,0,2,219,1,1,1
+###231
+$171,12,0,4,220,3,1,3
+###231
+$172,6,0,6,221,5,1,5
+###232
+$174,0,0,0,222,7,1,7
+###232
+$175,2,0,2,223,9,1,1
+###232
+$176,4,0,4,224,11,1,3
+###232
+$177,6,0,6,225,5,1,5
+###233
+$179,8,0,0,226,7,1,7
+###233
+$180,10,0,2,227,1,1,1
+###233
+$181,12,0,4,228,3,1,3
+Buffered Output:
+60
+Hello Task Computing Time: 
+60
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+60
+Hello Task Computing Time: 
+60
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+6
+
+Hello Task Computing Time: 
+5
+60
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+60
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+60
+HeHello Task Computing Time: 
+5
+60
+Virtual Core ReadyList Shifting
+Core 0: 176, Core 1: 295
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 522        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1039       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1522       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2038       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2522       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3075       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3544       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4075       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4522       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5037       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5522       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6037       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6522       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###315
+$204,0,0,0,306,7,1,7
+###315
+$205,2,0,2,307,1,1,1
+###316
+$206,4,0,4,308,3,1,3
+###316
+$207,6,0,6,309,5,1,5
+###316
+$237,8,0,0,310,7,1,7
+###316
+$238,10,0,2,311,9,1,1
+###317
+$239,12,0,4,312,11,1,3
+###317
+$240,6,0,6,313,5,1,5
+###317
+$242,0,0,0,314,7,1,7
+###318
+$243,2,0,2,315,1,1,1
+###318
+$244,4,0,4,316,3,1,3
+###318
+$245,6,0,6,317,5,1,5
+###318
+$247,8,0,0,318,7,1,7
+###319
+$248,10,0,2,319,9,1,1
+###319
+$249,12,0,4,260,3,1,3
+###319
+$250,6,0,6,261,5,1,5
+###319
+$252,0,0,0,262,7,1,7
+###320
+$253,2,0,2,263,9,1,1
+###320
+$254,4,0,4,264,11,1,3
+###320
+$255,6,0,6,265,5,1,5
+###320
+$257,8,0,0,266,7,1,7
+###321
+$258,10,0,2,267,1,1,1
+###321
+$259,12,0,4,268,3,1,3
+###321
+$260,6,0,6,269,5,1,5
+###321
+$262,0,0,0,270,7,1,7
+###322
+$263,2,0,2,271,9,1,1
+###322
+$264,4,0,4,272,11,1,3
+###322
+$265,6,0,6,273,5,1,5
+###323
+$267,8,0,0,274,7,1,7
+###323
+$268,10,0,2,275,1,1,1
+###323
+$269,12,0,4,276,3,1,3
+###323
+$270,6,0,6,277,5,1,5
+###324
+$272,0,0,0,278,7,1,7
+###324
+$273,2,0,2,279,9,1,1
+###324
+$274,4,0,4,280,11,1,3
+###324
+$275,6,0,6,281,5,1,5
+###325
+$277,8,0,0,282,7,1,7
+###325
+$278,10,0,2,283,1,1,1
+###325
+$279,12,0,4,284,3,1,3
+###325
+$280,6,0,6,285,5,1,5
+###326
+$282,0,0,0,286,7,1,7
+###326
+$283,2,0,2,287,9,1,1
+###326
+$284,4,0,4,288,11,1,3
+###326
+$285,6,0,6,289,5,1,5
+###327
+$287,8,0,0,290,7,1,7
+###327
+$288,10,0,2,291,1,1,1
+###327
+$289,12,0,4,292,3,1,3
+###328
+$290,6,0,6,293,5,1,5
+###328
+$292,0,0,0,294,7,1,7
+###328
+$293,2,0,2,295,9,1,1
+###328
+$294,4,0,4,296,11,1,3
+###329
+$295,6,0,6,297,5,1,5
+###329
+$297,8,0,0,298,7,1,7
+###329
+$298,10,0,2,299,1,1,1
+###329
+$299,12,0,4,300,3,1,3
+###330
+$300,6,0,6,301,5,1,5
+Buffered Output:
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+45
+Hello Task Computing Time: 
+30
+45
+Hello Task Computing Time: 
+30
+45
+Virtual Core ReadyList Shifting
+Core 0: 228, Core 1: 390
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 529        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1051       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1529       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2050       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2529       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3099       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3557       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4099       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4528       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5049       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5528       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6049       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6528       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###410
+$337,8,0,0,366,7,1,7
+###410
+$338,10,0,2,367,9,1,1
+###411
+$339,12,0,4,368,11,1,3
+###411
+$340,6,0,6,369,5,1,5
+###411
+$342,0,0,0,370,7,1,7
+###411
+$343,2,0,2,371,1,1,1
+###412
+$344,4,0,4,372,3,1,3
+###412
+$345,6,0,6,373,5,1,5
+###412
+$347,8,0,0,374,7,1,7
+Buffered Output:
+20
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 20
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+20
+HeHello Task Computing Time: 
+5
+20
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+20
+HeHello Task Computing Time: 
+5
+20
+Virtual Core ReadyList Shifting
+Core 0: 280, Core 1: 478
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 535        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1062       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1535       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2061       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2535       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3121       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3570       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4121       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4535       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5060       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5535       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6060       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6535       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###498
+$435,0,0,0,486,7,1,7
+###498
+$436,2,0,2,487,9,1,1
+###499
+$437,4,0,4,488,11,1,3
+###499
+$438,6,0,6,489,5,1,5
+###499
+$440,8,0,0,490,7,1,7
+###499
+$441,10,0,2,491,1,1,1
+###500
+$442,12,0,4,492,3,1,3
+###500
+$443,6,0,6,493,5,1,5
+###500
+$445,0,0,0,494,7,1,7
+###501
+$446,2,0,2,495,9,1,1
+###501
+$447,4,0,4,496,11,1,3
+###501
+$448,6,0,6,497,5,1,5
+###501
+$450,8,0,0,498,7,1,7
+###502
+$451,10,0,2,499,1,1,1
+###502
+$452,12,0,4,500,3,1,3
+###502
+$453,6,0,6,501,5,1,5
+###502
+$455,0,0,0,502,7,1,7
+###503
+$456,2,0,2,503,9,1,1
+###503
+$457,4,0,4,444,3,1,3
+###503
+$458,6,0,6,445,5,1,5
+###503
+$460,8,0,0,446,7,1,7
+###504
+$461,10,0,2,447,9,1,1
+Buffered Output:
+20
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+20
+Virtual Core ReadyList Shifting
+Core 0: 332, Core 1: 564
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 542        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1073       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1542       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2072       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2542       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3142       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3583       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4142       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4541       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5071       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5541       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6071       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6541       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###584
+$531,8,0,0,546,7,1,7
+###584
+$532,10,0,2,547,1,1,1
+###585
+$533,12,0,4,548,3,1,3
+###585
+$534,6,0,6,549,5,1,5
+###585
+$536,0,0,0,550,7,1,7
+###585
+$537,2,0,2,551,9,1,1
+###586
+$538,4,0,4,552,11,1,3
+###586
+$539,6,0,6,553,5,1,5
+###586
+$541,8,0,0,554,7,1,7
+###587
+$542,10,0,2,555,1,1,1
+###587
+$543,12,0,4,556,3,1,3
+###587
+$544,6,0,6,557,5,1,5
+###587
+$546,0,0,0,558,7,1,7
+###588
+$547,2,0,2,559,9,1,1
+###588
+$548,4,0,4,560,11,1,3
+###588
+$549,6,0,6,561,5,1,5
+###588
+$551,8,0,0,562,7,1,7
+###589
+$552,10,0,2,563,1,1,1
+###589
+$553,12,0,4,564,3,1,3
+###589
+$554,6,0,6,565,5,1,5
+###589
+$556,0,0,0,566,7,1,7
+###590
+$557,2,0,2,567,9,1,1
+###590
+$558,4,0,4,568,11,1,3
+###590
+$559,6,0,6,569,5,1,5
+###590
+$561,8,0,0,570,7,1,7
+###591
+$562,10,0,2,571,1,1,1
+###591
+$563,12,0,4,572,3,1,3
+###591
+$564,6,0,6,573,5,1,5
+###592
+$566,0,0,0,574,7,1,7
+###592
+$567,2,0,2,575,9,1,1
+###592
+$568,4,0,4,576,11,1,3
+###592
+$569,6,0,6,577,5,1,5
+###593
+$475,0,0,0,578,7,1,7
+###593
+$476,2,0,2,579,1,1,1
+###593
+$477,4,0,4,580,3,1,3
+Buffered Output:
+40
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+5
+40
+Virtual Core ReadyList Shifting
+Core 0: 384, Core 1: 652
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 548        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1084       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1548       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2083       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2548       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3164       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3596       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4164       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4548       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5082       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5548       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6082       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6548       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###672
+$629,0,0,0,666,7,1,7
+###672
+$630,2,0,2,667,1,1,1
+###673
+$631,4,0,4,668,3,1,3
+###673
+$632,6,0,6,669,5,1,5
+###673
+$634,8,0,0,670,7,1,7
+###673
+$635,10,0,2,671,9,1,1
+###674
+$636,12,0,4,672,11,1,3
+###674
+$637,6,0,6,673,5,1,5
+###674
+$639,0,0,0,674,7,1,7
+###675
+$640,2,0,2,675,1,1,1
+###675
+$641,4,0,4,616,11,1,3
+###675
+$642,6,0,6,617,5,1,5
+###675
+$644,8,0,0,618,7,1,7
+###676
+$645,10,0,2,619,1,1,1
+###676
+$646,12,0,4,620,3,1,3
+###676
+$647,6,0,6,621,5,1,5
+###676
+$649,0,0,0,622,7,1,7
+###677
+$650,2,0,2,623,9,1,1
+###677
+$651,4,0,4,624,11,1,3
+###677
+$652,6,0,6,625,5,1,5
+###677
+$654,8,0,0,626,7,1,7
+###678
+$655,10,0,2,627,1,1,1
+###678
+$656,12,0,4,628,3,1,3
+###678
+$657,6,0,6,629,5,1,5
+###678
+$561,8,0,0,630,7,1,7
+###679
+$562,10,0,2,631,9,1,1
+###679
+$563,12,0,4,632,11,1,3
+###679
+$564,6,0,6,633,5,1,5
+###680
+$566,0,0,0,634,7,1,7
+###680
+$567,2,0,2,635,1,1,1
+###680
+$568,4,0,4,636,3,1,3
+###680
+$569,6,0,6,637,5,1,5
+###681
+$594,8,0,0,638,7,1,7
+###681
+$595,10,0,2,639,9,1,1
+###681
+$596,12,0,4,640,11,1,3
+###681
+$597,6,0,6,641,5,1,5
+###682
+$599,0,0,0,642,7,1,7
+###682
+$600,2,0,2,643,1,1,1
+###682
+$601,4,0,4,644,3,1,3
+###682
+$602,6,0,6,645,5,1,5
+###683
+$604,8,0,0,646,7,1,7
+###683
+$605,10,0,2,647,9,1,1
+###683
+$606,12,0,4,648,11,1,3
+###684
+$607,6,0,6,649,5,1,5
+###684
+$609,0,0,0,650,7,1,7
+###684
+$610,2,0,2,651,1,1,1
+###684
+$611,4,0,4,652,3,1,3
+###685
+$612,6,0,6,653,5,1,5
+Buffered Output:
+40
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+45
+40
+Hello Task Computing Time: 
+45
+40
+Hello Task Computing Time: 
+45
+40
+Virtual Core ReadyList Shifting
+Core 0: 436, Core 1: 752
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 555        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1096       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1555       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2095       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2555       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3189       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3609       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4189       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4554       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5094       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5554       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6095       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6554       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###772
+$739,8,0,0,726,7,1,7
+Buffered Output:
+40
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+40
+HeHello Task Computing Time: 
+5
+40
+Virtual Core ReadyList Shifting
+Core 0: 488, Core 1: 834
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 561        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1106       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1561       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2105       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2561       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3210       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3622       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4210       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4561       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5105       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5561       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6105       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6561       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###854
+$831,0,0,0,846,7,1,7
+###854
+$832,2,0,2,847,9,1,1
+###855
+$833,4,0,4,848,11,1,3
+###855
+$834,6,0,6,849,5,1,5
+###855
+$836,8,0,0,850,7,1,7
+###855
+$837,10,0,2,851,1,1,1
+###856
+$838,12,0,4,852,3,1,3
+###856
+$839,6,0,6,853,5,1,5
+###856
+$749,8,0,0,854,7,1,7
+###857
+$750,10,0,2,855,9,1,1
+###857
+$751,12,0,4,856,11,1,3
+###857
+$752,6,0,6,857,5,1,5
+###857
+$754,0,0,0,798,7,1,7
+###858
+$755,2,0,2,799,9,1,1
+Buffered Output:
+Virtual Core ReadyList Shifting
+Core 0: 540, Core 1: 916
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 568        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1117       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1568       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2116       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2568       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3230       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3635       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4230       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4567       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5115       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5567       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6115       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6567       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###936
+$831,0,0,0,906,7,1,7
+###936
+$832,2,0,2,907,1,1,1
+###937
+$833,4,0,4,908,3,1,3
+###937
+$834,6,0,6,909,5,1,5
+###937
+$836,8,0,0,910,7,1,7
+###937
+$837,10,0,2,911,9,1,1
+###938
+$838,12,0,4,912,11,1,3
+###938
+$839,6,0,6,913,5,1,5
+###938
+$858,0,0,0,914,7,1,7
+###939
+$859,2,0,2,915,1,1,1
+###939
+$860,4,0,4,916,3,1,3
+###939
+$861,6,0,6,917,5,1,5
+###939
+$863,8,0,0,918,7,1,7
+###940
+$864,10,0,2,919,9,1,1
+###940
+$865,12,0,4,920,11,1,3
+###940
+$866,6,0,6,921,5,1,5
+###940
+$868,0,0,0,922,7,1,7
+###941
+$869,2,0,2,923,1,1,1
+###941
+$870,4,0,4,924,3,1,3
+###941
+$871,6,0,6,925,5,1,5
+###941
+$873,8,0,0,926,7,1,7
+###942
+$874,10,0,2,927,9,1,1
+###942
+$875,12,0,4,928,11,1,3
+###942
+$876,6,0,6,929,5,1,5
+###942
+$878,0,0,0,930,7,1,7
+###943
+$879,2,0,2,931,1,1,1
+###943
+$880,4,0,4,932,3,1,3
+Buffered Output:
+40
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+40
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+40
+5
+Virtual Core ReadyList Shifting
+Core 0: 592, Core 1: 1003
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 574        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1128       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1574       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2127       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2574       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3252       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3648       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4252       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4574       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5126       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5574       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6126       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6574       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###1023
+$945,8,0,0,966,7,1,7
+###1023
+$946,10,0,2,967,9,1,1
+###1024
+$947,12,0,4,968,11,1,3
+###1024
+$948,6,0,6,969,5,1,5
+###1024
+$950,0,0,0,970,7,1,7
+###1025
+$951,2,0,2,971,1,1,1
+###1025
+$952,4,0,4,972,3,1,3
+###1025
+$953,6,0,6,973,5,1,5
+###1025
+$955,8,0,0,974,7,1,7
+###1026
+$956,10,0,2,975,9,1,1
+###1026
+$957,12,0,4,976,11,1,3
+###1026
+$958,6,0,6,977,5,1,5
+###1026
+$960,0,0,0,978,7,1,7
+###1027
+$961,2,0,2,979,1,1,1
+###1027
+$962,4,0,4,980,3,1,3
+###1027
+$963,6,0,6,981,5,1,5
+###1028
+$965,8,0,0,982,7,1,7
+###1028
+$966,10,0,2,983,9,1,1
+###1028
+$967,12,0,4,984,11,1,3
+###1028
+$968,6,0,6,985,5,1,5
+###1029
+$970,0,0,0,986,7,1,7
+###1029
+$971,2,0,2,987,1,1,1
+###1029
+$972,4,0,4,988,3,1,3
+###1029
+$973,6,0,6,989,5,1,5
+###1030
+$975,8,0,0,990,7,1,7
+###1030
+$976,10,0,2,991,9,1,1
+###1030
+$977,12,0,4,992,11,1,3
+###1031
+$978,6,0,6,993,5,1,5
+###1031
+$980,0,0,0,994,7,1,7
+###1031
+$981,2,0,2,995,1,1,1
+###1031
+$982,4,0,4,996,3,1,3
+###1032
+$983,6,0,6,997,5,1,5
+###1032
+$985,8,0,0,998,7,1,7
+###1032
+$986,10,0,2,999,9,1,1
+###1032
+$987,12,0,4,1000,11,1,3
+###1033
+$988,6,0,6,1001,5,1,5
+###1033
+$990,0,0,0,1002,7,1,7
+###1033
+$991,2,0,2,1003,1,1,1
+###1034
+$992,4,0,4,1004,3,1,3
+###1034
+$993,6,0,6,1005,5,1,5
+Buffered Output:
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+ZVirtual Core ReadyList Shifting
+Core 0: 644, Core 1: 1111
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 581        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1141       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1581       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2140       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2581       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3279       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3661       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4279       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4580       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5139       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5580       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6139       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6580       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###1131
+$1063,0,0,0,1086,7,1,7
+###1131
+$1064,2,0,2,1087,9,1,1
+###1132
+$1065,4,0,4,1088,11,1,3
+###1132
+$1066,6,0,6,1089,5,1,5
+###1132
+$1068,8,0,0,1090,7,1,7
+###1133
+$1069,10,0,2,1091,1,1,1
+###1133
+$1070,12,0,4,1092,3,1,3
+###1133
+$1071,6,0,6,1093,5,1,5
+###1133
+$1073,0,0,0,1094,7,1,7
+###1134
+$1074,2,0,2,1095,9,1,1
+###1134
+$1075,4,0,4,1096,11,1,3
+###1134
+$1076,6,0,6,1097,5,1,5
+###1135
+$1078,8,0,0,1098,7,1,7
+###1135
+$1079,10,0,2,1099,1,1,1
+###1135
+$1080,12,0,4,1100,3,1,3
+###1136
+$1081,6,0,6,1101,5,1,5
+###1136
+$1083,0,0,0,1102,7,1,7
+###1136
+$1084,2,0,2,1103,9,1,1
+###1136
+$1085,4,0,4,1104,11,1,3
+###1137
+$1086,6,0,6,1105,5,1,5
+###1137
+$1088,8,0,0,1106,7,1,7
+###1137
+$1089,10,0,2,1107,1,1,1
+###1138
+$1090,12,0,4,1108,3,1,3
+###1138
+$1091,6,0,6,1109,5,1,5
+###1138
+$1093,0,0,0,1110,7,1,7
+###1138
+$1094,2,0,2,1111,9,1,1
+###1139
+$1095,4,0,4,1112,11,1,3
+###1139
+$1096,6,0,6,1113,5,1,5
+###1139
+$1098,8,0,0,1114,7,1,7
+###1140
+$1099,10,0,2,1115,1,1,1
+###1140
+$1100,12,0,4,1116,3,1,3
+###1140
+$1101,6,0,6,1117,5,1,5
+###1140
+$1103,0,0,0,1118,7,1,7
+###1141
+$1104,2,0,2,1119,9,1,1
+###1141
+$1105,4,0,4,1120,11,1,3
+###1141
+$1106,6,0,6,1121,5,1,5
+###1142
+$1108,8,0,0,1122,7,1,7
+###1142
+$1109,10,0,2,1123,1,1,1
+###1142
+$1110,12,0,4,1124,3,1,3
+###1142
+$1111,6,0,6,1125,5,1,5
+###1143
+$1113,0,0,0,1126,7,1,7
+###1143
+$1114,2,0,2,1127,9,1,1
+###1143
+$1115,4,0,4,1128,11,1,3
+###1144
+$1116,6,0,6,1129,5,1,5
+###1144
+$1000,0,0,0,1130,7,1,7
+###1144
+$1001,2,0,2,1131,1,1,1
+###1144
+$1002,4,0,4,1132,3,1,3
+###1145
+$1003,6,0,6,1133,5,1,5
+###1145
+$1005,8,0,0,1134,7,1,7
+###1145
+$1006,10,0,2,1135,9,1,1
+###1146
+$1007,12,0,4,1136,11,1,3
+###1146
+$1008,6,0,6,1137,5,1,5
+###1146
+$1053,0,0,0,1138,7,1,7
+Buffered Output:
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+30
+5
+Virtual Core ReadyList Shifting
+Core 0: 696, Core 1: 1206
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 587        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1153       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1587       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2152       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2587       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3303       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3674       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4303       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4587       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5151       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5587       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6151       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6587       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###1226
+$1168,8,0,0,1206,7,1,7
+###1226
+$1169,10,0,2,1207,9,1,1
+###1227
+$1170,12,0,4,1208,11,1,3
+###1227
+$1171,6,0,6,1209,5,1,5
+###1227
+$1173,0,0,0,1210,7,1,7
+###1228
+$1174,2,0,2,1211,1,1,1
+Buffered Output:
+20
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+Hello Task Computing Time: 
+45
+Hello Task Computing Time: 
+20
+45
+Hello Task Computing Time: 
+20
+45
+Hello Task Computing Time: 
+20
+45
+Virtual Core ReadyList Shifting
+Core 0: 748, Core 1: 1295
+------------------------------------------------------------------------------------------------------------
+| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |
+-----------------------------------------------------------------------------------------------------------
+| 0       | 500     | 5              | 594        | 5                 | 0       | 0       | |
+| 1       | 1000    | 10             | 1164       | 10                | 1       | 1       | |
+| 2       | 1500    | 15             | 1594       | 15                | 0       | 2       | |
+| 3       | 2000    | 20             | 2163       | 20                | 1       | 3       | |
+| 4       | 2500    | 25             | 2594       | 25                | 0       | 4       | |
+| 5       | 3000    | 30             | 3325       | 30                | 1       | 5       | |
+| 6       | 3500    | 35             | 3687       | 35                | 0       | 6       | |
+| 7       | 4000    | 40             | 4325       | 40                | 1       | 7       | |
+| 8       | 4500    | 45             | 4593       | 45                | 0       | 0       | |
+| 9       | 5000    | 50             | 5162       | 50                | 1       | 1       | |
+| 10      | 5500    | 55             | 5593       | 55                | 0       | 2       | |
+| 11      | 6000    | 60             | 6162       | 60                | 1       | 3       | |
+| 12      | 6500    | 65             | 6593       | 65                | 0       | 4       | |
+-----------------------------------------------------------------------------------------------------------
+Idle 0 handle: 0x3ffafb80 , Idle 1 handle: 0x3ffafcd8
+History of selected tasks:
+###1315
+$1267,0,0,0,1266,7,1,7
+###1315
+$1268,2,0,2,1267,1,1,1
+###1316
+$1269,4,0,4,1268,3,1,3
+###1316
+$1270,6,0,6,1269,5,1,5
+###1316
+$1272,8,0,0,1270,7,1,7
+###1317
+$1273,10,0,2,1271,9,1,1
+###1317
+$1274,12,0,4,1272,11,1,3
+###1317
+$1275,6,0,6,1273,5,1,5
+###1317
+$1277,0,0,0,1274,7,1,7
+###1318
+$1278,2,0,2,1275,1,1,1
+###1318
+$1279,4,0,4,1276,3,1,3
+###1318
+$1280,6,0,6,1277,5,1,5
+###1319
+$1282,8,0,0,1278,7,1,7
+###1319
+$1283,10,0,2,1279,9,1,1
+###1319
+$1284,12,0,4,1280,11,1,3
+###1320
+$1285,6,0,6,1281,5,1,5
+###1320
+$1287,0,0,0,1282,7,1,7
+###1320
+$1288,2,0,2,1283,1,1,1
+###1320
+$1289,4,0,4,1284,3,1,3
+Buffered Output:
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+5
+30
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+5
+30
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+30
+Hello Task Computing Time: 
+5
+Hello Task Computing Time: 
+30
+5
+Hello Task Computing Time: 
+5
+30

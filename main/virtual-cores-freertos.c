@@ -102,8 +102,11 @@ void printTaskIdsBuffer(void) {
         int index_1 = (start_1 + i) % BUFFER_SIZE_C;
         //Core 0      Core 1
         //tick,taskid,realcore,virtualcore,tick,taskid,realcore,virtualcore
+        printf("###%d\n", tickCounter);
         printf("$%d,%d,%d,%d,%d,%d,%d,%d\n", gantt_buffer_0[index_0][0],gantt_buffer_0[index_0][1],gantt_buffer_0[index_0][2],gantt_buffer_0[index_0][3],
-            gantt_buffer_1[index_1][0],gantt_buffer_1[index_1][1],gantt_buffer_1[index_1][2],gantt_buffer_1[index_1][3]);
+             gantt_buffer_1[index_1][0],gantt_buffer_1[index_1][1],gantt_buffer_1[index_1][2],gantt_buffer_1[index_1][3]
+          // gantt_buffer_1[index_0][0],gantt_buffer_0[index_0][1],gantt_buffer_0[index_0][2],gantt_buffer_0[index_0][3]
+        );
     }
 }
 
@@ -115,15 +118,16 @@ void print_task(){
         printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |\n");
         printf("-----------------------------------------------------------------------------------------------------------\n");
         for (size_t i = 0; i < task_count_celsinho_mano; i++) {
-            printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-7d | %-12d |\n",
+            printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-7d | |\n",
                 i,
                 descriptors[i].period,
                 descriptors[i].computing_time,
                 descriptors[i].period_dynamic,
                 descriptors[i].computing_time_dynamic,
                 descriptors[i].task_core,
-                descriptors[i].task_virtual_core,
-                tickCounter);
+                descriptors[i].task_virtual_core
+                // tickCounter
+            );
         }
         printf("-----------------------------------------------------------------------------------------------------------\n");
         printf("Idle 0 handle: %p , Idle 1 handle: %p\n", idleHandleArray[0], idleHandleArray[1]);
@@ -164,7 +168,7 @@ void generateTasks(int number_tasks){
 
 void app_main(void)
 {
-    setSchedulingAlgorithm(RMC);
+    setSchedulingAlgorithm(RRC);
 
     xTaskCreatePinnedToCore(
         print_task,           // Function that implements the task

@@ -16,8 +16,8 @@ int task_count_celsinho_mano = 0;
 int task_count = 0;
 
 extern int task_id_buffer[BUFFER_SIZE_C];
-extern int gantt_buffer_0[BUFFER_SIZE_C][2];
-extern int gantt_buffer_1[BUFFER_SIZE_C][2];
+extern int gantt_buffer_0[BUFFER_SIZE_C][4];
+extern int gantt_buffer_1[BUFFER_SIZE_C][4];
 extern TaskHandle_t task_handle_buffer[BUFFER_SIZE_C];
 extern int task_id_buffer_index;
 int task_id_buffer_start = 0;
@@ -101,8 +101,9 @@ void printTaskIdsBuffer(void) {
         int index_0 = (start_0 + i) % BUFFER_SIZE_C;
         int index_1 = (start_1 + i) % BUFFER_SIZE_C;
         //Core 0      Core 1
-        //tick,taskid,tick,taskid
-        printf("$%d,%d,%d,%d\n", gantt_buffer_0[index_0][0],gantt_buffer_0[index_0][1],gantt_buffer_1[index_1][0],gantt_buffer_1[index_1][1]);
+        //tick,taskid,realcore,virtualcore,tick,taskid,realcore,virtualcore
+        printf("$%d,%d,%d,%d,%d,%d,%d,%d\n", gantt_buffer_0[index_0][0],gantt_buffer_0[index_0][1],gantt_buffer_0[index_0][2],gantt_buffer_0[index_0][3],
+            gantt_buffer_1[index_1][0],gantt_buffer_1[index_1][1],gantt_buffer_1[index_1][2],gantt_buffer_1[index_1][3]);
     }
 }
 

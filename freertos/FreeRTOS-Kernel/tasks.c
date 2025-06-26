@@ -3636,8 +3636,8 @@ BaseType_t xTaskIncrementTick( void )
     
     extern struct Parameters descriptors[MAX_NUMBER_TASK_C];
     int task_id_buffer[BUFFER_SIZE_C];         //FreeRTOS task id buffer
-    int gantt_buffer_0[BUFFER_SIZE_C][2];
-    int gantt_buffer_1[BUFFER_SIZE_C][2];
+    int gantt_buffer_0[BUFFER_SIZE_C][4];
+    int gantt_buffer_1[BUFFER_SIZE_C][4];
     TaskHandle_t task_handle_buffer[BUFFER_SIZE_C];
     int task_id_buffer_index = 0;   //FreeRTOS task id buffer index
     int gantt_buffer_index_0 = 0;
@@ -3670,7 +3670,8 @@ BaseType_t xTaskIncrementTick( void )
                     pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
                     gantt_buffer_0[gantt_buffer_index_0][0] = tickCounter;
                     gantt_buffer_0[gantt_buffer_index_0][1] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_number;
-                    // gantt_buffer_0[gantt_buffer_index_0] = current_logical_in_core_0;
+                    gantt_buffer_0[gantt_buffer_index_0][2] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_core;
+                    gantt_buffer_0[gantt_buffer_index_0][3] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_virtual_core;
                     xTaskScheduled = pdTRUE;
                     int task_to_requeue = ready_list_by_core[current_logical_in_core_0][0];
                     for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_0] - 1; i++)
@@ -3695,7 +3696,8 @@ BaseType_t xTaskIncrementTick( void )
                 pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].handle;
                 gantt_buffer_1[gantt_buffer_index_1][0] = tickCounter;
                 gantt_buffer_1[gantt_buffer_index_1][1] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_number;
-                // gantt_buffer_1[gantt_buffer_index_1] = current_logical_in_core_1;
+                gantt_buffer_1[gantt_buffer_index_1][2] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_core;
+                gantt_buffer_1[gantt_buffer_index_1][3] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_virtual_core;
                 xTaskScheduled = pdTRUE;
                 int task_to_requeue = ready_list_by_core[current_logical_in_core_1][0];
                 for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_1] - 1; i++)

@@ -8,17 +8,43 @@ def ler_arquivo(filepath):
             if linha.startswith('$'):
                 linha = linha.strip().replace('$', '')
                 partes = linha.split(',')
-                if len(partes) == 4:
+                if len(partes) == 8:
                     tick0 = int(partes[0].strip())
                     task0 = partes[1].strip()
-                    tick1 = int(partes[2].strip())
-                    task1 = partes[3].strip()
-                    dados.append({'core0': (tick0, task0), 'core1': (tick1, task1)})
+                    realcore0 = int(partes[2].strip())
+                    # virtualcore0 = int(partes[3].strip())  # ignorado por enquanto
+
+                    tick1 = int(partes[4].strip())
+                    task1 = partes[5].strip()
+                    realcore1 = int(partes[6].strip())
+                    # virtualcore1 = int(partes[7].strip())  # ignorado por enquanto
+
+                    entrada = {}
+
+                    # Atribui ao core certo usando realcore
+                    if realcore0 == 0:
+                        entrada['core0'] = (tick0, task0)
+                    elif realcore0 == 1:
+                        entrada['core1'] = (tick0, task0)
+
+                    if realcore1 == 0:
+                        entrada['core0'] = (tick1, task1)
+                    elif realcore1 == 1:
+                        entrada['core1'] = (tick1, task1)
+
+                    # Garante que sempre teremos ambos os cores, mesmo que fiquem vazios
+                    if 'core0' not in entrada:
+                        entrada['core0'] = (None, None)
+                    if 'core1' not in entrada:
+                        entrada['core1'] = (None, None)
+
+                    dados.append(entrada)
     return dados
+
 
 def preparar_dados_gantt(dados, limite=10):
     tarefas = { 'core0': [], 'core1': [] }
-    
+
     ticks_core0 = []
     tasks_core0 = []
 
@@ -29,11 +55,13 @@ def preparar_dados_gantt(dados, limite=10):
         tick0, task0 = entrada['core0']
         tick1, task1 = entrada['core1']
 
-        ticks_core0.append(tick0)
-        tasks_core0.append(task0)
+        if tick0 is not None and task0 != 'idle':
+            ticks_core0.append(tick0)
+            tasks_core0.append(task0)
 
-        ticks_core1.append(tick1)
-        tasks_core1.append(task1)
+        if tick1 is not None and task1 != 'idle':
+            ticks_core1.append(tick1)
+            tasks_core1.append(task1)
 
     # Ordenar por tick para detectar intervalos corretamente
     pares_core0 = sorted(zip(ticks_core0, tasks_core0), key=lambda x: x[0])
@@ -56,6 +84,7 @@ def preparar_dados_gantt(dados, limite=10):
         tarefas['core1'].append((task, tick, 1))
 
     return tarefas
+
 
 def plotar_gantt(tarefas):
     fig, ax = plt.subplots(figsize=(12, 3))

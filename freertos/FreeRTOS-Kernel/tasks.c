@@ -3248,16 +3248,16 @@ BaseType_t xTaskIncrementTick( void )
     #endif /* configUSE_TICK_HOOK == 1 */
     switch (getSchedulingAlgorithm()) 
     {
-        case RMC:       // FIX THIS
-            for (int i = 0; i < task_count_celsinho_mano; i++)                  // FIX THIS
+        case RMC:       
+            for (int i = 0; i < task_count_celsinho_mano; i++)                 
             {
                 if (descriptors[i].task_core == 0)
                 {
-                    if (descriptors[i].period_dynamic <= -1000)
+                    if (descriptors[i].period_dynamic <= 0)
                     {
                         descriptors[i].period_dynamic = descriptors[i].period;
                         descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
-                        AddToReadyList(descriptors[i].task_virtual_core, i); // FIX THIS
+                        AddToReadyList(descriptors[i].task_virtual_core, i); 
                     }
                     descriptors[i].period_dynamic--;
                 }              
@@ -3267,7 +3267,7 @@ BaseType_t xTaskIncrementTick( void )
             {
                 int currentVirtualCore = descriptors[tempTid].task_virtual_core;
                 descriptors[tempTid].computing_time_dynamic--;
-                if (descriptors[tempTid].computing_time_dynamic == -200)
+                if (descriptors[tempTid].computing_time_dynamic == 0)
                     RemoveFromReadyList(currentVirtualCore, tempTid);
             }
             break;

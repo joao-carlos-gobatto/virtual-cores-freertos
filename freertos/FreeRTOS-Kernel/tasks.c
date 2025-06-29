@@ -3249,7 +3249,7 @@ BaseType_t xTaskIncrementTick( void )
     switch (getSchedulingAlgorithm()) 
     {
         case RMC:       
-            for (int i = 0; i < task_count_celsinho_mano; i++)                 
+            for (int i = 0; i < total_task_count; i++)                 
             {
                 if (descriptors[i].task_core == 0)
                 {

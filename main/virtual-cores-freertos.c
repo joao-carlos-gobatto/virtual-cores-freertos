@@ -12,7 +12,7 @@ extern int GetTidByHandle(TaskHandle_t);
 extern int tickCounter;
 extern TaskHandle_t idleHandleArray[2];
 
-int task_count_celsinho_mano = 0;
+int total_task_count = 0;
 int task_count = 0;
 
 extern int task_id_buffer[BUFFER_SIZE_C];
@@ -117,7 +117,7 @@ void print_task(){
         printf("------------------------------------------------------------------------------------------------------------\n");
         printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |\n");
         printf("-----------------------------------------------------------------------------------------------------------\n");
-        for (size_t i = 0; i < task_count_celsinho_mano; i++) {
+        for (size_t i = 0; i < total_task_count; i++) {
             printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-7d | |\n",
                 i,
                 descriptors[i].period,

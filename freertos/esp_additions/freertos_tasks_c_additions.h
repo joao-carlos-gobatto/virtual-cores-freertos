@@ -96,7 +96,7 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
         switch (getSchedulingAlgorithm())
         {
         case RMC:       // FIX THIS
-            for (int i = 0; i < task_count_celsinho_mano; i++)                  // FIX THIS
+            for (int i = 0; i < total_task_count; i++)                  // FIX THIS
             {
                 if (descriptors[i].task_core == 1)
                 {
@@ -188,11 +188,11 @@ struct Parameters descriptors[MAX_NUMBER_TASK_C];
 int counter = 0;
 extern int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
 extern int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
-extern int task_count_celsinho_mano; 
+extern int total_task_count; 
 
 int GetTidByHandle(TaskHandle_t handle)
 {
-	for (int i = 0; i < task_count_celsinho_mano;i++)
+	for (int i = 0; i < total_task_count;i++)
 	{
 		if (descriptors[i].handle == handle)
 			return i;
@@ -395,9 +395,9 @@ void SortReadyListByPeriod(int core_id)
                     descriptors[counter - 5].task_virtual_core = prPointer->task_virtual_core;
                     descriptors[counter - 5].task_core = prPointer->task_virtual_core % 2;
                     descriptors[counter - 5].final_task = prPointer->final_task;
-                    task_count_celsinho_mano++; 
+                    total_task_count++; 
 
-                    printf("\ncontado do celso mano: %d:\t", task_count_celsinho_mano);
+                    printf("\ncontado do celso mano: %d:\t", total_task_count);
 
                     ready_list_by_core[prPointer->task_virtual_core][ready_list_by_core_index[prPointer->task_virtual_core]] = counter - 5; // [coreId][taskPosInList] = id da task
                     ready_list_by_core_index[prPointer->task_virtual_core]++;

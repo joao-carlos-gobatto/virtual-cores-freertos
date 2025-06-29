@@ -121,7 +121,7 @@ struct Parameters{
 
 extern struct Parameters descriptors[MAX_NUMBER_TASK_C];
 
-extern int task_count_celsinho_mano; 
+extern int total_task_count; 
 
 extern int getSchedulingAlgorithm();
 extern void setSchedulingAlgorithm(int algorithm);

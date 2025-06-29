@@ -100,7 +100,7 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
             {
                 if (descriptors[i].task_core == 1)
                 {
-                    if (descriptors[i].period_dynamic <= -1000)
+                    if (descriptors[i].period_dynamic <= 0)
                     {
                         descriptors[i].period_dynamic = descriptors[i].period;
                         descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
@@ -114,7 +114,7 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
             {
                 int currentVirtualCore = descriptors[tempTid].task_virtual_core;
                 descriptors[tempTid].computing_time_dynamic--;
-                if (descriptors[tempTid].computing_time_dynamic == -200)
+                if (descriptors[tempTid].computing_time_dynamic == 0)
                     RemoveFromReadyList(currentVirtualCore, tempTid);
             }
             break;

@@ -129,27 +129,27 @@ void printTaskIdsBuffer(void) {
 void print_task(){
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     while(1){
-        // printf("Virtual Core ReadyList Shifting\nCore 0: %ld, Core 1: %ld\n", getcount_switch_vcore_0(),getcount_switch_vcore_1());
-        // printf("------------------------------------------------------------------------------------------------------------\n");
-        // printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |\n");
-        // printf("-----------------------------------------------------------------------------------------------------------\n");
-        // for (size_t i = 0; i < total_task_count; i++) {
-        //     printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-7d | |\n",
-        //         i,
-        //         descriptors[i].period,
-        //         descriptors[i].computing_time,
-        //         descriptors[i].period_dynamic,
-        //         descriptors[i].computing_time_dynamic,
-        //         descriptors[i].task_core,
-        //         descriptors[i].task_virtual_core
-        //         // tickCounter
-        //     );
-        // }
-        // printf("-----------------------------------------------------------------------------------------------------------\n");
+        printf("Virtual Core ReadyList Shifting\nCore 0: %ld, Core 1: %ld\n", getcount_switch_vcore_0(),getcount_switch_vcore_1());
+        printf("------------------------------------------------------------------------------------------------------------\n");
+        printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |\n");
+        printf("-----------------------------------------------------------------------------------------------------------\n");
+        for (size_t i = 0; i < total_task_count; i++) {
+            printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-7d | |\n",
+                i,
+                descriptors[i].period,
+                descriptors[i].computing_time,
+                descriptors[i].period_dynamic,
+                descriptors[i].computing_time_dynamic,
+                descriptors[i].task_core,
+                descriptors[i].task_virtual_core
+                // tickCounter
+            );
+        }
+        printf("-----------------------------------------------------------------------------------------------------------\n");
         // printf("Idle 0 handle: %p , Idle 1 handle: %p\n", idleHandleArray[0], idleHandleArray[1]);
         // printf("History of selected tasks:\n");
         //printTaskIdsBuffer();
-        printAndClearStringBuffer(0); // (real core ID)
+        //printAndClearStringBuffer(0); // (real core ID)
         printAllReadyLists();
         //printAndClearStringBuffer(1); // (real core ID)
         vTaskDelay(600 / portTICK_PERIOD_MS);
@@ -164,14 +164,14 @@ void hello_task(void *pvParameter)
         // addToStringBuffer("Hello Task Computing Time: ");
         snprintf(line, sizeof(line), "%d\n", params->computing_time);
         addToStringBuffer(line);
-        vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
+        //vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
     }
 }
 
 void generateTasks(int number_tasks){
     for (size_t i = 0; i < number_tasks; i++) //Quantidade de tasks
     {
-        tasks[i].period = (i+1)*500;
+        tasks[i].period = (i+4)*500;
         tasks[i].task_function = hello_task;
         tasks[i].task_name = strdup("Hello Task");
         tasks[i].computing_time = (i+1)*5;
@@ -186,7 +186,7 @@ void generateTasks(int number_tasks){
 
 void app_main(void)
 {
-    setSchedulingAlgorithm(RRC);
+    setSchedulingAlgorithm(RMC);
 
     xTaskCreatePinnedToCore(
         print_task,           // Function that implements the task

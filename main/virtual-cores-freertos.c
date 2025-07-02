@@ -40,32 +40,46 @@ const char* getTaskStateName(int state) {
 }
 
 #define BUFFER_SIZE 2048
-char string_buffer[BUFFER_SIZE];
-int buffer_index = 0;
+
+static char string_buffer[2][BUFFER_SIZE];
+static int  buffer_index[2] = {0, 0};
 
 void addToStringBuffer(const char* str) {
-    int len = strlen(str);
-    if (buffer_index + len < BUFFER_SIZE - 1) {
-        strcpy(&string_buffer[buffer_index], str);
-        buffer_index += len;
-        string_buffer[buffer_index++] = '\n';  // Add newline after each entry
-        string_buffer[buffer_index] = '\0';    // Null-terminate
+    int core = esp_cpu_get_core_id();      
+    if (core < 0 || core >= 2) {
+        // 
+        return;
     }
-    else {
-        string_buffer[BUFFER_SIZE - 2] = 'Z';
-        string_buffer[BUFFER_SIZE - 1] = '\0';
-        buffer_index = BUFFER_SIZE - 1;    
+
+    int len = strlen(str);
+    int idx = buffer_index[core];
+
+    if (idx + len < BUFFER_SIZE - 1) {
+        strcpy(&string_buffer[core][idx], str);
+        idx += len;
+        string_buffer[core][idx++] = '\n';
+        string_buffer[core][idx]   = '\0';
+        buffer_index[core] = idx;
+    } else {
+        string_buffer[core][BUFFER_SIZE - 2] = 'Z';
+        string_buffer[core][BUFFER_SIZE - 1] = '\0';
+        buffer_index[core] = BUFFER_SIZE - 1;
     }
 }
 
-void printAndClearStringBuffer() {
-    if (buffer_index > 0) {
-        printf("%s", string_buffer);
-        buffer_index = 0;
-        string_buffer[0] = '\0';
+void printAndClearStringBuffer(int core) {
+    if (core < 0 || core >= 2) {
+        printf("Invalid core %d\n", core);
+        return;
     }
-    else {
-        printf("Buffer is empty.\n");
+
+    if (buffer_index[core] > 0) {
+        printf("Core %d buffer:\n%s", core, string_buffer[core]);
+        // reset
+        buffer_index[core] = 0;
+        string_buffer[core][0] = '\0';
+    } else {
+        printf("Core %d buffer is empty.\n", core);
     }
 }
 
@@ -113,27 +127,28 @@ void printTaskIdsBuffer(void) {
 void print_task(){
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     while(1){
-        // printf("Virtual Core ReadyList Shifting\nCore 0: %ld, Core 1: %ld\n", getcount_switch_vcore_0(),getcount_switch_vcore_1());
-        // printf("------------------------------------------------------------------------------------------------------------\n");
-        // printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |\n");
-        // printf("-----------------------------------------------------------------------------------------------------------\n");
-        // for (size_t i = 0; i < total_task_count; i++) {
-        //     printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-7d | |\n",
-        //         i,
-        //         descriptors[i].period,
-        //         descriptors[i].computing_time,
-        //         descriptors[i].period_dynamic,
-        //         descriptors[i].computing_time_dynamic,
-        //         descriptors[i].task_core,
-        //         descriptors[i].task_virtual_core
-        //         // tickCounter
-        //     );
-        // }
+        printf("Virtual Core ReadyList Shifting\nCore 0: %ld, Core 1: %ld\n", getcount_switch_vcore_0(),getcount_switch_vcore_1());
+        printf("------------------------------------------------------------------------------------------------------------\n");
+        printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |\n");
+        printf("-----------------------------------------------------------------------------------------------------------\n");
+        for (size_t i = 0; i < total_task_count; i++) {
+            printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-7d | |\n",
+                i,
+                descriptors[i].period,
+                descriptors[i].computing_time,
+                descriptors[i].period_dynamic,
+                descriptors[i].computing_time_dynamic,
+                descriptors[i].task_core,
+                descriptors[i].task_virtual_core
+                // tickCounter
+            );
+        }
         // printf("-----------------------------------------------------------------------------------------------------------\n");
         // printf("Idle 0 handle: %p , Idle 1 handle: %p\n", idleHandleArray[0], idleHandleArray[1]);
         // printf("History of selected tasks:\n");
-        printTaskIdsBuffer();
-        // printAndClearStringBuffer();
+        //printTaskIdsBuffer();
+        printAndClearStringBuffer(0); // (real core ID)
+        //printAndClearStringBuffer(1); // (real core ID)
         vTaskDelay(600 / portTICK_PERIOD_MS);
     }
 }
@@ -146,7 +161,7 @@ void hello_task(void *pvParameter)
         // addToStringBuffer("Hello Task Computing Time: ");
         snprintf(line, sizeof(line), "%d\n", params->computing_time);
         addToStringBuffer(line);
-        // vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
+        //vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
     }
 }
 

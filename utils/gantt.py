@@ -3,7 +3,7 @@ import sys
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-#Exemplo de uso do script: python gantt.py nome_do_arquivo_de_entrada.txt
+# Exemplo de uso do script: python gantt.py nome_do_arquivo_de_entrada.txt
 
 def extrair_ticks_print(filepath):
     ticks = []
@@ -33,9 +33,15 @@ def preparar_dados_logical_cores(dados, limite=70):
     for entrada in dados[:limite]:
         for tick, task, real, virt in entrada:
             if task != 'idle':
-                chave = (real, virt)
-                tarefas.setdefault(chave, []).append((task, tick, 1))
+                # Se o número da task é -1, trata como "print"
+                nome_tarefa = 'print' if task == '-1' else task
+
+                # Redireciona a task 'print' para o core lógico (0,8)
+                chave = (0, 8) if nome_tarefa == 'print' else (real, virt)
+
+                tarefas.setdefault(chave, []).append((nome_tarefa, tick, 1))
     return tarefas
+
 
 def plotar_gantt_logical_cores(tarefas, ticks_de_print):
     fig, ax = plt.subplots(figsize=(12, 0.8 * len(tarefas)))
@@ -51,22 +57,16 @@ def plotar_gantt_logical_cores(tarefas, ticks_de_print):
     unicas = []
     for lst in tarefas.values():
         for lbl, _, _ in lst:
-            if lbl!='print' and lbl not in unicas:
+            if lbl != 'print' and lbl not in unicas:
                 unicas.append(lbl)
-    mapa = {nome: paleta[i%len(paleta)] for i,nome in enumerate(unicas)}
+    mapa = {nome: paleta[i % len(paleta)] for i, nome in enumerate(unicas)}
 
     for i, core in enumerate(cores):
         for lbl, start, dur in tarefas[core]:
-            c = cor_print if lbl=='print' else mapa.get(lbl,'gray')
+            c = cor_print if lbl == 'print' else mapa.get(lbl, 'gray')
             ax.broken_barh([(start, dur)], (y_ticks[i], altura), facecolors=c)
-            ax.text(start+dur/2, y_ticks[i]+altura/2, lbl,
+            ax.text(start + dur / 2, y_ticks[i] + altura / 2, lbl,
                     fontsize=6, va='center', ha='center', color='black')
-
-    # limites de eixo x e marcações de print
-    # ax.set_xlim(0, 400)
-    # for tp in ticks_de_print:
-    #     if 0 <= tp <= 400:
-    #         ax.axvline(tp, color='gray', linestyle=':', alpha=0.5)
 
     ax.set_yticks(y_ticks)
     ax.set_yticklabels(y_labels)

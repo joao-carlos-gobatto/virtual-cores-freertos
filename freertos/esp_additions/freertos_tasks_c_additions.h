@@ -189,6 +189,7 @@ int counter = 0;
 extern int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
 extern int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
 extern int total_task_count; 
+extern int start_flag;
 
 int GetTidByHandle(TaskHandle_t handle)
 {
@@ -416,6 +417,7 @@ void SortReadyListByPeriod(int core_id)
                             }
                             break;
                         }
+                        start_flag = 1;
                     }
 			    }
                 else {                    

@@ -3644,6 +3644,7 @@ BaseType_t xTaskIncrementTick( void )
     int gantt_buffer_index_1 = 0;
     int core_0_buffer_full = 0;
     int core_1_buffer_full = 0;
+    int start_flag = 0; //Flag to indicate if the scheduler has started
 
 
     int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
@@ -3681,74 +3682,85 @@ BaseType_t xTaskIncrementTick( void )
         BaseType_t xCurCoreID = portGET_CORE_ID();
 
         //int taskFound = 0;
-        if (xCurCoreID == 0)
-        {
-            if(current_logical_in_core_0 < 8){
-                if (ready_list_by_core_index[current_logical_in_core_0] > 0)
-                {
-                    if (SCHEDULING_ALGORITHM_C == RMC){
-                        SortReadyListByPeriod(current_logical_in_core_0);
-                    } //else RRC
-                                     
-                    pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
+        if(start_flag == 1) {
+            if (xCurCoreID == 0) {
+                if(current_logical_in_core_0 < 8){
+                    if (ready_list_by_core_index[current_logical_in_core_0] > 0)
+                    {
+                        if (SCHEDULING_ALGORITHM_C == RMC){
+                            SortReadyListByPeriod(current_logical_in_core_0);
+                        } //else RRC
+                                        
+                        pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
+                        if(gantt_buffer_index_0 < BUFFER_SIZE_C){
+                            gantt_buffer_0[gantt_buffer_index_0][0] = tickCounter;
+                            gantt_buffer_0[gantt_buffer_index_0][1] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_number;
+                            gantt_buffer_0[gantt_buffer_index_0][2] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_core;
+                            gantt_buffer_0[gantt_buffer_index_0][3] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_virtual_core;
+                        }
+                        xTaskScheduled = pdTRUE;
+                        int task_to_requeue = ready_list_by_core[current_logical_in_core_0][0];
+                        for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_0] - 1; i++)
+                        {
+                            ready_list_by_core[current_logical_in_core_0][i] = ready_list_by_core[current_logical_in_core_0][i + 1];
+                        }
+                        ready_list_by_core[current_logical_in_core_0][ready_list_by_core_index[current_logical_in_core_0] - 1] = task_to_requeue;
+                        // gantt_buffer_index_0 = (gantt_buffer_index_0 + 1) % BUFFER_SIZE_C;
+                        if(gantt_buffer_index_0 < BUFFER_SIZE_C){
+                            gantt_buffer_index_0++;
+                        } else {
+                            core_0_buffer_full = 1;
+                        }
+                        count_switch_vcore_0++;
+                    }
+                } else {
                     if(gantt_buffer_index_0 < BUFFER_SIZE_C){
                         gantt_buffer_0[gantt_buffer_index_0][0] = tickCounter;
-                        gantt_buffer_0[gantt_buffer_index_0][1] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_number;
-                        gantt_buffer_0[gantt_buffer_index_0][2] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_core;
-                        gantt_buffer_0[gantt_buffer_index_0][3] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_virtual_core;
+                        gantt_buffer_0[gantt_buffer_index_0][1] = -1;
+                        gantt_buffer_0[gantt_buffer_index_0][2] = 0;
+                        gantt_buffer_0[gantt_buffer_index_0][3] = 8;
                     }
-                    xTaskScheduled = pdTRUE;
-                    int task_to_requeue = ready_list_by_core[current_logical_in_core_0][0];
-                    for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_0] - 1; i++)
-                    {
-                        ready_list_by_core[current_logical_in_core_0][i] = ready_list_by_core[current_logical_in_core_0][i + 1];
-                    }
-                    ready_list_by_core[current_logical_in_core_0][ready_list_by_core_index[current_logical_in_core_0] - 1] = task_to_requeue;
-                    // gantt_buffer_index_0 = (gantt_buffer_index_0 + 1) % BUFFER_SIZE_C;
                     if(gantt_buffer_index_0 < BUFFER_SIZE_C){
                         gantt_buffer_index_0++;
                     } else {
                         core_0_buffer_full = 1;
                     }
-                    count_switch_vcore_0++;
                 }
+                current_logical_in_core_0 = (current_logical_in_core_0 + 2) % (VIRTUAL_CORE_QUANTITY_C + 2);
             }
-            current_logical_in_core_0 = (current_logical_in_core_0 + 2) % (VIRTUAL_CORE_QUANTITY_C + 2);
-        }
-        else //real core == 1
-        {
-            if (ready_list_by_core_index[current_logical_in_core_1] > 0)
+            else //real core == 1
             {
-                if (SCHEDULING_ALGORITHM_C == RMC) {
-                    SortReadyListByPeriod(current_logical_in_core_1);
-                } //else RRC
-
-                pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].handle;
-                if(gantt_buffer_index_1 < BUFFER_SIZE_C){
-                    gantt_buffer_1[gantt_buffer_index_1][0] = tickCounter;
-                    gantt_buffer_1[gantt_buffer_index_1][1] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_number;
-                    gantt_buffer_1[gantt_buffer_index_1][2] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_core;
-                    gantt_buffer_1[gantt_buffer_index_1][3] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_virtual_core;
-                }
-                xTaskScheduled = pdTRUE;
-                int task_to_requeue = ready_list_by_core[current_logical_in_core_1][0];
-                for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_1] - 1; i++)
+                if (ready_list_by_core_index[current_logical_in_core_1] > 0)
                 {
-                    ready_list_by_core[current_logical_in_core_1][i] = ready_list_by_core[current_logical_in_core_1][i + 1];
+                    if (SCHEDULING_ALGORITHM_C == RMC) {
+                        SortReadyListByPeriod(current_logical_in_core_1);
+                    } //else RRC
+
+                    pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].handle;
+                    if(gantt_buffer_index_1 < BUFFER_SIZE_C){
+                        gantt_buffer_1[gantt_buffer_index_1][0] = tickCounter;
+                        gantt_buffer_1[gantt_buffer_index_1][1] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_number;
+                        gantt_buffer_1[gantt_buffer_index_1][2] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_core;
+                        gantt_buffer_1[gantt_buffer_index_1][3] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_virtual_core;
+                    }
+                    xTaskScheduled = pdTRUE;
+                    int task_to_requeue = ready_list_by_core[current_logical_in_core_1][0];
+                    for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_1] - 1; i++)
+                    {
+                        ready_list_by_core[current_logical_in_core_1][i] = ready_list_by_core[current_logical_in_core_1][i + 1];
+                    }
+                    ready_list_by_core[current_logical_in_core_1][ready_list_by_core_index[current_logical_in_core_1] - 1] = task_to_requeue;
+                    // gantt_buffer_index_1 = (gantt_buffer_index_1 + 1) % BUFFER_SIZE_C;
+                    if(gantt_buffer_index_1 < BUFFER_SIZE_C){
+                        gantt_buffer_index_1++;
+                    } else {
+                        core_1_buffer_full = 1;
+                    }
+                    count_switch_vcore_1++;
                 }
-                ready_list_by_core[current_logical_in_core_1][ready_list_by_core_index[current_logical_in_core_1] - 1] = task_to_requeue;
-                // gantt_buffer_index_1 = (gantt_buffer_index_1 + 1) % BUFFER_SIZE_C;
-                if(gantt_buffer_index_1 < BUFFER_SIZE_C){
-                    gantt_buffer_index_1++;
-                } else {
-                    core_1_buffer_full = 1;
-                }
-                count_switch_vcore_1++;
+                current_logical_in_core_1 = (current_logical_in_core_1 + 2) % VIRTUAL_CORE_QUANTITY_C;
             }
-            current_logical_in_core_1 = (current_logical_in_core_1 + 2) % VIRTUAL_CORE_QUANTITY_C;
         }
-
-
 
         /* Search for tasks, starting form the highest ready priority. If nothing is
          * found, we eventually default to the IDLE tasks at priority 0 */

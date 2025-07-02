@@ -189,7 +189,7 @@ void generateTasks(int number_tasks){
 
 void app_main(void)
 {
-    setSchedulingAlgorithm(RRC);
+    setSchedulingAlgorithm(RMC);
 
     xTaskCreatePinnedToCore(
         print_task,           // Function that implements the task

@@ -1,6 +1,9 @@
 import re
+import sys
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+
+#Exemplo de uso do script: python gantt.py nome_do_arquivo_de_entrada.txt
 
 def extrair_ticks_print(filepath):
     ticks = []
@@ -81,8 +84,12 @@ def plotar_gantt_logical_cores(tarefas, ticks_de_print):
     plt.show()
 
 if __name__ == "__main__":
-    arquivo = 'entrada.txt'
+    if len(sys.argv) < 2:
+        print("Uso: python nome_do_script.py arquivo.txt")
+        sys.exit(1)
+
+    arquivo = sys.argv[1]
     ticks_de_print = extrair_ticks_print(arquivo)
     dados = ler_arquivo(arquivo)
-    tarefas = preparar_dados_logical_cores(dados, limite=100)
+    tarefas = preparar_dados_logical_cores(dados, limite=240)
     plotar_gantt_logical_cores(tarefas, ticks_de_print)

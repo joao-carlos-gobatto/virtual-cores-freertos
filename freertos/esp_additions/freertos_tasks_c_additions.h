@@ -398,30 +398,22 @@ void SortReadyListByPeriod(int core_id)
                     total_task_count++; 
 
                     printf("\ncontado do celso mano: %d:\t", total_task_count);
+                    // ready_list_by_core[prPointer->task_virtual_core][ready_list_by_core_index[prPointer->task_virtual_core]] = counter - 5; // [coreId][taskPosInList] = id da task
+                    // ready_list_by_core_index[prPointer->task_virtual_core]++;
 
-                    ready_list_by_core[prPointer->task_virtual_core][ready_list_by_core_index[prPointer->task_virtual_core]] = counter - 5; // [coreId][taskPosInList] = id da task
-                    ready_list_by_core_index[prPointer->task_virtual_core]++;
-
-
-                    if(descriptors[counter - 5].final_task == 1){
+                    if(prPointer->final_task == 1){
                         switch (getSchedulingAlgorithm())
-                        {
-                        case 0:
-                            printf("Chama RR\n");
-                            
-                            break;
-                        
+                        {                        
                         case 1:
                             printf("Chama EDF\n");
                             break;
                         
                         default:
-                            printf("Chama RM\n");
-                            // for (int i = 0; i < counter - 4; i++)
-                            // {
-                            	// prvAddNewTaskToReadyList( descriptors[i].handle );
-                            	// printf("added to ready list RM\n");
-							// }
+                            printf("Chama RM ou RR\n");
+                            for (int i = 0; i < total_task_count; i++) {
+                                ready_list_by_core[descriptors[i].task_virtual_core][ready_list_by_core_index[descriptors[i].task_virtual_core]] = i;
+                                ready_list_by_core_index[descriptors[i].task_virtual_core]++;
+                            }
                             break;
                         }
                     }

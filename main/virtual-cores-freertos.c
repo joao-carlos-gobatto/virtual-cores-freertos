@@ -145,14 +145,14 @@ void print_task(){
         // printf("-----------------------------------------------------------------------------------------------------------\n");
         // printf("Idle 0 handle: %p , Idle 1 handle: %p\n", idleHandleArray[0], idleHandleArray[1]);
         // printf("History of selected tasks:\n");
-        // if (core_0_buffer_full && core_1_buffer_full)
-        // {
-        //     printTaskIdsBuffer();
-        //     break;
-        // }
+        if (core_0_buffer_full && core_1_buffer_full)
+        {
+            printTaskIdsBuffer();
+            break;
+        }
         // printAndClearStringBuffer(0); // (real core ID)
         // printAllReadyLists();
-        printAndClearStringBuffer(1); // (real core ID)
+        // printAndClearStringBuffer(1); // (real core ID)
         vTaskDelay(600 / portTICK_PERIOD_MS);
     }
     printf("Print task have been finished.\n");
@@ -167,7 +167,7 @@ void hello_task(void *pvParameter)
         // addToStringBuffer("Hello Task Computing Time: ");
         snprintf(line, sizeof(line), "%d\n", params->computing_time);
         addToStringBuffer(line);
-        vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
+        // vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
     }
 }
 
@@ -179,9 +179,9 @@ void generateTasks(int number_tasks){
         tasks[i].task_name = strdup("Hello Task");
         tasks[i].computing_time = (i+1)*5;
         if (i == number_tasks - 1){
-            tasks[i].final_task = 0;
-        } else {
             tasks[i].final_task = 1;
+        } else {
+            tasks[i].final_task = 0;
         }
         tasks[i].task_virtual_core = i % VIRTUAL_CORE_QUANTITY_C;
     }

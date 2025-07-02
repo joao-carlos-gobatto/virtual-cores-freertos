@@ -3646,7 +3646,27 @@ BaseType_t xTaskIncrementTick( void )
     int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
     int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
 
-    int current_logical_in_core_0 = 0, current_logical_in_core_1 = 1; //current logical core id thas is executing in the real core
+    int current_logical_in_core_0 = 0, current_logical_in_core_1 = 1; //current logical core id thas is executing in the real 
+    
+    void printAllReadyLists() {
+        for (int core = 0; core < VIRTUAL_CORE_QUANTITY_C; ++core) {
+            int len = ready_list_by_core_index[core];
+            printf("Core %d ready list (size=%d): ", core, len);
+            if (len > 0) {
+                for (int pos = 0; pos < len; ++pos) {
+                    int task_id = ready_list_by_core[core][pos];
+                    printf("%d", task_id);
+                    if (pos < len - 1) {
+                        printf(", ");
+                    }
+                }
+            } else {
+                printf("[empty]");
+            }
+            printf("\n");
+        }
+    }
+
 #if ( configNUMBER_OF_CORES > 1 )
 
     static void prvSelectHighestPriorityTaskSMP( void )

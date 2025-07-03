@@ -3684,7 +3684,7 @@ BaseType_t xTaskIncrementTick( void )
         //int taskFound = 0;
         if(start_flag == 1) {
             if (xCurCoreID == 0) {
-                if(current_logical_in_core_0 < 8){
+                if(current_logical_in_core_0 < VIRTUAL_CORE_QUANTITY_C){
                     if (ready_list_by_core_index[current_logical_in_core_0] > 0)
                     {
                         if (SCHEDULING_ALGORITHM_C == RMC){
@@ -3718,7 +3718,7 @@ BaseType_t xTaskIncrementTick( void )
                         gantt_buffer_0[gantt_buffer_index_0][0] = tickCounter;
                         gantt_buffer_0[gantt_buffer_index_0][1] = -1;
                         gantt_buffer_0[gantt_buffer_index_0][2] = 0;
-                        gantt_buffer_0[gantt_buffer_index_0][3] = 8;
+                        gantt_buffer_0[gantt_buffer_index_0][3] = VIRTUAL_CORE_QUANTITY_C;
                     }
                     if(gantt_buffer_index_0 < BUFFER_SIZE_C){
                         gantt_buffer_index_0++;

@@ -100,8 +100,8 @@ enum scheduling_algorithms{
 };
 
 #define MAX_NUMBER_TASK_C 120
-#define BUFFER_SIZE_C 240
-#define VIRTUAL_CORE_QUANTITY_C 8
+#define BUFFER_SIZE_C 256
+#define VIRTUAL_CORE_QUANTITY_C 32
 #define VIRTUAL_CORE_READY_LIST_SIZE_C 15 //MAX_NUMBER_TASK_C / VIRTUAL_CORE_QUANTITY_C Tem que ser um número inteiro
 
 struct Parameters{

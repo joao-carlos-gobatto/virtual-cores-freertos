@@ -1,0 +1,967 @@
+Executing action: monitor
+Running idf_monitor in directory /home/doidobr/Documents/virtual-cores-freertos
+Executing "/home/doidobr/.espressif/python_env/idf5.3_py3.10_env/bin/python /home/doidobr/esp/v5.3.3/esp-idf/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 /home/doidobr/Documents/virtual-cores-freertos/build/virtual-cores-freertos.elf -m '/home/doidobr/.espressif/python_env/idf5.3_py3.10_env/bin/python' '/home/doidobr/esp/v5.3.3/esp-idf/tools/idf.py' '-p' '/dev/ttyUSB0'"...
+ets Jun  8 2016 00:22:57
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:7176
+load:0x40078000,len:15644
+ho 0 tail 12 room 4
+load:0x40080400,len:4
+load:0x40080404,len:3904
+entry 0x40080640
+[0;32mI (30) boot: ESP-IDF v5.3.3-dirty 2nd stage bootloader[0m
+[0;32mI (30) boot: compile time Jul  3 2025 11:11:41[0m
+[0;32mI (30) boot: Multicore bootloader[0m
+[0;32mI (35) boot: chip revision: v1.0[0m
+[0;32mI (39) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (43) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (48) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (53) boot: Enabling RNG early entropy source...[0m
+[0;32mI (58) boot: Partition Table:[0m
+[0;32mI (62) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (69) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (76) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (84) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (91) boot: End of partition table[0m
+[0;32mI (95) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=0984ch ( 38988) map[0m
+[0;32mI (117) esp_image: segment 1: paddr=00019874 vaddr=3ffb0000 size=022cch (  8908) load[0m
+[0;32mI (121) esp_image: segment 2: paddr=0001bb48 vaddr=40080000 size=044d0h ( 17616) load[0m
+[0;32mI (130) esp_image: segment 3: paddr=00020020 vaddr=400d0020 size=16efch ( 93948) map[0m
+[0;32mI (164) esp_image: segment 4: paddr=00036f24 vaddr=400844d0 size=08ef8h ( 36600) load[0m
+[0;32mI (185) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (185) boot: Disabling RNG early entropy source...[0m
+[0;32mI (198) cpu_start: Multicore app[0m
+[0;32mI (206) cpu_start: Pro cpu start user code[0m
+[0;32mI (206) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (206) app_init: Application information:[0m
+[0;32mI (209) app_init: Project name:     virtual-cores-freertos[0m
+[0;32mI (215) app_init: App version:      cbda1fb-dirty[0m
+[0;32mI (220) app_init: Compile time:     Jul  3 2025 11:11:21[0m
+[0;32mI (226) app_init: ELF file SHA256:  7f291b024...[0m
+[0;32mI (232) app_init: ESP-IDF:          v5.3.3-dirty[0m
+[0;32mI (237) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (242) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (247) efuse_init: Chip rev:         v1.0[0m
+[0;32mI (252) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (259) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (265) heap_init: At 3FFB98E0 len 00026720 (153 KiB): DRAM[0m
+[0;32mI (271) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (277) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (284) heap_init: At 4008D3C8 len 00012C38 (75 KiB): IRAM[0m
+[0;32mI (292) spi_flash: detected chip: generic[0m
+[0;32mI (295) spi_flash: flash io: dio[0m
+task 0
+task 1
+task 2
+T 'IDLE0' created successfully!
+T 'IDLE1' created successfully!
+[0;32mI (306) main_task: Started on CPU0[0m
+[0;32mI (316) main_task: Calling app_main()[0m
+task 3
+task 4
+'20' dynamic period set!
+'2' dynamic computing_time set!
+
+contado do celso mano: 1:	task 5
+'40' dynamic period set!
+'4' dynamic computing_time set!
+
+contado do celso mano: 2:	task 6
+'60' dynamic period set!
+'6' dynamic computing_time set!
+
+contado do celso mano: 3:	task 7
+'80' dynamic period set!
+'8' dynamic computing_time set!
+
+contado do celso mano: 4:	task 8
+'100' dynamic period set!
+'10' dynamic computing_time set!
+
+contado do celso mano: 5:	task 9
+'120' dynamic period set!
+'12' dynamic computing_time set!
+
+contado do celso mano: 6:	task 10
+'140' dynamic period set!
+'14' dynamic computing_time set!
+
+contado do celso mano: 7:	task 11
+'160' dynamic period set!
+'16' dynamic computing_time set!
+
+contado do celso mano: 8:	task 12
+'180' dynamic period set!
+'18' dynamic computing_time set!
+
+contado do celso mano: 9:	task 13
+'200' dynamic period set!
+'20' dynamic computing_time set!
+
+contado do celso mano: 10:	task 14
+'220' dynamic period set!
+'22' dynamic computing_time set!
+
+contado do celso mano: 11:	task 15
+'240' dynamic period set!
+'24' dynamic computing_time set!
+
+contado do celso mano: 12:	task 16
+'260' dynamic period set!
+'26' dynamic computing_time set!
+
+contado do celso mano: 13:	task 17
+'280' dynamic period set!
+'28' dynamic computing_time set!
+
+contado do celso mano: 14:	task 18
+'300' dynamic period set!
+'30' dynamic computing_time set!
+
+contado do celso mano: 15:	task 19
+'320' dynamic period set!
+'32' dynamic computing_time set!
+
+contado do celso mano: 16:	task 20
+'340' dynamic period set!
+'34' dynamic computing_time set!
+
+contado do celso mano: 17:	task 21
+'360' dynamic period set!
+'36' dynamic computing_time set!
+
+contado do celso mano: 18:	task 22
+'380' dynamic period set!
+'38' dynamic computing_time set!
+
+contado do celso mano: 19:	task 23
+'400' dynamic period set!
+'40' dynamic computing_time set!
+
+contado do celso mano: 20:	task 24
+'420' dynamic period set!
+'42' dynamic computing_time set!
+
+contado do celso mano: 21:	task 25
+'440' dynamic period set!
+'44' dynamic computing_time set!
+
+contado do celso mano: 22:	task 26
+'460' dynamic period set!
+'46' dynamic computing_time set!
+
+contado do celso mano: 23:	task 27
+'480' dynamic period set!
+'48' dynamic computing_time set!
+
+contado do celso mano: 24:	task 28
+'500' dynamic period set!
+'50' dynamic computing_time set!
+
+contado do celso mano: 25:	task 29
+'520' dynamic period set!
+'52' dynamic computing_time set!
+
+contado do celso mano: 26:	task 30
+'540' dynamic period set!
+'54' dynamic computing_time set!
+
+contado do celso mano: 27:	task 31
+'560' dynamic period set!
+'56' dynamic computing_time set!
+
+contado do celso mano: 28:	task 32
+'580' dynamic period set!
+'58' dynamic computing_time set!
+
+contado do celso mano: 29:	task 33
+'600' dynamic period set!
+'60' dynamic computing_time set!
+
+contado do celso mano: 30:	task 34
+'620' dynamic period set!
+'62' dynamic computing_time set!
+
+contado do celso mano: 31:	task 35
+'640' dynamic period set!
+'64' dynamic computing_time set!
+
+contado do celso mano: 32:	task 36
+'660' dynamic period set!
+'66' dynamic computing_time set!
+
+contado do celso mano: 33:	task 37
+'680' dynamic period set!
+'68' dynamic computing_time set!
+
+contado do celso mano: 34:	task 38
+'700' dynamic period set!
+'70' dynamic computing_time set!
+
+contado do celso mano: 35:	task 39
+'720' dynamic period set!
+'72' dynamic computing_time set!
+
+contado do celso mano: 36:	task 40
+'740' dynamic period set!
+'74' dynamic computing_time set!
+
+contado do celso mano: 37:	task 41
+'760' dynamic period set!
+'76' dynamic computing_time set!
+
+contado do celso mano: 38:	task 42
+'780' dynamic period set!
+'78' dynamic computing_time set!
+
+contado do celso mano: 39:	task 43
+'800' dynamic period set!
+'80' dynamic computing_time set!
+
+contado do celso mano: 40:	task 44
+'820' dynamic period set!
+'82' dynamic computing_time set!
+
+contado do celso mano: 41:	task 45
+'840' dynamic period set!
+'84' dynamic computing_time set!
+
+contado do celso mano: 42:	task 46
+'860' dynamic period set!
+'86' dynamic computing_time set!
+
+contado do celso mano: 43:	task 47
+'880' dynamic period set!
+'88' dynamic computing_time set!
+
+contado do celso mano: 44:	task 48
+'900' dynamic period set!
+'90' dynamic computing_time set!
+
+contado do celso mano: 45:	task 49
+'920' dynamic period set!
+'92' dynamic computing_time set!
+
+contado do celso mano: 46:	task 50
+'940' dynamic period set!
+'94' dynamic computing_time set!
+
+contado do celso mano: 47:	task 51
+'960' dynamic period set!
+'96' dynamic computing_time set!
+
+contado do celso mano: 48:	task 52
+'980' dynamic period set!
+'98' dynamic computing_time set!
+
+contado do celso mano: 49:	task 53
+'1000' dynamic period set!
+'100' dynamic computing_time set!
+
+contado do celso mano: 50:	task 54
+'1020' dynamic period set!
+'102' dynamic computing_time set!
+
+contado do celso mano: 51:	task 55
+'1040' dynamic period set!
+'104' dynamic computing_time set!
+
+contado do celso mano: 52:	task 56
+'1060' dynamic period set!
+'106' dynamic computing_time set!
+
+contado do celso mano: 53:	task 57
+'1080' dynamic period set!
+'108' dynamic computing_time set!
+
+contado do celso mano: 54:	task 58
+'1100' dynamic period set!
+'110' dynamic computing_time set!
+
+contado do celso mano: 55:	task 59
+'1120' dynamic period set!
+'112' dynamic computing_time set!
+
+contado do celso mano: 56:	task 60
+'1140' dynamic period set!
+'114' dynamic computing_time set!
+
+contado do celso mano: 57:	task 61
+'1160' dynamic period set!
+'116' dynamic computing_time set!
+
+contado do celso mano: 58:	task 62
+'1180' dynamic period set!
+'118' dynamic computing_time set!
+
+contado do celso mano: 59:	task 63
+'1200' dynamic period set!
+'120' dynamic computing_time set!
+
+contado do celso mano: 60:	task 64
+'1220' dynamic period set!
+'122' dynamic computing_time set!
+
+contado do celso mano: 61:	task 65
+'1240' dynamic period set!
+'124' dynamic computing_time set!
+
+contado do celso mano: 62:	task 66
+'1260' dynamic period set!
+'126' dynamic computing_time set!
+
+contado do celso mano: 63:	task 67
+'1280' dynamic period set!
+'128' dynamic computing_time set!
+
+contado do celso mano: 64:	Chama RM ou RR
+[0;32mI (866) main_task: Returned from app_main()[0m
+Core 0 ready list (size=3): 0, 32, 0
+Core 1 ready list (size=3): 1, 33, 1
+Core 2 ready list (size=2): 34, 2
+Core 3 ready list (size=2): 35, 3
+Core 4 ready list (size=2): 36, 4
+Core 5 ready list (size=2): 37, 5
+Core 6 ready list (size=2): 38, 6
+Core 7 ready list (size=2): 39, 7
+Core 8 ready list (size=2): 40, 8
+Core 9 ready list (size=2): 41, 9
+Core 10 ready list (size=2): 42, 10
+Core 11 ready list (size=2): 43, 11
+Core 12 ready list (size=2): 44, 12
+Core 13 ready list (size=2): 45, 13
+Core 14 ready list (size=2): 46, 14
+Core 15 ready list (size=2): 47, 15
+Core 16 ready list (size=2): 48, 16
+Core 17 ready list (size=2): 49, 17
+Core 18 ready list (size=2): 50, 18
+Core 19 ready list (size=2): 51, 19
+Core 20 ready list (size=2): 52, 20
+Core 21 ready list (size=2): 53, 21
+Core 22 ready list (size=2): 54, 22
+Core 23 ready list (size=2): 55, 23
+Core 24 ready list (size=2): 56, 24
+Core 25 ready list (size=2): 57, 25
+Core 26 ready list (size=2): 58, 26
+Core 27 ready list (size=2): 59, 27
+Core 28 ready list (size=2): 60, 28
+Core 29 ready list (size=2): 61, 29
+Core 30 ready list (size=2): 62, 30
+Core 31 ready list (size=2): 63, 31
+Core 0 ready list (size=3): 0, 32, 0
+Core 1 ready list (size=3): 1, 33, 1
+Core 2 ready list (size=2): 34, 2
+Core 3 ready list (size=2): 35, 3
+Core 4 ready list (size=2): 36, 4
+Core 5 ready list (size=2): 37, 5
+Core 6 ready list (size=2): 38, 6
+Core 7 ready list (size=2): 39, 7
+Core 8 ready list (size=2): 40, 8
+Core 9 ready list (size=2): 41, 9
+Core 10 ready list (size=2): 42, 10
+Core 11 ready list (size=2): 43, 11
+Core 12 ready list (size=2): 44, 12
+Core 13 ready list (size=2): 45, 13
+Core 14 ready list (size=2): 46, 14
+Core 15 ready list (size=2): 47, 15
+Core 16 ready list (size=2): 48, 16
+Core 17 ready list (size=2): 49, 17
+Core 18 ready list (size=2): 50, 18
+Core 19 ready list (size=2): 51, 19
+Core 20 ready list (size=2): 52, 20
+Core 21 ready list (size=2): 53, 21
+Core 22 ready list (size=2): 54, 22
+Core 23 ready list (size=2): 55, 23
+Core 24 ready list (size=2): 56, 24
+Core 25 ready list (size=2): 57, 25
+Core 26 ready list (size=2): 58, 26
+Core 27 ready list (size=2): 59, 27
+Core 28 ready list (size=2): 60, 28
+Core 29 ready list (size=2): 61, 29
+Core 30 ready list (size=2): 62, 30
+Core 31 ready list (size=2): 63, 31
+Core 0 ready list (size=3): 0, 32, 0
+Core 1 ready list (size=3): 1, 33, 1
+Core 2 ready list (size=2): 34, 2
+Core 3 ready list (size=2): 35, 3
+Core 4 ready list (size=2): 36, 4
+Core 5 ready list (size=2): 37, 5
+Core 6 ready list (size=2): 38, 6
+Core 7 ready list (size=2): 39, 7
+Core 8 ready list (size=2): 40, 8
+Core 9 ready list (size=2): 41, 9
+Core 10 ready list (size=2): 42, 10
+Core 11 ready list (size=2): 43, 11
+Core 12 ready list (size=2): 44, 12
+Core 13 ready list (size=2): 45, 13
+Core 14 ready list (size=2): 46, 14
+Core 15 ready list (size=2): 47, 15
+Core 16 ready list (size=2): 48, 16
+Core 17 ready list (size=2): 49, 17
+Core 18 ready list (size=2): 50, 18
+Core 19 ready list (size=2): 51, 19
+Core 20 ready list (size=2): 52, 20
+Core 21 ready list (size=2): 53, 21
+Core 22 ready list (size=2): 54, 22
+Core 23 ready list (size=2): 55, 23
+Core 24 ready list (size=2): 56, 24
+Core 25 ready list (size=2): 57, 25
+Core 26 ready list (size=2): 58, 26
+Core 27 ready list (size=2): 59, 27
+Core 28 ready list (size=2): 60, 28
+Core 29 ready list (size=2): 61, 29
+Core 30 ready list (size=2): 62, 30
+Core 31 ready list (size=2): 63, 31
+Core 0 ready list (size=2): 32, 0
+Core 1 ready list (size=3): 1, 33, 1
+Core 2 ready list (size=2): 34, 2
+Core 3 ready list (size=2): 35, 3
+Core 4 ready list (size=2): 36, 4
+Core 5 ready list (size=2): 37, 5
+Core 6 ready list (size=2): 38, 6
+Core 7 ready list (size=2): 39, 7
+Core 8 ready list (size=2): 40, 8
+Core 9 ready list (size=2): 41, 9
+Core 10 ready list (size=2): 42, 10
+Core 11 ready list (size=2): 43, 11
+Core 12 ready list (size=2): 44, 12
+Core 13 ready list (size=2): 45, 13
+Core 14 ready list (size=2): 46, 14
+Core 15 ready list (size=2): 47, 15
+Core 16 ready list (size=2): 48, 16
+Core 17 ready list (size=2): 49, 17
+Core 18 ready list (size=2): 50, 18
+Core 19 ready list (size=2): 51, 19
+Core 20 ready list (size=2): 52, 20
+Core 21 ready list (size=2): 53, 21
+Core 22 ready list (size=2): 54, 22
+Core 23 ready list (size=2): 55, 23
+Core 24 ready list (size=2): 56, 24
+Core 25 ready list (size=2): 57, 25
+Core 26 ready list (size=2): 58, 26
+Core 27 ready list (size=2): 59, 27
+Core 28 ready list (size=2): 60, 28
+Core 29 ready list (size=2): 61, 29
+Core 30 ready list (size=2): 62, 30
+Core 31 ready list (size=2): 63, 31
+###410
+$56,0,0,0,57,1,1,1
+###410
+$57,2,0,2,58,3,1,3
+###410
+$58,4,0,4,59,5,1,5
+###410
+$59,6,0,6,60,7,1,7
+###410
+$60,8,0,8,61,9,1,9
+###410
+$61,10,0,10,62,11,1,11
+###410
+$62,12,0,12,63,13,1,13
+###410
+$63,14,0,14,64,15,1,15
+###410
+$64,16,0,16,65,17,1,17
+###411
+$65,18,0,18,66,19,1,19
+###411
+$66,20,0,20,67,21,1,21
+###411
+$67,22,0,22,68,23,1,23
+###412
+$68,24,0,24,69,25,1,25
+###412
+$69,26,0,26,70,27,1,27
+###412
+$70,28,0,28,71,29,1,29
+###412
+$71,30,0,30,72,31,1,31
+###413
+$72,-1,0,32,73,1,1,1
+###413
+$73,0,0,0,74,3,1,3
+###413
+$74,2,0,2,75,5,1,5
+###413
+$75,4,0,4,76,7,1,7
+###414
+$76,6,0,6,77,9,1,9
+###414
+$77,8,0,8,78,11,1,11
+###414
+$78,10,0,10,79,13,1,13
+###414
+$79,12,0,12,80,15,1,15
+###415
+$80,14,0,14,81,17,1,17
+###415
+$81,16,0,16,82,19,1,19
+###415
+$82,18,0,18,83,21,1,21
+###416
+$83,20,0,20,84,23,1,23
+###416
+$84,22,0,22,85,25,1,25
+###416
+$85,24,0,24,86,27,1,27
+###416
+$86,26,0,26,87,29,1,29
+###417
+$87,28,0,28,88,31,1,31
+###417
+$88,30,0,30,89,1,1,1
+###417
+$89,-1,0,32,90,3,1,3
+###417
+$90,0,0,0,91,5,1,5
+###418
+$91,2,0,2,92,7,1,7
+###418
+$92,4,0,4,93,9,1,9
+###418
+$93,6,0,6,94,11,1,11
+###418
+$94,8,0,8,95,13,1,13
+###419
+$95,10,0,10,96,15,1,15
+###419
+$96,12,0,12,97,17,1,17
+###419
+$97,14,0,14,98,19,1,19
+###420
+$98,16,0,16,99,21,1,21
+###420
+$99,18,0,18,100,23,1,23
+###420
+$100,20,0,20,101,25,1,25
+###420
+$101,22,0,22,102,27,1,27
+###421
+$102,24,0,24,103,29,1,29
+###421
+$103,26,0,26,104,31,1,31
+###421
+$104,28,0,28,105,1,1,1
+###422
+$105,30,0,30,106,3,1,3
+###422
+$106,-1,0,32,107,5,1,5
+###422
+$115,0,0,0,108,7,1,7
+###422
+$116,2,0,2,109,9,1,9
+###423
+$117,4,0,4,110,11,1,11
+###423
+$118,6,0,6,111,13,1,13
+###423
+$119,8,0,8,112,15,1,15
+###423
+$120,10,0,10,113,17,1,17
+###424
+$121,12,0,12,114,19,1,19
+###424
+$122,14,0,14,115,21,1,21
+###424
+$123,16,0,16,116,23,1,23
+###425
+$124,18,0,18,117,25,1,25
+###425
+$125,20,0,20,118,27,1,27
+###425
+$126,22,0,22,119,29,1,29
+###426
+$127,24,0,24,120,31,1,31
+###426
+$128,26,0,26,121,1,1,1
+###426
+$129,28,0,28,122,3,1,3
+###426
+$130,30,0,30,123,5,1,5
+###427
+$131,-1,0,32,124,7,1,7
+###427
+$132,0,0,0,125,9,1,9
+###427
+$133,2,0,2,126,11,1,11
+###427
+$134,4,0,4,127,13,1,13
+###428
+$135,6,0,6,128,15,1,15
+###428
+$136,8,0,8,129,17,1,17
+###428
+$137,10,0,10,130,19,1,19
+###429
+$138,12,0,12,131,21,1,21
+###429
+$139,14,0,14,132,23,1,23
+###429
+$140,16,0,16,133,25,1,25
+###430
+$141,18,0,18,134,27,1,27
+###430
+$142,20,0,20,135,29,1,29
+###430
+$143,22,0,22,136,31,1,31
+###430
+$144,24,0,24,137,1,1,1
+###431
+$145,26,0,26,138,3,1,3
+###431
+$146,28,0,28,139,5,1,5
+###431
+$147,30,0,30,140,7,1,7
+###431
+$148,-1,0,32,141,9,1,9
+###432
+$149,0,0,0,142,11,1,11
+###432
+$150,2,0,2,143,13,1,13
+###432
+$151,4,0,4,144,15,1,15
+###433
+$152,6,0,6,145,17,1,17
+###433
+$153,8,0,8,146,19,1,19
+###433
+$154,10,0,10,147,21,1,21
+###433
+$155,12,0,12,148,23,1,23
+###434
+$156,14,0,14,149,25,1,25
+###434
+$157,16,0,16,150,27,1,27
+###434
+$158,18,0,18,151,29,1,29
+###435
+$159,20,0,20,152,31,1,31
+###435
+$160,22,0,22,153,1,1,1
+###435
+$161,24,0,24,154,3,1,3
+###435
+$162,26,0,26,155,5,1,5
+###436
+$163,28,0,28,156,7,1,7
+###436
+$164,30,0,30,157,9,1,9
+###436
+$165,-1,0,32,158,11,1,11
+###437
+$166,0,0,0,159,13,1,13
+###437
+$167,2,0,2,160,15,1,15
+###437
+$168,4,0,4,161,17,1,17
+###437
+$169,6,0,6,162,19,1,19
+###438
+$170,8,0,8,163,21,1,21
+###438
+$171,10,0,10,164,23,1,23
+###438
+$172,12,0,12,165,25,1,25
+###439
+$173,14,0,14,166,27,1,27
+###439
+$174,16,0,16,167,29,1,29
+###439
+$175,18,0,18,168,31,1,31
+###439
+$176,20,0,20,169,1,1,1
+###440
+$177,22,0,22,170,3,1,3
+###440
+$178,24,0,24,171,5,1,5
+###440
+$179,26,0,26,172,7,1,7
+###441
+$180,28,0,28,173,9,1,9
+###441
+$181,30,0,30,174,11,1,11
+###441
+$182,-1,0,32,175,13,1,13
+###441
+$191,0,0,0,176,15,1,15
+###442
+$192,2,0,2,177,17,1,17
+###442
+$193,4,0,4,178,19,1,19
+###442
+$194,6,0,6,179,21,1,21
+###443
+$195,8,0,8,180,23,1,23
+###443
+$196,10,0,10,181,25,1,25
+###443
+$197,12,0,12,182,27,1,27
+###443
+$198,14,0,14,183,29,1,29
+###444
+$199,16,0,16,184,31,1,31
+###444
+$200,18,0,18,185,1,1,1
+###444
+$201,20,0,20,186,3,1,3
+###445
+$202,22,0,22,187,5,1,5
+###445
+$203,24,0,24,188,7,1,7
+###445
+$204,26,0,26,189,9,1,9
+###445
+$205,28,0,28,190,11,1,11
+###446
+$206,30,0,30,191,13,1,13
+###446
+$207,-1,0,32,192,15,1,15
+###446
+$208,0,0,0,193,17,1,17
+###447
+$209,2,0,2,194,19,1,19
+###447
+$210,4,0,4,195,21,1,21
+###447
+$211,6,0,6,196,23,1,23
+###447
+$212,8,0,8,197,25,1,25
+###448
+$213,10,0,10,198,27,1,27
+###448
+$214,12,0,12,199,29,1,29
+###448
+$215,14,0,14,200,31,1,31
+###449
+$216,16,0,16,201,1,1,1
+###449
+$217,18,0,18,202,3,1,3
+###449
+$218,20,0,20,203,5,1,5
+###449
+$219,22,0,22,204,7,1,7
+###450
+$220,24,0,24,205,9,1,9
+###450
+$221,26,0,26,206,11,1,11
+###450
+$222,28,0,28,207,13,1,13
+###451
+$223,30,0,30,208,15,1,15
+###451
+$224,-1,0,32,209,17,1,17
+###451
+$225,0,0,0,210,19,1,19
+###451
+$226,2,0,2,211,21,1,21
+###452
+$227,4,0,4,212,23,1,23
+###452
+$228,6,0,6,213,25,1,25
+###452
+$229,8,0,8,214,27,1,27
+###453
+$230,10,0,10,215,29,1,29
+###453
+$231,12,0,12,216,31,1,31
+###453
+$232,14,0,14,217,1,1,1
+###453
+$233,16,0,16,218,3,1,3
+###454
+$234,18,0,18,219,5,1,5
+###454
+$235,20,0,20,220,7,1,7
+###454
+$236,22,0,22,221,9,1,9
+###455
+$237,24,0,24,222,11,1,11
+###455
+$238,26,0,26,223,13,1,13
+###455
+$239,28,0,28,224,15,1,15
+###455
+$240,30,0,30,225,17,1,17
+###456
+$241,-1,0,32,226,19,1,19
+###456
+$242,0,0,0,227,21,1,21
+###456
+$243,2,0,2,228,23,1,23
+###457
+$244,4,0,4,229,25,1,25
+###457
+$245,6,0,6,230,27,1,27
+###457
+$246,8,0,8,231,29,1,29
+###457
+$247,10,0,10,232,31,1,31
+###458
+$248,12,0,12,233,1,1,1
+###458
+$249,14,0,14,234,3,1,3
+###458
+$250,16,0,16,235,5,1,5
+###459
+$251,18,0,18,236,7,1,7
+###459
+$252,20,0,20,237,9,1,9
+###459
+$253,22,0,22,238,11,1,11
+###459
+$254,24,0,24,239,13,1,13
+###460
+$255,26,0,26,240,15,1,15
+###460
+$256,28,0,28,241,17,1,17
+###460
+$257,30,0,30,242,19,1,19
+###461
+$258,-1,0,32,243,21,1,21
+###461
+$267,0,0,0,244,23,1,23
+###461
+$268,2,0,2,245,25,1,25
+###461
+$269,4,0,4,246,27,1,27
+###462
+$270,6,0,6,247,29,1,29
+###462
+$271,8,0,8,248,31,1,31
+###462
+$272,10,0,10,249,1,1,1
+###463
+$273,12,0,12,250,3,1,3
+###463
+$274,14,0,14,251,5,1,5
+###463
+$275,16,0,16,252,7,1,7
+###463
+$276,18,0,18,253,9,1,9
+###464
+$277,20,0,20,254,11,1,11
+###464
+$278,22,0,22,255,13,1,13
+###464
+$279,24,0,24,256,15,1,15
+###465
+$280,26,0,26,257,17,1,17
+###465
+$281,28,0,28,258,19,1,19
+###465
+$282,30,0,30,259,21,1,21
+###465
+$283,-1,0,32,260,23,1,23
+###466
+$284,0,0,0,261,25,1,25
+###466
+$285,2,0,2,262,27,1,27
+###466
+$286,4,0,4,263,29,1,29
+###467
+$287,6,0,6,264,31,1,31
+###467
+$288,8,0,8,265,1,1,1
+###467
+$289,10,0,10,266,3,1,3
+###467
+$290,12,0,12,267,5,1,5
+###468
+$291,14,0,14,268,7,1,7
+###468
+$292,16,0,16,269,9,1,9
+###468
+$293,18,0,18,270,11,1,11
+###468
+$294,20,0,20,271,13,1,13
+###469
+$295,22,0,22,272,15,1,15
+###469
+$296,24,0,24,273,17,1,17
+###469
+$297,26,0,26,274,19,1,19
+###470
+$298,28,0,28,275,21,1,21
+###470
+$299,30,0,30,276,23,1,23
+###470
+$300,-1,0,32,277,25,1,25
+###471
+$301,0,0,0,278,27,1,27
+###471
+$302,2,0,2,279,29,1,29
+###471
+$303,4,0,4,280,31,1,31
+###471
+$304,6,0,6,281,1,1,1
+###472
+$305,8,0,8,282,3,1,3
+###472
+$306,10,0,10,283,5,1,5
+###472
+$307,12,0,12,284,7,1,7
+###472
+$308,14,0,14,285,9,1,9
+###473
+$309,16,0,16,286,11,1,11
+###473
+$310,18,0,18,287,13,1,13
+###473
+$311,20,0,20,288,15,1,15
+###474
+$312,22,0,22,289,17,1,17
+###474
+$313,24,0,24,290,19,1,19
+###474
+$314,26,0,26,291,21,1,21
+###474
+$315,28,0,28,292,23,1,23
+###475
+$316,30,0,30,293,25,1,25
+###475
+$317,-1,0,32,294,27,1,27
+###475
+$318,0,0,0,295,29,1,29
+###476
+$319,2,0,2,296,31,1,31
+###476
+$320,4,0,4,297,1,1,1
+###476
+$321,6,0,6,298,3,1,3
+###476
+$322,8,0,8,299,5,1,5
+###477
+$323,10,0,10,300,7,1,7
+###477
+$324,12,0,12,301,9,1,9
+###477
+$325,14,0,14,302,11,1,11
+###478
+$326,16,0,16,303,13,1,13
+###478
+$327,18,0,18,304,15,1,15
+###478
+$328,20,0,20,305,17,1,17
+###478
+$329,22,0,22,306,19,1,19
+###479
+$330,24,0,24,307,21,1,21
+###479
+$331,26,0,26,308,23,1,23
+###479
+$332,28,0,28,309,25,1,25
+###480
+$333,30,0,30,310,27,1,27
+###480
+$334,-1,0,32,311,29,1,29
+###480
+$343,0,0,0,312,31,1,31
+
+
+
+
+Print task have been finished.

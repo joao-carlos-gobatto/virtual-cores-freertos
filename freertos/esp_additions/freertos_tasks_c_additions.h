@@ -77,6 +77,21 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
 #endif /* ( CONFIG_FREERTOS_SMP && ( configNUM_CORES > 1 ) ) */
 /*----------------------------------------------------------*/
 
+
+
+extern int task_id_buffer[BUFFER_SIZE_C];
+extern int gantt_buffer_0[BUFFER_SIZE_C][4];
+extern int gantt_buffer_1[BUFFER_SIZE_C][4];
+extern TaskHandle_t task_handle_buffer[BUFFER_SIZE_C];
+extern int task_id_buffer_index;
+extern int task_id_buffer_start ;
+extern int gantt_buffer_index_0;
+extern int task_id_0_buffer_start ;
+extern int gantt_buffer_index_1;
+extern int task_id_1_buffer_start ;
+
+extern int tickCounter;
+
 #if ( !CONFIG_FREERTOS_SMP && ( configNUM_CORES > 1 ) )
 
     BaseType_t xTaskIncrementTickOtherCores( void )
@@ -103,6 +118,20 @@ _Static_assert( tskNO_AFFINITY == ( BaseType_t ) CONFIG_FREERTOS_NO_AFFINITY, "C
                     if (descriptors[i].period_dynamic <= 0)
                     {
                         descriptors[i].period_dynamic = descriptors[i].period;
+                        if (descriptors[i].computing_time_dynamic > 0)      // DEADLINE MISS
+                        {
+                            if(gantt_buffer_index_1 < BUFFER_SIZE_C){
+                                gantt_buffer_0[gantt_buffer_index_1][0] = -tickCounter;  //Negative indicates its a miss
+                                gantt_buffer_0[gantt_buffer_index_1][1] = descriptors[i].task_number;
+                                gantt_buffer_0[gantt_buffer_index_1][2] = descriptors[i].task_core;
+                                gantt_buffer_0[gantt_buffer_index_1][3] = descriptors[i].task_virtual_core;
+                            }  
+                            if(gantt_buffer_index_1 < BUFFER_SIZE_C){
+                                gantt_buffer_index_1++;
+                            } else {
+                                core_1_buffer_full = 1;
+                            }
+                        }
                         descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
                         AddToReadyList(descriptors[i].task_virtual_core, i); // FIX THIS
                     }

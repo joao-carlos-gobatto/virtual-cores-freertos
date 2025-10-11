@@ -3232,6 +3232,18 @@ int getSchedulingAlgorithm()
 
 
 int tickCounter = 0;
+int task_id_buffer[BUFFER_SIZE_C];         //FreeRTOS task id buffer
+int gantt_buffer_0[BUFFER_SIZE_C][4];
+int gantt_buffer_1[BUFFER_SIZE_C][4];
+TaskHandle_t task_handle_buffer[BUFFER_SIZE_C];
+int task_id_buffer_index = 0;   //FreeRTOS task id buffer index
+int gantt_buffer_index_0 = 0;
+int gantt_buffer_index_1 = 0;
+int core_0_buffer_full = 0;
+int core_1_buffer_full = 0;
+int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
+int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
+int current_logical_in_core_0 = 0, current_logical_in_core_1 = 1; //current logical core id thas is executing in the real 
 BaseType_t xTaskIncrementTick( void )
 {
     const BaseType_t xCurCoreID = portGET_CORE_ID();
@@ -3256,8 +3268,23 @@ BaseType_t xTaskIncrementTick( void )
                     if (descriptors[i].period_dynamic <= 0)
                     {
                         descriptors[i].period_dynamic = descriptors[i].period;
+                        if (descriptors[i].computing_time_dynamic > 0)      // DEADLINE MISS
+                        {
+                            if(gantt_buffer_index_0 < BUFFER_SIZE_C){
+                                gantt_buffer_0[gantt_buffer_index_0][0] = -tickCounter;  //Negative indicates its a miss
+                                gantt_buffer_0[gantt_buffer_index_0][1] = descriptors[i].task_number;
+                                gantt_buffer_0[gantt_buffer_index_0][2] = descriptors[i].task_core;
+                                gantt_buffer_0[gantt_buffer_index_0][3] = descriptors[i].task_virtual_core;
+                            }  
+                            if(gantt_buffer_index_0 < BUFFER_SIZE_C){
+                                gantt_buffer_index_0++;
+                            } else {
+                                core_0_buffer_full = 1;
+                            }
+                        }
                         descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
                         AddToReadyList(descriptors[i].task_virtual_core, i); 
+                        
                     }
                     descriptors[i].period_dynamic--;
                 }              
@@ -3635,22 +3662,11 @@ BaseType_t xTaskIncrementTick( void )
 /*-----------------------------------------------------------*/
     
     extern struct Parameters descriptors[MAX_NUMBER_TASK_C];
-    int task_id_buffer[BUFFER_SIZE_C];         //FreeRTOS task id buffer
-    int gantt_buffer_0[BUFFER_SIZE_C][4];
-    int gantt_buffer_1[BUFFER_SIZE_C][4];
-    TaskHandle_t task_handle_buffer[BUFFER_SIZE_C];
-    int task_id_buffer_index = 0;   //FreeRTOS task id buffer index
-    int gantt_buffer_index_0 = 0;
-    int gantt_buffer_index_1 = 0;
-    int core_0_buffer_full = 0;
-    int core_1_buffer_full = 0;
+    
     int start_flag = 0; //Flag to indicate if the scheduler has started
 
 
-    int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
-    int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
-
-    int current_logical_in_core_0 = 0, current_logical_in_core_1 = 1; //current logical core id thas is executing in the real 
+    
     
     void printAllReadyLists() {
         for (int core = 0; core < VIRTUAL_CORE_QUANTITY_C; ++core) {

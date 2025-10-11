@@ -151,7 +151,7 @@ void print_task(){
             break;
         }
         // printAndClearStringBuffer(0); // (real core ID)
-        printAllReadyLists();
+        //printAllReadyLists();
         // printAndClearStringBuffer(1); // (real core ID)
         vTaskDelay(600 / portTICK_PERIOD_MS);
     }
@@ -174,7 +174,7 @@ void hello_task(void *pvParameter)
 void generateTasks(int number_tasks){
     for (size_t i = 0; i < number_tasks; i++) //Quantidade de tasks
     {
-        tasks[i].period = (i+1)*20;
+        tasks[i].period = (i+1)*40;
         tasks[i].task_function = hello_task;
         tasks[i].task_name = strdup("Hello Task");
         tasks[i].computing_time = (i+1)*2;
@@ -185,6 +185,8 @@ void generateTasks(int number_tasks){
         }
         tasks[i].task_virtual_core = i % VIRTUAL_CORE_QUANTITY_C;
     }
+    tasks[6].period = 30;
+    tasks[6].computing_time = 20;
 }
 
 void app_main(void)
@@ -258,7 +260,7 @@ void app_main(void)
     // tasks[7].computing_time = 40;
     // tasks[7].final_task = 1;
     // tasks[7].task_virtual_core = 3;
-    task_count = 64;
+    task_count = 13;
 
     generateTasks(task_count);
 

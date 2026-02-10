@@ -108,54 +108,7 @@ extern int tickCounter;
          * on a core other than core 0. */
         traceTASK_INCREMENT_TICK( xTickCount );
 
-        switch (getSchedulingAlgorithm())
-        {
-        case RMC:       // FIX THIS
-            for (int i = 0; i < total_task_count; i++)                  // FIX THIS
-            {
-                if (descriptors[i].task_core == 1)
-                {
-                    if (descriptors[i].period_dynamic <= 0)
-                    {
-                        descriptors[i].period_dynamic = descriptors[i].period;
-                        if (descriptors[i].computing_time_dynamic > 0)      // DEADLINE MISS
-                        {
-                            if(gantt_buffer_index_1 < BUFFER_SIZE_C){
-                                gantt_buffer_0[gantt_buffer_index_1][0] = -tickCounter;  //Negative indicates its a miss
-                                gantt_buffer_0[gantt_buffer_index_1][1] = descriptors[i].task_number;
-                                gantt_buffer_0[gantt_buffer_index_1][2] = descriptors[i].task_core;
-                                gantt_buffer_0[gantt_buffer_index_1][3] = descriptors[i].task_virtual_core;
-                            }  
-                            if(gantt_buffer_index_1 < BUFFER_SIZE_C){
-                                gantt_buffer_index_1++;
-                            } else {
-                                core_1_buffer_full = 1;
-                            }
-                        }
-                        descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
-                        AddToReadyList(descriptors[i].task_virtual_core, i); // FIX THIS
-                    }
-                    descriptors[i].period_dynamic--;
-                }
-            }
-            int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCoreID));
-            if (tempTid != -1)
-            {
-                int currentVirtualCore = descriptors[tempTid].task_virtual_core;
-                descriptors[tempTid].computing_time_dynamic--;
-                if (descriptors[tempTid].computing_time_dynamic == 0)
-                    RemoveFromReadyList(currentVirtualCore, tempTid);
-            }
-            break;
-        case EDFC:
-
-            break;
-        default:
-            int tempTidRR = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCoreID));
-            if (tempTidRR != -1)
-                descriptors[tempTidRR].period_dynamic++; // FIX THIS
-            break;
-        }
+        
         
 
         if( uxSchedulerSuspended[ xCoreID ] == ( UBaseType_t ) 0U )
@@ -163,6 +116,57 @@ extern int tickCounter;
             /* We need take the kernel lock here as we are about to access
              * kernel data structures. */
             taskENTER_CRITICAL_ISR( &xKernelLock );
+            
+
+            switch (getSchedulingAlgorithm())
+            {
+                case RMC:       // FIX THIS
+                    for (int i = 0; i < total_task_count; i++)                  // FIX THIS
+                    {
+                        if (descriptors[i].task_core == 1)
+                        {
+                            if (descriptors[i].period_dynamic <= 0)
+                            {
+                                descriptors[i].period_dynamic = descriptors[i].period;
+                                if (descriptors[i].computing_time_dynamic > 0)      // DEADLINE MISS
+                                {
+                                    if(gantt_buffer_index_1 < BUFFER_SIZE_C){
+                                        gantt_buffer_0[gantt_buffer_index_1][0] = -tickCounter;  //Negative indicates its a miss
+                                        gantt_buffer_0[gantt_buffer_index_1][1] = descriptors[i].task_number;
+                                        gantt_buffer_0[gantt_buffer_index_1][2] = descriptors[i].task_core;
+                                        gantt_buffer_0[gantt_buffer_index_1][3] = descriptors[i].task_virtual_core;
+                                    }  
+                                    if(gantt_buffer_index_1 < BUFFER_SIZE_C){
+                                        gantt_buffer_index_1++;
+                                    } else {
+                                        core_1_buffer_full = 1;
+                                    }
+                                }
+                                descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
+                                AddToReadyList(descriptors[i].task_virtual_core, i); // FIX THIS
+                            }
+                            descriptors[i].period_dynamic--;
+                        }
+                    }
+                    int tempTid = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCoreID));
+                    if (tempTid != -1)
+                    {
+                        int currentVirtualCore = descriptors[tempTid].task_virtual_core;
+                        descriptors[tempTid].computing_time_dynamic--;
+                        if (descriptors[tempTid].computing_time_dynamic == 0)
+                            RemoveFromReadyList(currentVirtualCore, tempTid);
+                    }
+                    break;
+                case EDFC:
+
+                    break;
+                default:
+                    int tempTidRR = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCoreID));
+                    if (tempTidRR != -1)
+                        descriptors[tempTidRR].period_dynamic++; // FIX THIS
+                    break;
+            }
+
 
             /* Tasks of equal priority to the currently running task will share
              * processing time (time slice) if preemption is on, and the application

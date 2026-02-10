@@ -185,8 +185,8 @@ void generateTasks(int number_tasks){
         }
         tasks[i].task_virtual_core = i % VIRTUAL_CORE_QUANTITY_C;
     }
-    tasks[6].period = 30;
-    tasks[6].computing_time = 20;
+    //tasks[6].period = 30;
+    //tasks[6].computing_time = 20;
 }
 
 void app_main(void)
@@ -205,64 +205,99 @@ void app_main(void)
 
 
 
-    // tasks[0].period = 1000;
-    // tasks[0].task_function = hello_task;
-    // tasks[0].task_name = strdup("Hello Task 0");  // Requires char* not char[]
-    // tasks[0].computing_time = 5;
-    // tasks[0].final_task = 0;
-    // tasks[0].task_virtual_core = 0;
+    tasks[0].period = 80;
+    tasks[0].task_function = hello_task;
+    tasks[0].task_name = strdup("Hello Task 0");
+    tasks[0].computing_time = 6;
+    tasks[0].final_task = 0;
+    tasks[0].task_virtual_core = 0;
 
-    // tasks[1].period = 500;
-    // tasks[1].task_function = hello_task;
-    // tasks[1].task_name = strdup("Hello Task 1");  // Requires char* not char[]
-    // tasks[1].computing_time = 10;
-    // tasks[1].final_task = 0;
-    // tasks[1].task_virtual_core = 0;
+    tasks[1].period = 50;
+    tasks[1].task_function = hello_task;
+    tasks[1].task_name = strdup("Hello Task 1");
+    tasks[1].computing_time = 7;
+    tasks[1].final_task = 0;
+    tasks[1].task_virtual_core = 0;
 
-    // tasks[2].period = 999;
-    // tasks[2].task_function = hello_task;
-    // tasks[2].task_name = strdup("Hello Task 2");  // Requires char* not char[]
-    // tasks[2].computing_time = 15;
-    // tasks[2].final_task = 0;
-    // tasks[2].task_virtual_core = 2;
+    tasks[2].period = 15;
+    tasks[2].task_function = hello_task;
+    tasks[2].task_name = strdup("Hello Task 2");
+    tasks[2].computing_time = 1;
+    tasks[2].final_task = 0;
+    tasks[2].task_virtual_core = 1;
 
-    // tasks[3].period = 1000;
-    // tasks[3].task_function = hello_task;
-    // tasks[3].task_name = strdup("Hello Task 3");  // Requires char* not char[]
-    // tasks[3].computing_time = 20;
-    // tasks[3].final_task = 0;
-    // tasks[3].task_virtual_core = 2;
+    tasks[3].period = 200;
+    tasks[3].task_function = hello_task;
+    tasks[3].task_name = strdup("Hello Task 3");
+    tasks[3].computing_time = 21;
+    tasks[3].final_task = 0;
+    tasks[3].task_virtual_core = 1;
 
-    // tasks[4].period = 1000;
-    // tasks[4].task_function = hello_task;
-    // tasks[4].task_name = strdup("Hello Task 4");  // Requires char* not char[]
-    // tasks[4].computing_time = 25;
-    // tasks[4].final_task = 0;
-    // tasks[4].task_virtual_core = 1;
+    tasks[4].period = 60;
+    tasks[4].task_function = hello_task;
+    tasks[4].task_name = strdup("Hello Task 4");
+    tasks[4].computing_time = 4;
+    tasks[4].final_task = 0;
+    tasks[4].task_virtual_core = 2;
 
-    // tasks[5].period = 999;
-    // tasks[5].task_function = hello_task;
-    // tasks[5].task_name = strdup("Hello Task 5");  // Requires char* not char[]
-    // tasks[5].computing_time = 30;
-    // tasks[5].final_task = 0;
-    // tasks[5].task_virtual_core = 1;
+    tasks[5].period = 40;
+    tasks[5].task_function = hello_task;
+    tasks[5].task_name = strdup("Hello Task 5");
+    tasks[5].computing_time = 3;
+    tasks[5].final_task = 0;
+    tasks[5].task_virtual_core = 2;
 
-    // tasks[6].period = 999;
-    // tasks[6].task_function = hello_task;
-    // tasks[6].task_name = strdup("Hello Task 6");  // Requires char* not char[]
-    // tasks[6].computing_time = 35;
-    // tasks[6].final_task = 0;
-    // tasks[6].task_virtual_core = 3;
+    tasks[6].period = 20;
+    tasks[6].task_function = hello_task;
+    tasks[6].task_name = strdup("Hello Task 6");
+    tasks[6].computing_time = 2;
+    tasks[6].final_task = 0;
+    tasks[6].task_virtual_core = 3;
 
-    // tasks[7].period = 1000;
-    // tasks[7].task_function = hello_task;
-    // tasks[7].task_name = strdup("Hello Task 6");  // Requires char* not char[]
-    // tasks[7].computing_time = 40;
-    // tasks[7].final_task = 1;
-    // tasks[7].task_virtual_core = 3;
+    tasks[7].period = 25;
+    tasks[7].task_function = hello_task;
+    tasks[7].task_name = strdup("Hello Task 7");
+    tasks[7].computing_time = 2;
+    tasks[7].final_task = 0;
+    tasks[7].task_virtual_core = 3;
+
+    tasks[8].period = 50;
+    tasks[8].task_function = hello_task;
+    tasks[8].task_name = strdup("Hello Task 8");
+    tasks[8].computing_time = 9;
+    tasks[8].final_task = 0;
+    tasks[8].task_virtual_core = 4;
+
+    tasks[9].period = 40;
+    tasks[9].task_function = hello_task;
+    tasks[9].task_name = strdup("Hello Task 9");
+    tasks[9].computing_time = 8;
+    tasks[9].final_task = 0;
+    tasks[9].task_virtual_core = 5;
+
+    tasks[10].period = 100;
+    tasks[10].task_function = hello_task;
+    tasks[10].task_name = strdup("Hello Task 10");
+    tasks[10].computing_time = 7;
+    tasks[10].final_task = 0;
+    tasks[10].task_virtual_core = 6;
+
+    tasks[11].period = 60;
+    tasks[11].task_function = hello_task;
+    tasks[11].task_name = strdup("Hello Task 11");
+    tasks[11].computing_time = 5;
+    tasks[11].final_task = 0;
+    tasks[11].task_virtual_core = 6;
+
+    tasks[12].period = 100;
+    tasks[12].task_function = hello_task;
+    tasks[12].task_name = strdup("Hello Task 12");
+    tasks[12].computing_time = 20;
+    tasks[12].final_task = 1;
+    tasks[12].task_virtual_core = 7;
     task_count = 13;
 
-    generateTasks(task_count);
+    //generateTasks(task_count);
 
     initVirtualCores();
 }

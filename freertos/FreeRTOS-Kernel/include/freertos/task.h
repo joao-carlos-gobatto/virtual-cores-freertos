@@ -102,7 +102,7 @@ enum scheduling_algorithms{
 #define MAX_NUMBER_TASK_C 120
 #define BUFFER_SIZE_C 256
 #define VIRTUAL_CORE_QUANTITY_C 8
-#define VIRTUAL_CORE_READY_LIST_SIZE_C 15 //MAX_NUMBER_TASK_C / VIRTUAL_CORE_QUANTITY_C Tem que ser um número inteiro
+#define VIRTUAL_CORE_READY_LIST_SIZE_C 15                        //MAX_NUMBER_TASK_C / VIRTUAL_CORE_QUANTITY_C Tem que ser um número inteiro
 
 struct Parameters{
     TaskFunction_t task_function;
@@ -118,7 +118,6 @@ struct Parameters{
     int task_virtual_core;
     int delayed_timer;
 };
-
 extern struct Parameters descriptors[MAX_NUMBER_TASK_C];
 
 extern int total_task_count; 

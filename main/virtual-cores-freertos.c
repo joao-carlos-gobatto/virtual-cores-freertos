@@ -96,7 +96,7 @@ void initVirtualCores(){
                 tasks[i].task_name,
                 2048,
                 &tasks[i],
-                0,
+                0,                    // priority
                 NULL,
                 i%2
             );
@@ -150,6 +150,7 @@ void print_task(){
             printTaskIdsBuffer();
             break;
         }
+        printf("%d\n", tickCounter);
         // printAndClearStringBuffer(0); // (real core ID)
         //printAllReadyLists();
         // printAndClearStringBuffer(1); // (real core ID)
@@ -191,7 +192,7 @@ void generateTasks(int number_tasks){
 
 void app_main(void)
 {
-    setSchedulingAlgorithm(RMC);
+    setSchedulingAlgorithm(RRC);
 
     xTaskCreatePinnedToCore(
         print_task,           // Function that implements the task

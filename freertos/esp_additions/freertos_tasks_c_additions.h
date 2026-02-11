@@ -271,6 +271,29 @@ void AddToReadyList(int core_id, int task_id) {
     ready_list_by_core_index[core_id]++;
 }
 
+
+void SortReadyListByPriority(int core_id)
+{
+    int i, j;
+    //printf("This will crash\n\n");
+    for (i = 0; i < ready_list_by_core_index[core_id] - 1; i++)
+    {
+        for (j = 0; j < ready_list_by_core_index[core_id] - i - 1; j++)
+        {
+            int id1 = ready_list_by_core[core_id][j];
+            int id2 = ready_list_by_core[core_id][j + 1];
+            if (descriptors[id1].handle->uxBasePriority < descriptors[id2].handle->uxBasePriority)
+            {
+                // Swap the two task IDs
+                int temp = ready_list_by_core[core_id][j];
+                ready_list_by_core[core_id][j] = ready_list_by_core[core_id][j + 1];
+                ready_list_by_core[core_id][j + 1] = temp;
+            }
+        }
+    }
+}
+
+
 void SortReadyListByPeriod(int core_id)
 {
     int i, j;
@@ -414,10 +437,15 @@ void SortReadyListByPeriod(int core_id)
                 }
                 #endif /* tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE */
 
-                prvInitialiseNewTask( pxTaskCode, pcName, ( uint32_t ) usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL, xCoreID % 2 );  // COLOQUEI O %2
-                xReturn = pdPASS;
+                
                 if (counter > 4 && counter < MAX_NUMBER_TASK_C + 4)   ////////////////////////////// Definir um MAX_NUMBER_TASK para o 20
 				{	
+                    //Inicializar internamente com a prioridade 0 ----------------------------------->
+                    prvInitialiseNewTask( pxTaskCode, pcName, ( uint32_t ) usStackDepth, pvParameters, 0, pxCreatedTask, pxNewTCB, NULL, xCoreID % 2 );  // COLOQUEI O %2
+                    xReturn = pdPASS;
+                    //pxNewTCB->uxPriority = uxPriority;     // Alterar prioridade dinamica do freertos trava
+                    pxNewTCB->uxBasePriority = uxPriority;
+
                     descriptors[counter - 5].period = prPointer->period;
                     descriptors[counter - 5].period_dynamic = prPointer->period;
                     printf("'%d' dynamic period set!\n", descriptors[counter -5].period_dynamic);
@@ -454,6 +482,8 @@ void SortReadyListByPeriod(int core_id)
                     }
 			    }
                 else {                    
+                    prvInitialiseNewTask( pxTaskCode, pcName, ( uint32_t ) usStackDepth, pvParameters, uxPriority, pxCreatedTask, pxNewTCB, NULL, xCoreID % 2 );  // COLOQUEI O %2
+                    xReturn = pdPASS;
                     prvAddNewTaskToReadyList( pxNewTCB );
                 }
             }

@@ -1563,6 +1563,7 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
     extern void RemoveFromReadyList(int core_id, int task_id);
     extern void AddToReadyList(int core_id, int task_id);
     extern void SortReadyListByPeriod(int core_id);
+    extern void SortReadyListByPriority(int core_id);
 #if ( INCLUDE_vTaskDelay == 1 )
 
     void vTaskDelay( const TickType_t xTicksToDelay )
@@ -3707,7 +3708,9 @@ BaseType_t xTaskIncrementTick( void )
                         if (SCHEDULING_ALGORITHM_C == RMC){
                             SortReadyListByPeriod(current_logical_in_core_0);
                         } //else RRC
-                                        
+                        else if (SCHEDULING_ALGORITHM_C == RRC){
+                            SortReadyListByPriority(current_logical_in_core_0);
+                        }                
                         pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
                         if(gantt_buffer_index_0 < BUFFER_SIZE_C){
                             gantt_buffer_0[gantt_buffer_index_0][0] = tickCounter;
@@ -3752,7 +3755,9 @@ BaseType_t xTaskIncrementTick( void )
                     if (SCHEDULING_ALGORITHM_C == RMC) {
                         SortReadyListByPeriod(current_logical_in_core_1);
                     } //else RRC
-
+                    else if (SCHEDULING_ALGORITHM_C == RRC) {
+                        SortReadyListByPriority(current_logical_in_core_1);
+                    }
                     pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].handle;
                     if(gantt_buffer_index_1 < BUFFER_SIZE_C){
                         gantt_buffer_1[gantt_buffer_index_1][0] = tickCounter;
@@ -3778,10 +3783,10 @@ BaseType_t xTaskIncrementTick( void )
                 current_logical_in_core_1 = (current_logical_in_core_1 + 2) % VIRTUAL_CORE_QUANTITY_C;
             }
         }
-
+        
         /* Search for tasks, starting form the highest ready priority. If nothing is
          * found, we eventually default to the IDLE tasks at priority 0 */
-
+        
         for( uxCurPriority = uxTopReadyPriority; uxCurPriority >= 0 && xTaskScheduled == pdFALSE; uxCurPriority-- )
         {
             /* Check if current priority has one or more ready tasks. Skip if none */
@@ -3837,7 +3842,7 @@ BaseType_t xTaskIncrementTick( void )
                 }
 
 
-                if (GetTidByHandle(pxTCBCur) > 0)
+                if (GetTidByHandle(pxTCBCur) >= 0)
                 {
                     goto get_next_task;
                 }

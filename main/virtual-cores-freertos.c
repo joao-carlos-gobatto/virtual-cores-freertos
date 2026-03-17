@@ -27,6 +27,8 @@ int task_id_0_buffer_start = 0;
 extern int gantt_buffer_index_1;
 int task_id_1_buffer_start = 0;
 
+SemaphoreHandle_t xSemaphore;
+extern int current_logical_in_core_0;
 
 
 const char* getTaskStateName(int state) {
@@ -145,20 +147,24 @@ void print_task(){
         // printf("-----------------------------------------------------------------------------------------------------------\n");
         // printf("Idle 0 handle: %p , Idle 1 handle: %p\n", idleHandleArray[0], idleHandleArray[1]);
         // printf("History of selected tasks:\n");
-        if (core_0_buffer_full && core_1_buffer_full)
-        {
-            printTaskIdsBuffer();
-            break;
-        }
+      //  if (core_0_buffer_full && core_1_buffer_full)
+       // {
+       //     printTaskIdsBuffer();
+        //    break;
+        //}
+        printf("%d\n", current_logical_in_core_0);
         printf("%d\n", tickCounter);
-        // printAndClearStringBuffer(0); // (real core ID)
-        //printAllReadyLists();
-        // printAndClearStringBuffer(1); // (real core ID)
+        printAndClearStringBuffer(0); // (real core ID)
+        printAllReadyLists();
+        printAndClearStringBuffer(1); // (real core ID)
         vTaskDelay(600 / portTICK_PERIOD_MS);
+        xSemaphoreGive(xSemaphore);
+        xSemaphoreGive(xSemaphore);
     }
     printf("Print task have been finished.\n");
     vTaskDelete(NULL); // Delete this task after printing
 }
+
 
 void hello_task(void *pvParameter)
 {
@@ -167,8 +173,12 @@ void hello_task(void *pvParameter)
         char line[16]; 
         // addToStringBuffer("Hello Task Computing Time: ");
         snprintf(line, sizeof(line), "%d\n", params->computing_time);
-        addToStringBuffer(line);
-        // vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
+        if (params->task_virtual_core %2 == 1)
+            addToStringBuffer(line);
+        if (params->task_virtual_core %2 == 1)
+            xSemaphoreTake(xSemaphore, portMAX_DELAY);
+        
+        vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
     }
 }
 
@@ -190,6 +200,9 @@ void generateTasks(int number_tasks){
     //tasks[6].computing_time = 20;
 }
 
+
+
+
 void app_main(void)
 {
     setSchedulingAlgorithm(RRC);
@@ -204,9 +217,9 @@ void app_main(void)
         0
     );
 
+    xSemaphore = xSemaphoreCreateCounting(19, 19);
 
-
-    tasks[0].period = 80;
+    tasks[0].period = 45;
     tasks[0].task_function = hello_task;
     tasks[0].task_name = strdup("Hello Task 0");
     tasks[0].computing_time = 6;

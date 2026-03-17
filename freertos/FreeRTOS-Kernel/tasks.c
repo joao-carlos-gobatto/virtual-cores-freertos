@@ -3245,6 +3245,7 @@ int core_1_buffer_full = 0;
 int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
 int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
 int current_logical_in_core_0 = 0, current_logical_in_core_1 = 1; //current logical core id thas is executing in the real 
+extern void addToStringBuffer(const char* str);
 BaseType_t xTaskIncrementTick( void )
 {
     const BaseType_t xCurCoreID = portGET_CORE_ID();
@@ -3718,6 +3719,7 @@ BaseType_t xTaskIncrementTick( void )
                             gantt_buffer_0[gantt_buffer_index_0][2] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_core;
                             gantt_buffer_0[gantt_buffer_index_0][3] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_virtual_core;
                         }
+                        //addToStringBuffer("Task scheduled");
                         xTaskScheduled = pdTRUE;
                         int task_to_requeue = ready_list_by_core[current_logical_in_core_0][0];
                         for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_0] - 1; i++)
@@ -3996,9 +3998,17 @@ void vTaskPlaceOnEventList( List_t * const pxEventList,
          *
          * The queue that contains the event list is locked, preventing
          * simultaneous access from interrupts. */
-        vListInsert( pxEventList, &( pxCurrentTCBs[ portGET_CORE_ID() ]->xEventListItem ) );
+        if (GetTidByHandle(pxCurrentTCBs[portGET_CORE_ID()]) != -1)
+        {
 
-        prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE );
+        }
+        else
+        {
+            vListInsert( pxEventList, &( pxCurrentTCBs[ portGET_CORE_ID() ]->xEventListItem ) );
+
+            prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE ); 
+        }
+        
     }
     /* Release the previously taken kernel lock. */
     prvEXIT_CRITICAL_SMP_ONLY( &xKernelLock );
@@ -6583,15 +6593,22 @@ static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait,
 
     /* Remove the task from the ready list before adding it to the blocked list
      * as the same list item is used for both lists. */
-    if( uxListRemove( &( pxCurrentTCBs[ xCurCoreID ]->xStateListItem ) ) == ( UBaseType_t ) 0 )
+    if (GetTidByHandle(pxCurrentTCBs[xCurCoreID]) != -1)
     {
-        /* The current task must be in a ready list, so there is no need to
-         * check, and the port reset macro can be called directly. */
-        portRESET_READY_PRIORITY( pxCurrentTCBs[ xCurCoreID ]->uxPriority, uxTopReadyPriority ); /*lint !e931 pxCurrentTCBs cannot change as it is the calling task.  pxCurrentTCBs->uxPriority and uxTopReadyPriority cannot change as called with scheduler suspended or in a critical section. */
+
     }
     else
     {
-        mtCOVERAGE_TEST_MARKER();
+        if( uxListRemove( &( pxCurrentTCBs[ xCurCoreID ]->xStateListItem ) ) == ( UBaseType_t ) 0 )
+        {
+            /* The current task must be in a ready list, so there is no need to
+             * check, and the port reset macro can be called directly. */
+            portRESET_READY_PRIORITY( pxCurrentTCBs[ xCurCoreID ]->uxPriority, uxTopReadyPriority ); /*lint !e931 pxCurrentTCBs cannot change as it is the calling task.  pxCurrentTCBs->uxPriority and uxTopReadyPriority cannot change as called with scheduler suspended or in a critical section. */
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
     }
 
     #if ( INCLUDE_vTaskSuspend == 1 )

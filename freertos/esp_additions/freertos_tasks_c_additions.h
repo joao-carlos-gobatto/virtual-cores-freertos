@@ -207,7 +207,7 @@ extern int tickCounter;
             vApplicationTickHook();
         }
         #endif
-
+        xSwitchRequired = true; // TEST FIX THIS DELETE THIS AAAAAAAAAAAAAAAAAAAAAAA
         return xSwitchRequired;
     }
 

@@ -3307,7 +3307,8 @@ BaseType_t xTaskIncrementTick( void )
                                 }
                             }
                             descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
-                            AddToReadyList(descriptors[i].task_virtual_core, i); 
+                            if (descriptors[i].state == 0)
+                                AddToReadyList(descriptors[i].task_virtual_core, i); 
                             
                         }
                         descriptors[i].period_dynamic--;
@@ -3713,6 +3714,8 @@ BaseType_t xTaskIncrementTick( void )
                             SortReadyListByPriority(current_logical_in_core_0);
                         }                
                         pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
+                        if (descriptors[ready_list_by_core[current_logical_in_core_0][0]].state == 1)
+                            printf("Crash");
                         if(gantt_buffer_index_0 < BUFFER_SIZE_C){
                             gantt_buffer_0[gantt_buffer_index_0][0] = tickCounter;
                             gantt_buffer_0[gantt_buffer_index_0][1] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_number;
@@ -3846,6 +3849,7 @@ BaseType_t xTaskIncrementTick( void )
 
                 if (GetTidByHandle(pxTCBCur) >= 0)
                 {
+                    printf("This will crash");
                     goto get_next_task;
                 }
 
@@ -3998,16 +4002,18 @@ void vTaskPlaceOnEventList( List_t * const pxEventList,
          *
          * The queue that contains the event list is locked, preventing
          * simultaneous access from interrupts. */
-        if (GetTidByHandle(pxCurrentTCBs[portGET_CORE_ID()]) != -1)
-        {
 
-        }
-        else
-        {
+        //if (GetTidByHandle(pxCurrentTCBs[portGET_CORE_ID()]) != -1)
+        //{
+
+        //}
+        //else
+        //{
             vListInsert( pxEventList, &( pxCurrentTCBs[ portGET_CORE_ID() ]->xEventListItem ) );
 
             prvAddCurrentTaskToDelayedList( xTicksToWait, pdTRUE ); 
-        }
+            configASSERT(pxCurrentTCBs[portGET_CORE_ID()]->xStateListItem.pxContainer != NULL);
+        //}
         
     }
     /* Release the previously taken kernel lock. */
@@ -4135,7 +4141,19 @@ void vTaskPlaceOnUnorderedEventList( List_t * pxEventList,
                 /* Remove the task from its current event list */
                 pxUnblockedTCB = listGET_OWNER_OF_HEAD_ENTRY( pxEventList );
                 configASSERT( pxUnblockedTCB );
-                listREMOVE_ITEM( &( pxUnblockedTCB->xEventListItem ) );
+                int id = GetTidByHandle(pxUnblockedTCB);
+                
+                if (id != -1)
+                {
+                    configASSERT(pxUnblockedTCB->xEventListItem.pxContainer != NULL);
+                    
+                    listREMOVE_ITEM( &( pxUnblockedTCB->xEventListItem ) );
+                }
+                else
+                {
+                    listREMOVE_ITEM( &( pxUnblockedTCB->xEventListItem ) );
+                }
+                
 
                 /* Add the task to the ready list if a core with compatible affinity
                  * has NOT suspended its scheduler. This occurs when:
@@ -4143,8 +4161,21 @@ void vTaskPlaceOnUnorderedEventList( List_t * pxEventList,
                  * - The task is unpinned, and at least one of the core's scheduler is running */
                 if( taskCAN_BE_SCHEDULED( pxUnblockedTCB ) == pdTRUE )
                 {
-                    listREMOVE_ITEM( &( pxUnblockedTCB->xStateListItem ) );
-                    prvAddTaskToReadyList( pxUnblockedTCB );
+                    
+                    if (id != -1)
+                    {
+                        configASSERT(pxUnblockedTCB->xStateListItem.pxContainer != NULL);
+                        listREMOVE_ITEM( &( pxUnblockedTCB->xStateListItem ) );
+                        descriptors[id].state = 0;
+                        AddToReadyList(descriptors[id].task_virtual_core, id);
+                        
+                    }
+                    else
+                    {
+                        listREMOVE_ITEM( &( pxUnblockedTCB->xStateListItem ) );
+                        prvAddTaskToReadyList( pxUnblockedTCB );
+                    }
+                    
 
                     #if ( configUSE_TICKLESS_IDLE != 0 )
                     {
@@ -6593,9 +6624,14 @@ static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait,
 
     /* Remove the task from the ready list before adding it to the blocked list
      * as the same list item is used for both lists. */
-    if (GetTidByHandle(pxCurrentTCBs[xCurCoreID]) != -1)
+    int id = GetTidByHandle(pxCurrentTCBs[xCurCoreID]);
+    if (id != -1)
     {
-
+        RemoveFromReadyList(descriptors[id].task_virtual_core, id);
+        descriptors[id].state = 1;
+        //if (getSchedulingAlgorithm() == RRC || (getSchedulingAlgorithm() != RRC && descriptors[id].computing_time_dynamic > 0))
+            descriptors[id].handle->xStateListItem.pxContainer = NULL;
+        configASSERT(pxCurrentTCBs[ xCurCoreID ]->xStateListItem.pxContainer == NULL);
     }
     else
     {

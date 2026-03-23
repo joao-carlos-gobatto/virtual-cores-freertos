@@ -117,6 +117,7 @@ struct Parameters{
     int task_core;
     int task_virtual_core;
     int delayed_timer;
+    int state;
 };
 extern struct Parameters descriptors[MAX_NUMBER_TASK_C];
 

@@ -249,16 +249,18 @@ void RemoveFromReadyList(int core_id, int task_id) {
             ready_list_by_core[core_id][i] = ready_list_by_core[core_id][i + 1];
         }
         ready_list_by_core_index[core_id]--;
+        
     }
     else
     {
-        printf("This will crash");
+        //printf("This will crash");
     }
 }
 
 void AddToReadyList(int core_id, int task_id) {
     // check bounds?
-    
+    if (descriptors[task_id].state == 1)
+        printf("Crash");
 
     for (int i = 0; i < ready_list_by_core_index[core_id]; i++) {
         if (ready_list_by_core[core_id][i] == task_id) {
@@ -475,6 +477,7 @@ void SortReadyListByPeriod(int core_id)
                             for (int i = 0; i < total_task_count; i++) {
                                 ready_list_by_core[descriptors[i].task_virtual_core][ready_list_by_core_index[descriptors[i].task_virtual_core]] = i;
                                 ready_list_by_core_index[descriptors[i].task_virtual_core]++;
+                                descriptors[i].state = 0;
                             }
                             break;
                         }

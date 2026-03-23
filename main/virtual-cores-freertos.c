@@ -147,10 +147,10 @@ void print_task(){
         // printf("-----------------------------------------------------------------------------------------------------------\n");
         // printf("Idle 0 handle: %p , Idle 1 handle: %p\n", idleHandleArray[0], idleHandleArray[1]);
         // printf("History of selected tasks:\n");
-      //  if (core_0_buffer_full && core_1_buffer_full)
-       // {
-       //     printTaskIdsBuffer();
-        //    break;
+        //if (core_0_buffer_full && core_1_buffer_full)
+        //{
+          //  printTaskIdsBuffer();
+           // break;
         //}
         printf("%d\n", current_logical_in_core_0);
         printf("%d\n", tickCounter);
@@ -159,7 +159,7 @@ void print_task(){
         printAndClearStringBuffer(1); // (real core ID)
         vTaskDelay(600 / portTICK_PERIOD_MS);
         xSemaphoreGive(xSemaphore);
-        xSemaphoreGive(xSemaphore);
+        //xSemaphoreGive(xSemaphore);
     }
     printf("Print task have been finished.\n");
     vTaskDelete(NULL); // Delete this task after printing
@@ -173,12 +173,18 @@ void hello_task(void *pvParameter)
         char line[16]; 
         // addToStringBuffer("Hello Task Computing Time: ");
         snprintf(line, sizeof(line), "%d\n", params->computing_time);
-        if (params->task_virtual_core %2 == 1)
-            addToStringBuffer(line);
-        if (params->task_virtual_core %2 == 1)
+        //if (params->task_virtual_core %2 == 1)
+            //addToStringBuffer(line);
+        if (params->task_virtual_core %2 == 0)
+        {
+            //params->state = 1;
+            //descriptors[0].state = 1;
             xSemaphoreTake(xSemaphore, portMAX_DELAY);
-        
-        vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
+            //params->state = 0;
+            addToStringBuffer(line);
+            
+        }
+        //vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
     }
 }
 
@@ -205,7 +211,7 @@ void generateTasks(int number_tasks){
 
 void app_main(void)
 {
-    setSchedulingAlgorithm(RRC);
+    setSchedulingAlgorithm(RMC);
 
     xTaskCreatePinnedToCore(
         print_task,           // Function that implements the task
@@ -217,7 +223,7 @@ void app_main(void)
         0
     );
 
-    xSemaphore = xSemaphoreCreateCounting(19, 19);
+    xSemaphore = xSemaphoreCreateCounting(3, 3);
 
     tasks[0].period = 45;
     tasks[0].task_function = hello_task;
@@ -229,7 +235,7 @@ void app_main(void)
     tasks[1].period = 50;
     tasks[1].task_function = hello_task;
     tasks[1].task_name = strdup("Hello Task 1");
-    tasks[1].computing_time = 7;
+    tasks[1].computing_time = 2;
     tasks[1].final_task = 0;
     tasks[1].task_virtual_core = 0;
 

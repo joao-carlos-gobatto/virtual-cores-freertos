@@ -143,7 +143,8 @@ extern int tickCounter;
                                     }
                                 }
                                 descriptors[i].computing_time_dynamic = descriptors[i].computing_time;
-                                AddToReadyList(descriptors[i].task_virtual_core, i); // FIX THIS
+                                if (descriptors[i].state == 0)
+                                    AddToReadyList(descriptors[i].task_virtual_core, i); // FIX THIS
                             }
                             descriptors[i].period_dynamic--;
                         }
@@ -253,7 +254,7 @@ void RemoveFromReadyList(int core_id, int task_id) {
     }
     else
     {
-        //printf("This will crash");
+        printf("This will crash");
     }
 }
 
@@ -481,7 +482,10 @@ void SortReadyListByPeriod(int core_id)
                             }
                             break;
                         }
-                        start_flag = 1;
+                        if (start_flag == 0)
+                            start_flag = 1;
+                        else
+                            printf("Two final tasks declared");
                     }
 			    }
                 else {                    

@@ -147,18 +147,18 @@ void print_task(){
         // printf("-----------------------------------------------------------------------------------------------------------\n");
         // printf("Idle 0 handle: %p , Idle 1 handle: %p\n", idleHandleArray[0], idleHandleArray[1]);
         // printf("History of selected tasks:\n");
-        //if (core_0_buffer_full && core_1_buffer_full)
-        //{
-          //  printTaskIdsBuffer();
-           // break;
-        //}
-        printf("%d\n", current_logical_in_core_0);
-        printf("%d\n", tickCounter);
-        printAndClearStringBuffer(0); // (real core ID)
+        if (core_0_buffer_full && core_1_buffer_full)
+        {
+            printTaskIdsBuffer();
+            break;
+        }
+        //printf("%d\n", current_logical_in_core_0);
+        //printf("%d\n", tickCounter);
+        //printAndClearStringBuffer(0); // (real core ID)
         printAllReadyLists();
-        printAndClearStringBuffer(1); // (real core ID)
+        //printAndClearStringBuffer(1); // (real core ID)
         vTaskDelay(600 / portTICK_PERIOD_MS);
-        xSemaphoreGive(xSemaphore);
+        //xSemaphoreGive(xSemaphore);
         //xSemaphoreGive(xSemaphore);
     }
     printf("Print task have been finished.\n");
@@ -173,17 +173,14 @@ void hello_task(void *pvParameter)
         char line[16]; 
         // addToStringBuffer("Hello Task Computing Time: ");
         snprintf(line, sizeof(line), "%d\n", params->computing_time);
+        //addToStringBuffer(line);
         //if (params->task_virtual_core %2 == 1)
             //addToStringBuffer(line);
-        if (params->task_virtual_core %2 == 0)
-        {
-            //params->state = 1;
-            //descriptors[0].state = 1;
-            xSemaphoreTake(xSemaphore, portMAX_DELAY);
-            //params->state = 0;
-            addToStringBuffer(line);
+        //if (params->task_virtual_core == 0 || params->task_virtual_core == 1)
+        //{
+            //xSemaphoreTake(xSemaphore, portMAX_DELAY);
             
-        }
+        //}
         //vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
     }
 }
@@ -223,12 +220,12 @@ void app_main(void)
         0
     );
 
-    xSemaphore = xSemaphoreCreateCounting(3, 3);
+    //xSemaphore = xSemaphoreCreateCounting(3, 3);
 
     tasks[0].period = 45;
     tasks[0].task_function = hello_task;
     tasks[0].task_name = strdup("Hello Task 0");
-    tasks[0].computing_time = 6;
+    tasks[0].computing_time = 4;
     tasks[0].final_task = 0;
     tasks[0].task_virtual_core = 0;
 
@@ -274,7 +271,7 @@ void app_main(void)
     tasks[6].final_task = 0;
     tasks[6].task_virtual_core = 3;
 
-    tasks[7].period = 25;
+    tasks[7].period = 35;
     tasks[7].task_function = hello_task;
     tasks[7].task_name = strdup("Hello Task 7");
     tasks[7].computing_time = 2;
@@ -284,9 +281,16 @@ void app_main(void)
     tasks[8].period = 50;
     tasks[8].task_function = hello_task;
     tasks[8].task_name = strdup("Hello Task 8");
-    tasks[8].computing_time = 9;
+    tasks[8].computing_time = 5;
     tasks[8].final_task = 0;
     tasks[8].task_virtual_core = 4;
+
+    tasks[13].period = 80;
+    tasks[13].task_function = hello_task;
+    tasks[13].task_name = strdup("Hello Task 13");
+    tasks[13].computing_time = 4;
+    tasks[13].final_task = 0;
+    tasks[13].task_virtual_core = 4;
 
     tasks[9].period = 40;
     tasks[9].task_function = hello_task;
@@ -294,6 +298,13 @@ void app_main(void)
     tasks[9].computing_time = 8;
     tasks[9].final_task = 0;
     tasks[9].task_virtual_core = 5;
+
+    tasks[14].period = 80;
+    tasks[14].task_function = hello_task;
+    tasks[14].task_name = strdup("Hello Task 14");
+    tasks[14].computing_time = 2;
+    tasks[14].final_task = 0;
+    tasks[14].task_virtual_core = 5;
 
     tasks[10].period = 100;
     tasks[10].task_function = hello_task;
@@ -313,9 +324,17 @@ void app_main(void)
     tasks[12].task_function = hello_task;
     tasks[12].task_name = strdup("Hello Task 12");
     tasks[12].computing_time = 20;
-    tasks[12].final_task = 1;
+    tasks[12].final_task = 0;
     tasks[12].task_virtual_core = 7;
-    task_count = 13;
+
+    tasks[15].period = 100;
+    tasks[15].task_function = hello_task;
+    tasks[15].task_name = strdup("Hello Task 15");
+    tasks[15].computing_time = 1;
+    tasks[15].final_task = 1;
+    tasks[15].task_virtual_core = 7;
+    
+    task_count = 16;
 
     //generateTasks(task_count);
 

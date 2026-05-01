@@ -462,7 +462,7 @@ void SortReadyListByPeriod(int core_id)
                     descriptors[counter - 5].final_task = prPointer->final_task;
                     total_task_count++; 
 
-                    printf("\ncontado do celso mano: %d:\t", total_task_count);
+                    printf("\ncontador de tasks: %d:\t", total_task_count);
                     // ready_list_by_core[prPointer->task_virtual_core][ready_list_by_core_index[prPointer->task_virtual_core]] = counter - 5; // [coreId][taskPosInList] = id da task
                     // ready_list_by_core_index[prPointer->task_virtual_core]++;
 

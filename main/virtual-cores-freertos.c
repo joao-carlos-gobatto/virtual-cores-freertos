@@ -28,8 +28,6 @@ extern int gantt_buffer_index_1;
 int task_id_1_buffer_start = 0;
 
 SemaphoreHandle_t xSemaphore;
-extern int current_logical_in_core_0;
-
 
 const char* getTaskStateName(int state) {
     switch (state) {
@@ -128,99 +126,54 @@ extern int core_1_buffer_full;
 void print_task(){
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     while(1) {
-        // printf("Virtual Core ReadyList Shifting\nCore 0: %ld, Core 1: %ld\n", getcount_switch_vcore_0(),getcount_switch_vcore_1());
-        // printf("------------------------------------------------------------------------------------------------------------\n");
-        // printf("| Task ID | Period  | Computing Time | Period Dyn | Computing Time Dyn | Core ID | VCore ID | Tick Counter |\n");
-        // printf("-----------------------------------------------------------------------------------------------------------\n");
-        // for (size_t i = 0; i < total_task_count; i++) {
-        //     printf("| %-7d | %-7d | %-14d | %-10d | %-17d | %-7d | %-7d | |\n",
-        //         i,
-        //         descriptors[i].period,
-        //         descriptors[i].computing_time,
-        //         descriptors[i].period_dynamic,
-        //         descriptors[i].computing_time_dynamic,
-        //         descriptors[i].task_core,
-        //         descriptors[i].task_virtual_core
-        //         // tickCounter
-        //     );
-        // }
-        // printf("-----------------------------------------------------------------------------------------------------------\n");
-        // printf("Idle 0 handle: %p , Idle 1 handle: %p\n", idleHandleArray[0], idleHandleArray[1]);
-        // printf("History of selected tasks:\n");
+
         if (core_0_buffer_full && core_1_buffer_full)
         {
             printTaskIdsBuffer();
             break;
         }
-        //printf("%d\n", current_logical_in_core_0);
-        //printf("%d\n", tickCounter);
-        //printAndClearStringBuffer(0); // (real core ID)
-        printAllReadyLists();
-        //printAndClearStringBuffer(1); // (real core ID)
+        printAndClearStringBuffer(0); // (real core ID)
+        printAndClearStringBuffer(1); // (real core ID)
+        //printAllReadyLists();
         vTaskDelay(600 / portTICK_PERIOD_MS);
-        //xSemaphoreGive(xSemaphore);
-        //xSemaphoreGive(xSemaphore);
     }
     printf("Print task have been finished.\n");
     vTaskDelete(NULL); // Delete this task after printing
 }
 
+//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+/////////////// Modifique apenas o que estiver abaixo 
 
 void hello_task(void *pvParameter)
 {
     struct Parameters* params = (struct Parameters*)pvParameter;
     while (1) {
         char line[16]; 
-        // addToStringBuffer("Hello Task Computing Time: ");
-        snprintf(line, sizeof(line), "%d\n", params->computing_time);
-        //addToStringBuffer(line);
-        //if (params->task_virtual_core %2 == 1)
-            //addToStringBuffer(line);
-        //if (params->task_virtual_core == 0 || params->task_virtual_core == 1)
-        //{
-            //xSemaphoreTake(xSemaphore, portMAX_DELAY);
-            
-        //}
-        //vTaskDelay(100 / portTICK_PERIOD_MS); // Simulate computing time
+        
+        addToStringBuffer("Hello: ");                                   //Adiciona string ao buffer de print
+        
+        snprintf(line, sizeof(line), "%d\n", params->computing_time);   //Transforma int em string
+        addToStringBuffer(line);                                        //Adiciona string ao buffer de print
     }
 }
-
-void generateTasks(int number_tasks){
-    for (size_t i = 0; i < number_tasks; i++) //Quantidade de tasks
-    {
-        tasks[i].period = (i+1)*40;
-        tasks[i].task_function = hello_task;
-        tasks[i].task_name = strdup("Hello Task");
-        tasks[i].computing_time = (i+1)*2;
-        if (i == number_tasks - 1){
-            tasks[i].final_task = 1;
-        } else {
-            tasks[i].final_task = 0;
-        }
-        tasks[i].task_virtual_core = i % VIRTUAL_CORE_QUANTITY_C;
-    }
-    //tasks[6].period = 30;
-    //tasks[6].computing_time = 20;
-}
-
-
-
 
 void app_main(void)
 {
-    setSchedulingAlgorithm(RMC);
+    setSchedulingAlgorithm(RMC);  // RMC - Rate Monotonic     // RRC - Round Robin
 
-    xTaskCreatePinnedToCore(
+    xTaskCreatePinnedToCore(  //////////// Não modifique essa task
         print_task,           // Function that implements the task
         "PrintTask",          // Text name for debugging
         2048,                 // Stack size in words
         NULL,                 // Task input parameter
         tskIDLE_PRIORITY + 1, // Priority of the task
         NULL,                  // Task handle
-        0
-    );
+        0                      //
+    );                         ////////////// 
 
-    //xSemaphore = xSemaphoreCreateCounting(3, 3);
+
+    task_count = 16;
 
     tasks[0].period = 45;
     tasks[0].task_function = hello_task;
@@ -335,8 +288,6 @@ void app_main(void)
     tasks[15].task_virtual_core = 7;
     
     task_count = 16;
-
-    //generateTasks(task_count);
 
     initVirtualCores();
 }

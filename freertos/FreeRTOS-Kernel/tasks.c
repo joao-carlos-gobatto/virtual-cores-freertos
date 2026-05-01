@@ -3548,7 +3548,7 @@ BaseType_t xTaskIncrementTick( void )
         }
     }
     #endif
-
+    xSwitchRequired = pdTRUE; //TEST FIX THIS
     return xSwitchRequired;
 }
 /*-----------------------------------------------------------*/

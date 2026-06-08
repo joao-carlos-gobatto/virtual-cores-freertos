@@ -1564,6 +1564,7 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
     extern void AddToReadyList(int core_id, int task_id);
     extern void SortReadyListByPeriod(int core_id);
     extern void SortReadyListByPriority(int core_id);
+    extern void MoveTaskToCore(int task_id, int new_virtual_core);
 #if ( INCLUDE_vTaskDelay == 1 )
 
     void vTaskDelay( const TickType_t xTicksToDelay )
@@ -3700,6 +3701,11 @@ BaseType_t xTaskIncrementTick( void )
         BaseType_t xTaskScheduled = pdFALSE;
         BaseType_t xNewTopPrioritySet = pdFALSE;
         BaseType_t xCurCoreID = portGET_CORE_ID();
+        
+        if (tickCounter > 100)
+        {
+            MoveTaskToCore(0, 2);
+        }
 
         //int taskFound = 0;
         if(start_flag == 1) {

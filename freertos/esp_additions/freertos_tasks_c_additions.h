@@ -274,6 +274,24 @@ void AddToReadyList(int core_id, int task_id) {
     ready_list_by_core_index[core_id]++;
 }
 
+void MoveTaskToCore(int task_id, int new_virtual_core)
+{
+    int new_physical_core = new_virtual_core % 2;
+    int old_virtual_core = descriptors[task_id].task_virtual_core;
+
+    if (old_virtual_core == new_virtual_core)
+    {
+        return;
+    }
+
+    RemoveFromReadyList(old_virtual_core, task_id);
+
+    descriptors[task_id].task_virtual_core = new_virtual_core;
+    descriptors[task_id].task_core = new_physical_core;
+
+    AddToReadyList(new_virtual_core, task_id);
+}
+
 
 void SortReadyListByPriority(int core_id)
 {
@@ -309,6 +327,25 @@ void SortReadyListByPeriod(int core_id)
             if (descriptors[id1].period > descriptors[id2].period)
             {
                 // Swap the two task IDs
+                int temp = ready_list_by_core[core_id][j];
+                ready_list_by_core[core_id][j] = ready_list_by_core[core_id][j + 1];
+                ready_list_by_core[core_id][j + 1] = temp;
+            }
+        }
+    }
+}
+
+void SortReadyListByDeadline(int core_id)
+{
+    int i, j;
+    for (i = 0; i < ready_list_by_core_index[core_id] - 1; i++)
+    {
+        for (j = 0; j < ready_list_by_core_index[core_id] - i - 1; j++)
+        {
+            int id1 = ready_list_by_core[core_id][j];
+            int id2 = ready_list_by_core[core_id][j + 1];
+            if (descriptors[id1].period_dynamic > descriptors[id2].period_dynamic)
+            {
                 int temp = ready_list_by_core[core_id][j];
                 ready_list_by_core[core_id][j] = ready_list_by_core[core_id][j + 1];
                 ready_list_by_core[core_id][j + 1] = temp;

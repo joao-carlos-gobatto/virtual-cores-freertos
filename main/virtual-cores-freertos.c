@@ -27,6 +27,8 @@ int task_id_0_buffer_start = 0;
 extern int gantt_buffer_index_1;
 int task_id_1_buffer_start = 0;
 
+extern uint32_t start_scheduler_timer, end_scheduler_timer;
+
 SemaphoreHandle_t xSemaphore;
 
 const char* getTaskStateName(int state) {
@@ -88,7 +90,7 @@ void printAndClearStringBuffer(int core) {
 
 
 void initVirtualCores(){
-    if(getSchedulingAlgorithm() == RMC || getSchedulingAlgorithm() == RRC){
+    if(getSchedulingAlgorithm() == RMC || getSchedulingAlgorithm() == RRC || getSchedulingAlgorithm() == EDFC){
         for (size_t i = 0; i < task_count; i++)
         {
             xTaskCreatePinnedToCore(
@@ -127,14 +129,14 @@ void print_task(){
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     while(1) {
 
-        if (core_0_buffer_full && core_1_buffer_full)
-        {
-            printTaskIdsBuffer();
-            break;
-        }
+        //if (core_0_buffer_full && core_1_buffer_full)
+        //{
+        //    printTaskIdsBuffer();
+        //    break;
+        //}
         printAndClearStringBuffer(0); // (real core ID)
         printAndClearStringBuffer(1); // (real core ID)
-        //printAllReadyLists();
+        printAllReadyLists();
         vTaskDelay(600 / portTICK_PERIOD_MS);
     }
     printf("Print task have been finished.\n");
@@ -149,18 +151,22 @@ void hello_task(void *pvParameter)
 {
     struct Parameters* params = (struct Parameters*)pvParameter;
     while (1) {
-        char line[16]; 
+        char line[32]; 
         
-        addToStringBuffer("Hello: ");                                   //Adiciona string ao buffer de print
+        //addToStringBuffer("Hello: ");                                   //Adiciona string ao buffer de print
         
-        snprintf(line, sizeof(line), "%d\n", params->computing_time);   //Transforma int em string
-        addToStringBuffer(line);                                        //Adiciona string ao buffer de print
+        snprintf(line, sizeof(line), "%lu\n", end_scheduler_timer);   //Transforma int em string
+        //addToStringBuffer(line); 
+        //snprintf(line, sizeof(line), "%lu\n", start_scheduler_timer);   //Transforma int em string
+        //addToStringBuffer(line); 
+        //snprintf(line, sizeof(line), "%lu\n", (end_scheduler_timer - start_scheduler_timer));   //Transforma int em string
+        //addToStringBuffer(line);                                        //Adiciona string ao buffer de print
     }
 }
 
 void app_main(void)
 {
-    setSchedulingAlgorithm(RMC);  // RMC - Rate Monotonic     // RRC - Round Robin
+    setSchedulingAlgorithm(EDFC);  // RMC - Rate Monotonic     // RRC - Round Robin
 
     xTaskCreatePinnedToCore(  //////////// Não modifique essa task
         print_task,           // Function that implements the task

@@ -103,6 +103,8 @@ enum scheduling_algorithms{
 #define BUFFER_SIZE_C 256
 #define VIRTUAL_CORE_QUANTITY_C 8
 #define VIRTUAL_CORE_READY_LIST_SIZE_C 15                        //MAX_NUMBER_TASK_C / VIRTUAL_CORE_QUANTITY_C Tem que ser um número inteiro
+#define VIRTUAL_GLOBAL_READY_LIST_SIZE_C 64
+#define LOG_GANTT 1                                              //Habilita registrar valores no gantt buffer
 
 struct Parameters{
     TaskFunction_t task_function;
@@ -130,7 +132,8 @@ extern uint32_t getcount_switch_vcore_1();
 extern int task_id_buffer[BUFFER_SIZE_C];
 extern TaskHandle_t task_handle_buffer[BUFFER_SIZE_C];
 extern int task_id_buffer_index;
-
+extern int global_ready_list[VIRTUAL_GLOBAL_READY_LIST_SIZE_C];
+extern int global_ready_list_index;
 extern int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
 extern int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
 

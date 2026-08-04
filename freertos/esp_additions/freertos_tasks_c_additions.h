@@ -120,7 +120,7 @@ extern int tickCounter;
 
             switch (getSchedulingAlgorithm())
             {
-                case RMC:       // FIX THIS
+                case (RMC || EDFC):       // FIX THIS
                     for (int i = 0; i < total_task_count; i++)                  // FIX THIS
                     {
                         if (descriptors[i].task_core == 1)
@@ -158,9 +158,9 @@ extern int tickCounter;
                             RemoveFromReadyList(currentVirtualCore, tempTid);
                     }
                     break;
-                case EDFC:
+                //case EDFC:
 
-                    break;
+                  //  break;
                 default:
                     int tempTidRR = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCoreID));
                     if (tempTidRR != -1)
@@ -222,6 +222,8 @@ struct Parameters descriptors[MAX_NUMBER_TASK_C];
 int counter = 0;
 extern int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
 extern int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
+extern int global_ready_list[VIRTUAL_GLOBAL_READY_LIST_SIZE_C];
+extern int global_ready_list_index;
 extern int total_task_count; 
 extern int start_flag;
 
@@ -508,6 +510,16 @@ void SortReadyListByDeadline(int core_id)
                         {                        
                         case 1:
                             printf("Chama EDF\n");
+                            for (int i = 0; i < total_task_count; i++) {
+                                global_ready_list[global_ready_list_index] = i;
+                                global_ready_list_index++;
+                                descriptors[i].state = 0;
+                            }
+                            for (int i = 0; i < total_task_count; i++) {
+                                ready_list_by_core[descriptors[i].task_virtual_core][ready_list_by_core_index[descriptors[i].task_virtual_core]] = i;
+                                ready_list_by_core_index[descriptors[i].task_virtual_core]++;
+                                descriptors[i].state = 0;
+                            }
                             break;
                         
                         default:

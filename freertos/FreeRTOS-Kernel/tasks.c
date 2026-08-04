@@ -1564,6 +1564,7 @@ static void prvAddNewTaskToReadyList( TCB_t * pxNewTCB )
     extern void AddToReadyList(int core_id, int task_id);
     extern void SortReadyListByPeriod(int core_id);
     extern void SortReadyListByPriority(int core_id);
+    extern void SortReadyListByDeadline(int core_id);
     extern void MoveTaskToCore(int task_id, int new_virtual_core);
 #if ( INCLUDE_vTaskDelay == 1 )
 
@@ -3246,7 +3247,12 @@ int core_1_buffer_full = 0;
 int ready_list_by_core[VIRTUAL_CORE_QUANTITY_C][VIRTUAL_CORE_READY_LIST_SIZE_C]; // [coreId][taskPosInList]
 int ready_list_by_core_index[VIRTUAL_CORE_QUANTITY_C];
 int current_logical_in_core_0 = 0, current_logical_in_core_1 = 1; //current logical core id thas is executing in the real 
+int global_ready_list[VIRTUAL_GLOBAL_READY_LIST_SIZE_C];
+int global_ready_list_index = 0;
 extern void addToStringBuffer(const char* str);
+#include "esp_cpu.h"
+uint32_t start_scheduler_timer = 0, end_scheduler_timer = 0;
+int start_flag = 0; //Flag to indicate if the scheduler has started
 BaseType_t xTaskIncrementTick( void )
 {
     const BaseType_t xCurCoreID = portGET_CORE_ID();
@@ -3254,7 +3260,8 @@ BaseType_t xTaskIncrementTick( void )
         /* Only Core 0 should ever call this function. */
         configASSERT( portGET_CORE_ID() == 0 );
     #endif /* configNUMBER_OF_CORES > 1 */
-	
+    if (xCurCoreID == 0)
+                start_scheduler_timer = esp_cpu_get_cycle_count();
     TCB_t * pxTCB;
     TickType_t xItemValue;
     BaseType_t xSwitchRequired = pdFALSE;
@@ -3285,7 +3292,7 @@ BaseType_t xTaskIncrementTick( void )
     	tickCounter++;
         switch (getSchedulingAlgorithm()) 
         {
-            case RMC:       
+            case (RMC || EDFC):       
                 for (int i = 0; i < total_task_count; i++)                 
                 {
                     if (descriptors[i].task_core == 0)
@@ -3324,9 +3331,9 @@ BaseType_t xTaskIncrementTick( void )
                         RemoveFromReadyList(currentVirtualCore, tempTid);
                 }
                 break;
-            case EDFC:
+           // case EDFC:
 
-                break;
+            //    break;
             default:
                 int tempTidRR = GetTidByHandle(xTaskGetCurrentTaskHandleForCore(xCurCoreID));
                 if (tempTidRR != -1)
@@ -3535,6 +3542,8 @@ BaseType_t xTaskIncrementTick( void )
             }
             #endif
         }
+        if (xCurCoreID == 0)
+                end_scheduler_timer = esp_cpu_get_cycle_count(); 
     }
 
     /* Release the previously taken kernel lock as we have finished accessing
@@ -3668,14 +3677,15 @@ BaseType_t xTaskIncrementTick( void )
     
     extern struct Parameters descriptors[MAX_NUMBER_TASK_C];
     
-    int start_flag = 0; //Flag to indicate if the scheduler has started
-
+    
+    
 
     
     
     void printAllReadyLists() {
+        int len;
         for (int core = 0; core < VIRTUAL_CORE_QUANTITY_C; ++core) {
-            int len = ready_list_by_core_index[core];
+            len = ready_list_by_core_index[core];
             printf("Core %d ready list (size=%d): ", core, len);
             if (len > 0) {
                 for (int pos = 0; pos < len; ++pos) {
@@ -3690,12 +3700,27 @@ BaseType_t xTaskIncrementTick( void )
             }
             printf("\n");
         }
+        len = global_ready_list_index;
+            printf("Global ready list (size=%d): ", len);
+            if (len > 0) {
+                for (int pos = 0; pos < len; ++pos) {
+                    int task_id = global_ready_list[pos];
+                    printf("%d", task_id);
+                    if (pos < len - 1) {
+                        printf(", ");
+                    }
+                }
+            } else {
+                printf("Global [empty]");
+            }
+            printf("\n");
     }
-
+    int recordNext = 0;
 #if ( configNUMBER_OF_CORES > 1 )
-
+    
     static void prvSelectHighestPriorityTaskSMP( void )
     {
+        
         /* This function is called from a critical section. So some optimizations are made */
         BaseType_t uxCurPriority;
         BaseType_t xTaskScheduled = pdFALSE;
@@ -3704,12 +3729,13 @@ BaseType_t xTaskIncrementTick( void )
         
         if (tickCounter > 100)
         {
-            MoveTaskToCore(0, 2);
+            MoveTaskToCore(0, 1);
         }
 
         //int taskFound = 0;
-        if(start_flag == 1) {
-            if (xCurCoreID == 0) {
+        if(start_flag == 1) {      
+            if (xCurCoreID == 0) {           
+                 
                 if(current_logical_in_core_0 < VIRTUAL_CORE_QUANTITY_C){
                     if (ready_list_by_core_index[current_logical_in_core_0] > 0)
                     {
@@ -3718,16 +3744,21 @@ BaseType_t xTaskIncrementTick( void )
                         } //else RRC
                         else if (SCHEDULING_ALGORITHM_C == RRC){
                             SortReadyListByPriority(current_logical_in_core_0);
-                        }                
+                        }     
+                        else if (SCHEDULING_ALGORITHM_C == EDFC){
+                            SortReadyListByDeadline(current_logical_in_core_0);
+                        }           
                         pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].handle;
                         if (descriptors[ready_list_by_core[current_logical_in_core_0][0]].state == 1)
                             printf("Crash");
-                        if(gantt_buffer_index_0 < BUFFER_SIZE_C){
+                        #if LOG_GANTT == 1
+                            if(gantt_buffer_index_0 < BUFFER_SIZE_C){
                             gantt_buffer_0[gantt_buffer_index_0][0] = tickCounter;
                             gantt_buffer_0[gantt_buffer_index_0][1] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_number;
                             gantt_buffer_0[gantt_buffer_index_0][2] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_core;
                             gantt_buffer_0[gantt_buffer_index_0][3] = descriptors[ready_list_by_core[current_logical_in_core_0][0]].task_virtual_core;
                         }
+                        #endif
                         //addToStringBuffer("Task scheduled");
                         xTaskScheduled = pdTRUE;
                         int task_to_requeue = ready_list_by_core[current_logical_in_core_0][0];
@@ -3736,15 +3767,18 @@ BaseType_t xTaskIncrementTick( void )
                             ready_list_by_core[current_logical_in_core_0][i] = ready_list_by_core[current_logical_in_core_0][i + 1];
                         }
                         ready_list_by_core[current_logical_in_core_0][ready_list_by_core_index[current_logical_in_core_0] - 1] = task_to_requeue;
+                        #if LOG_GANTT == 1
                         // gantt_buffer_index_0 = (gantt_buffer_index_0 + 1) % BUFFER_SIZE_C;
                         if(gantt_buffer_index_0 < BUFFER_SIZE_C){
                             gantt_buffer_index_0++;
                         } else {
                             core_0_buffer_full = 1;
                         }
+                        #endif
                         count_switch_vcore_0++;
                     }
                 } else {
+                    #if LOG_GANTT == 1
                     if(gantt_buffer_index_0 < BUFFER_SIZE_C){
                         gantt_buffer_0[gantt_buffer_index_0][0] = tickCounter;
                         gantt_buffer_0[gantt_buffer_index_0][1] = -1;
@@ -3756,8 +3790,9 @@ BaseType_t xTaskIncrementTick( void )
                     } else {
                         core_0_buffer_full = 1;
                     }
+                    #endif
                 }
-                current_logical_in_core_0 = (current_logical_in_core_0 + 2) % (VIRTUAL_CORE_QUANTITY_C + 2);
+                current_logical_in_core_0 = (current_logical_in_core_0 + 2) % (VIRTUAL_CORE_QUANTITY_C + 2);           
             }
             else //real core == 1
             {
@@ -3769,13 +3804,18 @@ BaseType_t xTaskIncrementTick( void )
                     else if (SCHEDULING_ALGORITHM_C == RRC) {
                         SortReadyListByPriority(current_logical_in_core_1);
                     }
+                    else if (SCHEDULING_ALGORITHM_C == EDFC){
+                        SortReadyListByDeadline(current_logical_in_core_1);
+                    }    
                     pxCurrentTCBs[xCurCoreID] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].handle;
+                    #if LOG_GANTT == 1
                     if(gantt_buffer_index_1 < BUFFER_SIZE_C){
                         gantt_buffer_1[gantt_buffer_index_1][0] = tickCounter;
                         gantt_buffer_1[gantt_buffer_index_1][1] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_number;
                         gantt_buffer_1[gantt_buffer_index_1][2] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_core;
                         gantt_buffer_1[gantt_buffer_index_1][3] = descriptors[ready_list_by_core[current_logical_in_core_1][0]].task_virtual_core;
                     }
+                    #endif
                     xTaskScheduled = pdTRUE;
                     int task_to_requeue = ready_list_by_core[current_logical_in_core_1][0];
                     for (int i = 0; i < ready_list_by_core_index[current_logical_in_core_1] - 1; i++)
@@ -3783,16 +3823,19 @@ BaseType_t xTaskIncrementTick( void )
                         ready_list_by_core[current_logical_in_core_1][i] = ready_list_by_core[current_logical_in_core_1][i + 1];
                     }
                     ready_list_by_core[current_logical_in_core_1][ready_list_by_core_index[current_logical_in_core_1] - 1] = task_to_requeue;
+                    #if LOG_GANTT == 1
                     // gantt_buffer_index_1 = (gantt_buffer_index_1 + 1) % BUFFER_SIZE_C;
                     if(gantt_buffer_index_1 < BUFFER_SIZE_C){
                         gantt_buffer_index_1++;
                     } else {
                         core_1_buffer_full = 1;
                     }
+                    #endif
                     count_switch_vcore_1++;
                 }
-                current_logical_in_core_1 = (current_logical_in_core_1 + 2) % VIRTUAL_CORE_QUANTITY_C;
+                current_logical_in_core_1 = (current_logical_in_core_1 + 2) % VIRTUAL_CORE_QUANTITY_C;               
             }
+            
         }
         
         /* Search for tasks, starting form the highest ready priority. If nothing is
@@ -3881,8 +3924,11 @@ get_next_task:
             } while( pxTCBCur != pxTCBFirst ); /* Check to see if we've walked the entire list */
             ///////printf("Core %d selected task with handle: %p\n", xCurCoreID, pxTCBCur);
         }
+        
+        //&& end_scheduler_timer == 0 && start_scheduler_timer != 0)
 		
         configASSERT( xTaskScheduled == pdTRUE ); /* At this point, a task MUST have been scheduled */
+
         	//pxCurrentTCBs[xCurCoreID] = descriptors[0].handle;////////
     		//xTaskScheduled = pdTRUE;///////////////
     }
@@ -3951,7 +3997,9 @@ void vTaskSwitchContext( void )
 
             /* Select a new task to run using either the generic C or port
              * optimised asm code. */
+             
             taskSELECT_HIGHEST_PRIORITY_TASK(); /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+            
             traceTASK_SWITCHED_IN();
 
             /* After the new task is switched in, update the global errno. */
